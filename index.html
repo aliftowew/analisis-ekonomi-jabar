@@ -3,2783 +3,838 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Multiplier Analysis Jawa Barat — #SemuaBisaDihitung</title>
-<meta name="description" content="Analisis multiplier Input-Output untuk 185 sektor ekonomi Jawa Barat: berapa lapangan kerja, penurunan kemiskinan, dan pertumbuhan PDRB per Rp 1 triliun investasi.">
-
+<meta name="description" content="Analisis multiplier Input-Output untuk 52 industri Jawa Barat dari Tabel IO Provinsi Jabar 2016 BPS: lapangan kerja, kemiskinan, dan PDRB per Rp 1 triliun investasi.">
+<title>Multiplier Analysis Jawa Barat (Data Provinsi) — #SemuaBisaDihitung</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..900,0..100;1,9..144,300..900,0..100&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400;1,9..144,500&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
-:root {
-  --bg: #EFE9DD;
-  --bg-deep: #E5DECF;
-  --surface: #F7F2E8;
-  --paper: #FBF8F1;
-  --ink: #1C1B1A;
-  --ink-soft: #3A3633;
-  --ink-mute: #6B655D;
-  --rule: #1C1B1A;
-  --rule-soft: #CDC3AE;
-  --brick: #A0421C;
-  --moss: #2D4A2B;
-  --sepia: #8B6F47;
-  --gold: #B8881F;
-  --highlight: #F4E6A1;
-  --good: #5A7F3D;
-  --bad: #B0432A;
-  --col-hulu: #5A7F3D;
-  --col-hilir: #B8881F;
-  --col-manuf: #A0421C;
-  --col-jasa: #2D4A2B;
+:root{
+  --bg:#FBF7EE; --paper:#FAF4E6; --ink:#1A1815; --ink-2:#3D3833; --muted:#7A7068;
+  --line:#D9CFB8; --rule:#C8BC9F; --amber:#C8923A; --amber-soft:#E8B96A; --amber-bg:#F5E5C2;
+  --rust:#A8453A; --moss:#5E7A3A; --teal:#3A6E7A; --navy:#1A3A6E; --hi:#FFEB9C;
 }
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:70px}
+body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--ink);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding:0 32px}
+.serif{font-family:'Fraunces',serif}
+.mono{font-family:'IBM Plex Mono',monospace;font-variant-numeric:tabular-nums}
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+/* NAV */
+.topnav{position:sticky;top:0;z-index:100;background:rgba(251,247,238,0.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--rule)}
+.topnav .wrap{display:flex;justify-content:space-between;align-items:center;height:56px}
+.topnav .brand{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.15em;text-transform:uppercase;font-weight:600;color:var(--ink)}
+.topnav .brand b{color:var(--amber)}
+.topnav .cta{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.05em;padding:7px 14px;background:var(--ink);color:var(--paper);text-decoration:none;border-radius:2px}
+.topnav .cta:hover{background:var(--amber);color:var(--ink)}
 
-html { scroll-behavior: smooth; }
+/* HERO */
+.hero{padding:72px 0 56px;border-bottom:1px solid var(--ink);background:linear-gradient(180deg,#FBF7EE 0%,#F5E8C2 100%)}
+.kicker{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--amber);font-weight:600;margin-bottom:20px}
+h1.hero-title{font-family:'Fraunces',serif;font-weight:400;font-size:clamp(38px,6vw,72px);line-height:0.98;letter-spacing:-0.025em;margin-bottom:24px;max-width:16ch}
+h1.hero-title em{font-style:italic;font-weight:300;color:var(--amber)}
+.hero-lede{font-size:18px;line-height:1.5;color:var(--ink-2);max-width:62ch;margin-bottom:28px}
+.hero-source{font-size:13px;color:var(--muted);margin-bottom:28px;max-width:60ch}
+.hero-source b{color:var(--ink);font-weight:600}
+.hero-badge{display:inline-block;background:var(--moss);color:#fff;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.05em;padding:4px 12px;border-radius:2px;margin-bottom:24px;font-weight:500}
+.btn-primary{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:13px;letter-spacing:0.05em;padding:13px 26px;background:var(--ink);color:var(--paper);text-decoration:none;border-radius:2px;font-weight:500}
+.btn-primary:hover{background:var(--amber);color:var(--ink)}
 
-body {
-  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-  font-size: 16px;
-  line-height: 1.65;
-  color: var(--ink);
-  background: var(--bg);
-  background-image:
-    radial-gradient(ellipse 800px 600px at 10% 0%, rgba(160,66,28,0.04), transparent 60%),
-    radial-gradient(ellipse 600px 400px at 90% 30%, rgba(45,74,43,0.04), transparent 60%);
-  background-attachment: fixed;
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
-}
+/* TOC */
+.toc-strip{border-bottom:1px solid var(--rule);padding:20px 0;background:var(--paper)}
+.toc-strip ol{list-style:none;display:flex;flex-wrap:wrap;gap:6px 24px}
+.toc-strip li{font-size:13px}
+.toc-strip a{color:var(--ink-2);text-decoration:none}
+.toc-strip a:hover{color:var(--amber)}
+.toc-strip .sn{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--amber);margin-right:5px}
 
-.serif { font-family: 'Fraunces', Georgia, serif; font-variation-settings: 'opsz' 96, 'SOFT' 30; }
-.mono { font-family: 'JetBrains Mono', monospace; font-feature-settings: 'tnum' 1; }
+/* SECTIONS */
+section{padding:68px 0;border-bottom:1px solid var(--rule)}
+.section-tag{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--amber);font-weight:600;margin-bottom:14px}
+h2.section-title{font-family:'Fraunces',serif;font-weight:500;font-size:clamp(28px,4vw,46px);line-height:1.04;letter-spacing:-0.02em;margin-bottom:18px;max-width:20ch}
+h2.section-title em{font-style:italic;color:var(--amber)}
+.section-intro{font-size:16.5px;line-height:1.6;color:var(--ink-2);max-width:64ch;margin-bottom:14px}
+.section-intro.spaced{margin-bottom:40px}
 
-.container { max-width: 1100px; margin: 0 auto; padding: 0 32px; }
-.narrow { max-width: 760px; margin: 0 auto; padding: 0 32px; }
+/* METRIC CARDS */
+.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:0;border-top:1px solid var(--ink);border-left:1px solid var(--ink);margin-top:36px}
+.metric-card{background:var(--paper);border-right:1px solid var(--ink);border-bottom:1px solid var(--ink);padding:28px 26px}
+.metric-card .mnum{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.15em;color:var(--muted);font-weight:600;margin-bottom:10px}
+.metric-card h3{font-family:'Fraunces',serif;font-weight:600;font-size:23px;margin-bottom:14px;letter-spacing:-0.01em}
+.metric-card .formula-render{background:#F5EFE0;border:1px solid var(--rule);padding:14px;margin-bottom:14px;text-align:center;overflow-x:auto}
+.metric-card p{font-size:14px;line-height:1.55;color:var(--ink-2)}
+.metric-card p b{color:var(--ink)}
+.metric-card.feat{background:#FBF1D5;position:relative}
+.metric-card.feat::before{content:"";position:absolute;top:0;left:0;width:4px;height:100%;background:var(--amber)}
 
-/* ===== MASTHEAD ===== */
-.masthead {
-  border-bottom: 1.5px solid var(--ink);
-  padding: 32px 0 28px;
-  background: var(--paper);
-  position: relative;
-}
-.masthead-top {
-  display: flex; justify-content: space-between; align-items: baseline;
-  font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
-  color: var(--ink-soft); padding-bottom: 24px;
-  border-bottom: 0.5px solid var(--rule-soft);
-}
-.masthead-top .brand { font-weight: 600; color: var(--brick); letter-spacing: 0.16em; }
-.masthead-top .meta { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; }
+.notation-box{background:var(--paper);border:1px solid var(--rule);padding:20px 24px;margin-top:28px;font-size:13.5px;line-height:1.7;color:var(--ink-2)}
+.notation-box b{font-family:'IBM Plex Mono',monospace;color:var(--ink)}
 
-.masthead h1 {
-  font-family: 'Fraunces', serif;
-  font-variation-settings: 'opsz' 144, 'SOFT' 20, 'wght' 400;
-  font-size: clamp(40px, 6vw, 68px);
-  line-height: 1.02;
-  letter-spacing: -0.025em;
-  margin-top: 28px;
-  margin-bottom: 14px;
-  color: var(--ink);
-}
-.masthead h1 em {
-  font-style: italic;
-  font-variation-settings: 'opsz' 144, 'SOFT' 80, 'wght' 400;
-  color: var(--brick);
-}
-.masthead .deck {
-  font-family: 'Fraunces', serif;
-  font-variation-settings: 'opsz' 36, 'wght' 350;
-  font-size: 22px;
-  line-height: 1.35;
-  color: var(--ink-soft);
-  max-width: 700px;
-  font-style: italic;
-}
+/* QUADRANT mini explainer */
+.quad-legend{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--ink);border:1px solid var(--ink);margin-top:24px}
+@media(max-width:760px){.quad-legend{grid-template-columns:1fr 1fr}}
+.quad-cell{background:var(--paper);padding:16px}
+.quad-cell .qd{display:inline-block;width:11px;height:11px;border-radius:50%;margin-bottom:8px}
+.quad-cell h5{font-family:'Fraunces',serif;font-size:16px;font-weight:600;margin-bottom:4px}
+.quad-cell .qax{font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--muted);letter-spacing:0.08em;margin-bottom:6px}
+.quad-cell p{font-size:12px;line-height:1.45;color:var(--ink-2)}
 
-.masthead-bottom {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 32px;
-  align-items: end;
-  margin-top: 28px;
-  padding-top: 18px;
-  border-top: 0.5px solid var(--rule-soft);
-}
-.byline {
-  font-size: 13px; color: var(--ink-soft);
-  font-family: 'Fraunces', serif;
-  font-variation-settings: 'opsz' 14, 'wght' 400;
-}
-.byline .label { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-mute); display: block; margin-bottom: 4px; font-family: 'Plus Jakarta Sans', sans-serif; }
-.byline strong { font-weight: 600; }
+footer{background:var(--ink);color:var(--paper);padding:56px 0 36px}
+footer .fgrid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:40px;margin-bottom:40px}
+@media(max-width:760px){footer .fgrid{grid-template-columns:1fr;gap:28px}}
+footer h4{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--amber-soft);margin-bottom:14px;font-weight:600}
+footer p,footer li{font-size:13px;line-height:1.6;color:rgba(250,244,230,0.75);list-style:none}
+footer .ttl{font-family:'Fraunces',serif;font-size:22px;color:var(--paper);margin-bottom:10px}
+footer .foot-base{border-top:1px solid rgba(250,244,230,0.2);padding-top:24px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.05em;color:rgba(250,244,230,0.5);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
 
-.toc-link {
-  display: inline-flex; align-items: center; gap: 8px;
-  background: var(--ink); color: var(--paper);
-  padding: 10px 18px; font-size: 12px; letter-spacing: 0.08em;
-  text-transform: uppercase; text-decoration: none; font-weight: 500;
-  transition: all 0.2s;
-}
-.toc-link:hover { background: var(--brick); }
-.toc-link::after { content: '→'; }
+.katex{font-size:1.04em}
+.katex-display{margin:0}
 
-/* ===== TOC ===== */
-.toc {
-  background: var(--paper);
-  border-bottom: 1.5px solid var(--ink);
-  padding: 32px 0;
-}
-.toc-list {
-  list-style: none;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 0;
-  border-top: 0.5px solid var(--rule-soft);
-}
-.toc-list li {
-  border-bottom: 0.5px solid var(--rule-soft);
-  border-right: 0.5px solid var(--rule-soft);
-}
-.toc-list li:last-child { border-right: none; }
-.toc-list a {
-  display: block; padding: 18px 20px;
-  color: var(--ink); text-decoration: none;
-  transition: background 0.15s;
-}
-.toc-list a:hover { background: var(--bg-deep); }
-.toc-list .num {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10px; color: var(--brick);
-  letter-spacing: 0.1em; margin-bottom: 4px;
-  display: block;
-}
-.toc-list .ti {
-  font-family: 'Fraunces', serif;
-  font-variation-settings: 'opsz' 24, 'wght' 500;
-  font-size: 19px; line-height: 1.2;
-}
+/* Tutorial steps */
+.tut-steps{}
+.tut-step{display:grid;grid-template-columns:64px 1fr;gap:22px;padding:24px 28px;border-bottom:1px solid var(--rule);align-items:start}
+.tut-step:last-child{border-bottom:none}
+.tut-n{font-size:42px;font-weight:500;color:var(--amber);line-height:0.9;letter-spacing:-0.03em}
+.tut-body h4{font-family:'Fraunces',serif;font-size:19px;font-weight:600;margin-bottom:8px}
+.tut-body p{font-size:14px;line-height:1.55;color:var(--ink-2);margin-bottom:10px}
+.tut-body p:last-child{margin-bottom:0}
+.tut-formula{background:var(--ink);color:var(--paper);padding:12px 16px;font-size:13px;margin:10px 0;border-left:3px solid var(--amber)}
+.tut-render{background:#F5EFE0;border:1px solid var(--rule);padding:16px;margin:10px 0;text-align:center;overflow-x:auto}
+code{font-family:'IBM Plex Mono',monospace;font-size:12.5px;background:rgba(200,146,58,0.12);padding:1px 5px;border-radius:3px}
 
-/* ===== SECTIONS ===== */
-section.chapter {
-  padding: 80px 0 60px;
-  border-bottom: 1px solid var(--rule-soft);
-}
-section.chapter:last-of-type { border-bottom: none; }
+/* Table */
+.tbl-controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:20px}
+.tbl-search{flex:1;min-width:240px;padding:10px 14px;font-family:'IBM Plex Sans',sans-serif;font-size:14px;border:1px solid var(--rule);background:var(--paper);color:var(--ink);border-radius:3px}
+.tbl-search:focus{outline:none;border-color:var(--amber)}
+.fbtn{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.03em;padding:9px 14px;border:1px solid var(--rule);background:var(--paper);color:var(--ink-2);cursor:pointer;border-radius:3px}
+.fbtn:hover{border-color:var(--amber);color:var(--ink)}
+.fbtn.active{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.tbl-scroll{overflow-x:auto;max-height:620px;overflow-y:auto;border:1px solid var(--ink)}
+#sektor-tbl{width:100%;border-collapse:collapse;font-size:13.5px;background:var(--paper)}
+#sektor-tbl thead{position:sticky;top:0;z-index:5}
+#sektor-tbl th{background:var(--ink);color:var(--paper);padding:12px 12px;text-align:left;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;font-weight:500;cursor:pointer;white-space:nowrap}
+#sektor-tbl th.r{text-align:right}
+#sektor-tbl th:hover{background:#2a2a2a}
+#sektor-tbl th.sorted-desc::after{content:" ↓";color:var(--amber-soft)}
+#sektor-tbl th.sorted-asc::after{content:" ↑";color:var(--amber-soft)}
+#sektor-tbl td{padding:10px 12px;border-bottom:1px solid var(--line)}
+#sektor-tbl td.r{text-align:right;font-family:'IBM Plex Mono',monospace;font-variant-numeric:tabular-nums}
+#sektor-tbl tbody tr:hover td{background:var(--amber-bg)}
+.qd-pill{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:10px;padding:2px 8px;border-radius:10px;color:#fff;font-weight:600;letter-spacing:0.03em}
+.tbl-note{font-size:12px;color:var(--muted);margin-top:12px;letter-spacing:0.04em}
 
-.section-header {
-  margin-bottom: 48px;
-  border-top: 1.5px solid var(--ink);
-  padding-top: 16px;
-}
-.section-header .kicker {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--brick);
-  margin-bottom: 8px;
-}
-.section-header h2 {
-  font-family: 'Fraunces', serif;
-  font-variation-settings: 'opsz' 96, 'SOFT' 30, 'wght' 400;
-  font-size: clamp(32px, 4.5vw, 48px);
-  line-height: 1.05;
-  letter-spacing: -0.018em;
-  color: var(--ink);
-  max-width: 800px;
-}
-.section-header h2 em {
-  font-style: italic;
-  font-variation-settings: 'opsz' 96, 'SOFT' 90;
-  color: var(--brick);
-}
-.section-header .dek {
-  font-family: 'Fraunces', serif;
-  font-variation-settings: 'opsz' 24, 'wght' 350;
-  font-size: 18px; line-height: 1.45;
-  color: var(--ink-soft);
-  margin-top: 14px;
-  font-style: italic;
-  max-width: 680px;
-}
 
-p { margin-bottom: 16px; max-width: 720px; }
-p.lead {
-  font-family: 'Fraunces', serif;
-  font-variation-settings: 'opsz' 24, 'wght' 400;
-  font-size: 20px; line-height: 1.5;
-}
-p.lead::first-letter {
-  font-variation-settings: 'opsz' 144, 'wght' 500, 'SOFT' 0;
-  font-size: 4em; float: left; line-height: 0.85;
-  margin: 6px 10px 0 -2px;
-  color: var(--brick);
-}
+/* Viz */
+.viz-block{margin-bottom:48px}
+.viz-title{font-family:'Fraunces',serif;font-size:21px;font-weight:600;margin-bottom:6px;letter-spacing:-0.01em}
+.viz-desc{font-size:14px;line-height:1.5;color:var(--ink-2);max-width:64ch;margin-bottom:18px}
+.chart-box{background:var(--paper);border:1px solid var(--rule);padding:24px;border-radius:4px;position:relative;height:420px}
+.chart-box canvas{max-height:372px}
 
-strong { font-weight: 600; color: var(--ink); }
-em { font-style: italic; }
-a { color: var(--brick); }
+/* Scenario cards */
+.scen-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:0;border-top:1px solid var(--ink);border-left:1px solid var(--ink)}
+.scen-card{background:var(--paper);border-right:1px solid var(--ink);border-bottom:1px solid var(--ink);padding:24px;cursor:pointer;transition:background 0.15s}
+.scen-card:hover{background:#FBF1D5}
+.scen-letter{font-size:40px;font-weight:500;color:var(--amber);line-height:1;margin-bottom:10px}
+.scen-card h4{font-family:'Fraunces',serif;font-size:19px;font-weight:600;margin-bottom:6px}
+.scen-amount{font-size:14px;color:var(--ink);font-weight:600;margin-bottom:10px}
+.scen-card p{font-size:12.5px;line-height:1.45;color:var(--muted)}
 
-/* ===== METRIC CARDS ===== */
-.metrics-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 0;
-  margin: 32px 0;
-  border: 1.5px solid var(--ink);
-  background: var(--paper);
-}
-.metric-card {
-  padding: 24px 22px;
-  border-right: 0.5px solid var(--rule-soft);
-  border-bottom: 0.5px solid var(--rule-soft);
-  position: relative;
-}
-.metric-card .num {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10px; color: var(--brick);
-  letter-spacing: 0.12em; margin-bottom: 6px;
-}
-.metric-card h3 {
-  font-family: 'Fraunces', serif;
-  font-variation-settings: 'opsz' 28, 'wght' 500;
-  font-size: 22px; line-height: 1.15;
-  margin-bottom: 12px;
-}
-.metric-card .formula {
-  background: var(--bg);
-  padding: 10px 12px;
-  border-left: 2px solid var(--brick);
-  font-size: 14px;
-  margin-bottom: 12px;
-  min-height: 48px;
-  display: flex; align-items: center;
-}
-.metric-card .desc {
-  font-size: 14px; line-height: 1.55;
-  color: var(--ink-soft);
-}
 
-/* ===== TUTORIAL STEPS ===== */
-.tutorial {
-  background: var(--paper);
-  border: 1.5px solid var(--ink);
-  padding: 0;
-  margin: 32px 0;
-}
-.tutorial-header {
-  padding: 24px 28px;
-  border-bottom: 1px solid var(--ink);
-  background: var(--bg-deep);
-}
-.tutorial-header .badge {
-  display: inline-block;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10px; letter-spacing: 0.12em;
-  background: var(--ink); color: var(--paper);
-  padding: 4px 10px; margin-bottom: 8px;
-}
-.tutorial-header h3 {
-  font-family: 'Fraunces', serif;
-  font-variation-settings: 'opsz' 36, 'wght' 500;
-  font-size: 26px;
-}
-.tutorial-step {
-  display: grid;
-  grid-template-columns: 80px 1fr;
-  border-bottom: 0.5px solid var(--rule-soft);
-}
-.tutorial-step:last-child { border-bottom: none; }
-.tutorial-step .step-no {
-  background: var(--bg-deep);
-  border-right: 0.5px solid var(--rule-soft);
-  padding: 20px 16px;
-  font-family: 'Fraunces', serif;
-  font-variation-settings: 'opsz' 96, 'wght' 400;
-  font-size: 36px; line-height: 1;
-  color: var(--brick);
-  text-align: center;
-  font-style: italic;
-}
-.tutorial-step .step-body { padding: 22px 26px; }
-.tutorial-step .step-body h4 {
-  font-family: 'Fraunces', serif;
-  font-variation-settings: 'opsz' 24, 'wght' 500;
-  font-size: 18px;
-  margin-bottom: 8px;
-}
-.tutorial-step .step-body p { font-size: 14.5px; margin-bottom: 10px; max-width: none; }
-.tutorial-step .step-body .result {
-  background: var(--bg);
-  padding: 12px 14px;
-  border-left: 3px solid var(--moss);
-  margin-top: 12px;
-  font-size: 14px;
-}
-.tutorial-step .step-body .result .num {
-  font-family: 'JetBrains Mono', monospace;
-  font-weight: 600;
-  font-size: 18px;
-  color: var(--moss);
-}
+/* Calculator */
+.calc-shell{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--ink);box-shadow:8px 8px 0 var(--amber)}
+@media(max-width:900px){.calc-shell{grid-template-columns:1fr}}
+.calc-left{padding:26px;border-right:1px solid var(--ink);background:var(--paper)}
+@media(max-width:900px){.calc-left{border-right:none;border-bottom:1px solid var(--ink)}}
+.calc-right{padding:26px;background:var(--ink);color:var(--paper)}
+.preset-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.preset-btn{font-family:'IBM Plex Mono',monospace;font-size:11px;padding:9px 13px;border:1px solid var(--rule);background:var(--paper);cursor:pointer;border-radius:3px;color:var(--ink);font-weight:500}
+.preset-btn:hover{border-color:var(--amber);background:#FBF1D5}
+.preset-btn.reset{color:var(--rust);border-color:rgba(168,69,58,0.3)}
+.calc-search{width:100%;padding:10px 14px;border:1px solid var(--rule);background:var(--bg);font-size:13.5px;border-radius:3px;margin-bottom:10px}
+.calc-search:focus{outline:none;border-color:var(--amber)}
+.calc-list{max-height:240px;overflow-y:auto;border:1px solid var(--line);border-radius:3px;margin-bottom:16px}
+.calc-list-row{display:grid;grid-template-columns:44px 1fr auto;gap:10px;align-items:center;padding:8px 12px;border-bottom:1px solid var(--line);font-size:12.5px}
+.calc-list-row:hover{background:#FBF1D5}
+.calc-list-row .kd{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--amber)}
+.calc-list-row .nm small{display:block;color:var(--muted);font-family:'IBM Plex Mono',monospace;font-size:10px}
+.calc-list-row button{font-family:'IBM Plex Mono',monospace;font-size:10px;padding:4px 9px;background:var(--ink);color:var(--paper);border:none;cursor:pointer;border-radius:2px}
+.calc-list-row button.added{background:var(--moss)}
+.calc-selected{border-top:1px dashed var(--rule);padding-top:14px}
+.sel-empty{font-size:12.5px;color:var(--muted);font-style:italic;padding:12px 0}
+.sel-row{display:grid;grid-template-columns:1fr 84px 28px;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line);font-size:12.5px}
+.sel-row .snm{line-height:1.25}
+.sel-row .snm small{display:block;color:var(--muted);font-family:'IBM Plex Mono',monospace;font-size:10px}
+.sel-input{text-align:right;border:1px solid var(--rule);background:var(--bg);padding:5px 8px;font-family:'IBM Plex Mono',monospace;font-size:12px;width:100%;border-radius:2px}
+.sel-input:focus{outline:none;border-color:var(--amber)}
+.sel-rm{background:none;border:1px solid var(--rule);color:var(--muted);width:24px;height:24px;cursor:pointer;border-radius:50%;font-size:13px;display:flex;align-items:center;justify-content:center}
+.sel-rm:hover{background:var(--rust);color:#fff;border-color:var(--rust)}
 
-/* ===== TABLE ===== */
-.table-wrap {
-  background: var(--paper);
-  border: 1.5px solid var(--ink);
-  margin: 32px 0;
-  overflow-x: auto;
-}
-table.data {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 13.5px;
-}
-table.data thead th {
-  background: var(--bg-deep);
-  border-bottom: 1.5px solid var(--ink);
-  padding: 14px 12px;
-  text-align: left;
-  font-weight: 600;
-  font-size: 11px;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: var(--ink);
-  cursor: pointer;
-  user-select: none;
-  white-space: nowrap;
-  position: sticky; top: 0;
-}
-table.data thead th.sort-asc::after { content: ' ↑'; color: var(--brick); }
-table.data thead th.sort-desc::after { content: ' ↓'; color: var(--brick); }
-table.data thead th:hover { background: var(--bg); }
-table.data tbody td {
-  padding: 11px 12px;
-  border-bottom: 0.5px solid var(--rule-soft);
-  vertical-align: top;
-}
-table.data tbody tr:hover { background: var(--bg); }
-table.data tbody td.num {
-  font-family: 'JetBrains Mono', monospace;
-  text-align: right;
-  font-feature-settings: 'tnum' 1;
-}
-table.data tbody td .kode {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
-  color: var(--ink-mute);
-}
-table.data tbody td .sektor-name {
-  font-family: 'Fraunces', serif;
-  font-variation-settings: 'opsz' 18, 'wght' 500;
-  font-size: 15px;
-}
-.kategori-tag {
-  display: inline-block;
-  font-size: 10px; letter-spacing: 0.04em;
-  padding: 2px 8px;
-  background: var(--bg-deep);
-  border-radius: 2px;
-  white-space: nowrap;
-  font-weight: 500;
-}
-.kategori-tag.hulu { background: rgba(90,127,61,0.18); color: #3F5E2A; }
-.kategori-tag.hilir { background: rgba(184,136,31,0.18); color: #7A5A11; }
-.kategori-tag.manuf { background: rgba(160,66,28,0.18); color: #6F2D14; }
-.kategori-tag.jasa { background: rgba(45,74,43,0.18); color: #1F3320; }
-.kategori-tag.tambang { background: rgba(139,111,71,0.22); color: #5F4A2A; }
+.result-hero{padding-bottom:22px;border-bottom:1px solid rgba(250,244,230,0.2);margin-bottom:22px}
+.rh-label{font-size:10px;letter-spacing:0.12em;color:var(--amber-soft);margin-bottom:8px}
+.rh-value{font-size:52px;font-weight:500;line-height:1;letter-spacing:-0.02em;color:var(--paper)}
+.rh-sub{font-size:11px;color:rgba(250,244,230,0.6);margin-top:8px}
+.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(250,244,230,0.18);border:1px solid rgba(250,244,230,0.18);margin-bottom:18px}
+.rcard{background:var(--ink);padding:16px}
+.rc-label{font-size:9.5px;letter-spacing:0.1em;color:rgba(250,244,230,0.55);margin-bottom:5px}
+.rc-val{font-size:26px;font-weight:500;color:var(--amber-soft);line-height:1}
+.result-note{font-family:'Fraunces',serif;font-style:italic;font-size:14px;line-height:1.5;color:rgba(250,244,230,0.85);padding:14px;background:rgba(200,146,58,0.12);border-left:3px solid var(--amber);margin-bottom:14px}
+.result-baseline{font-size:10px;color:rgba(250,244,230,0.45);letter-spacing:0.03em}
 
-/* ===== TABLE FILTER ===== */
-.table-filter {
-  background: var(--paper);
-  border: 1.5px solid var(--ink);
-  border-bottom: none;
-  padding: 16px 18px;
-  display: flex;
-  gap: 18px;
-  align-items: center;
-  flex-wrap: wrap;
-  margin: 32px 0 0 0;
-}
-.filter-pills {
-  display: flex; flex-wrap: wrap; gap: 6px;
-  flex: 1; min-width: 0;
-}
-.filter-btn {
-  background: transparent;
-  border: 1px solid var(--rule-soft);
-  padding: 6px 12px;
-  font-size: 11.5px;
-  letter-spacing: 0.02em;
-  font-weight: 500;
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  color: var(--ink-soft);
-  cursor: pointer;
-  transition: all 0.15s;
-  white-space: nowrap;
-  border-radius: 2px;
-}
-.filter-btn:hover { background: var(--bg); border-color: var(--ink); color: var(--ink); }
-.filter-btn.active {
-  background: var(--ink); color: var(--paper); border-color: var(--ink);
-}
-.filter-btn .count {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
-  opacity: 0.65;
-  margin-left: 4px;
-}
-.filter-search {
-  position: relative;
-  min-width: 200px;
-}
-.filter-search input {
-  width: 100%;
-  padding: 7px 12px 7px 30px;
-  border: 1px solid var(--rule-soft);
-  background: var(--bg);
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 12.5px;
-  color: var(--ink);
-  border-radius: 2px;
-}
-.filter-search input:focus {
-  outline: none; border-color: var(--brick); background: var(--paper);
-}
-.filter-search::before {
-  content: "⌕";
-  position: absolute;
-  left: 9px; top: 50%; transform: translateY(-50%);
-  color: var(--ink-mute);
-  font-size: 14px; pointer-events: none;
-}
-.table-filter + .table-wrap { margin-top: 0; }
-
-.table-meta {
-  display: flex; justify-content: space-between;
-  padding: 10px 16px;
-  background: var(--bg-deep);
-  border-left: 1.5px solid var(--ink);
-  border-right: 1.5px solid var(--ink);
-  border-bottom: 0.5px solid var(--rule-soft);
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10.5px;
-  color: var(--ink-mute);
-  letter-spacing: 0.04em;
-}
-.table-meta strong { color: var(--ink); font-weight: 600; }
-.table-meta .target-badge {
-  display: inline-flex; align-items: center; gap: 4px;
-  background: var(--brick); color: var(--paper);
-  padding: 1px 6px;
-  font-size: 9px; letter-spacing: 0.08em;
-  border-radius: 2px;
-  font-weight: 600;
-}
-
-table.data tbody td .target-mark {
-  display: inline-block;
-  width: 5px; height: 5px;
-  background: var(--brick);
-  border-radius: 50%;
-  margin-right: 6px;
-  vertical-align: middle;
-}
-table.data tbody td.na { color: var(--ink-mute); font-style: italic; }
-
-@media (max-width: 640px) {
-  .table-filter { padding: 14px; }
-  .filter-search { min-width: 100%; }
-}
-
-/* ===== CHART CONTAINER ===== */
-.chart-card {
-  background: var(--paper);
-  border: 1.5px solid var(--ink);
-  padding: 24px 28px;
-  margin: 24px 0;
-}
-.chart-card h3 {
-  font-family: 'Fraunces', serif;
-  font-variation-settings: 'opsz' 28, 'wght' 500;
-  font-size: 22px;
-  margin-bottom: 4px;
-}
-.chart-card .chart-dek {
-  font-size: 13.5px; color: var(--ink-soft);
-  margin-bottom: 18px;
-  font-family: 'Fraunces', serif;
-  font-variation-settings: 'opsz' 14, 'wght' 350;
-  font-style: italic;
-}
-.chart-canvas-wrap { position: relative; height: 460px; }
-.chart-canvas-wrap.tall { height: 600px; }
-
-.chart-grid-2 {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
-  margin: 24px 0;
-}
-
-/* ===== SKENARIO CARDS ===== */
-.skenario-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
-  margin: 24px 0;
-}
-.skenario-card {
-  background: var(--paper);
-  border: 1.5px solid var(--ink);
-  padding: 24px;
-  position: relative;
-}
-.skenario-card .scen-no {
-  position: absolute; top: 14px; right: 18px;
-  font-family: 'Fraunces', serif;
-  font-variation-settings: 'opsz' 144, 'wght' 400;
-  font-style: italic;
-  font-size: 80px;
-  line-height: 1;
-  color: var(--bg-deep);
-  pointer-events: none;
-}
-.skenario-card h3 {
-  font-family: 'Fraunces', serif;
-  font-variation-settings: 'opsz' 28, 'wght' 500;
-  font-size: 22px;
-  margin-bottom: 4px;
-  position: relative;
-}
-.skenario-card .scen-dek {
-  font-size: 13px; color: var(--ink-soft);
-  margin-bottom: 16px;
-  font-style: italic;
-  font-family: 'Fraunces', serif;
-  font-variation-settings: 'opsz' 14, 'wght' 350;
-}
-.scen-metrics {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px 20px;
-  padding-top: 16px;
-  border-top: 1px solid var(--rule-soft);
-}
-.scen-metric .label {
-  font-size: 10px; color: var(--ink-mute);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-.scen-metric .value {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 22px;
-  font-weight: 500;
-  color: var(--ink);
-  line-height: 1.1;
-  margin-top: 2px;
-}
-.scen-metric .value.good { color: var(--moss); }
-.scen-metric .value.brick { color: var(--brick); }
-.scen-metric .unit { font-size: 12px; color: var(--ink-mute); margin-left: 3px; }
-
-/* ===== CALCULATOR ===== */
-.calc-wrap {
-  background: var(--paper);
-  border: 2px solid var(--ink);
-  margin: 32px 0;
-  position: relative;
-}
-.calc-header {
-  background: var(--ink);
-  color: var(--paper);
-  padding: 22px 28px;
-  display: flex; justify-content: space-between; align-items: center;
-  flex-wrap: wrap;
-  gap: 16px;
-}
-.calc-header h3 {
-  font-family: 'Fraunces', serif;
-  font-variation-settings: 'opsz' 36, 'wght' 500;
-  font-size: 24px;
-  color: var(--paper);
-}
-.calc-header h3 em {
-  font-style: italic;
-  color: var(--highlight);
-  font-variation-settings: 'opsz' 36, 'wght' 400, 'SOFT' 80;
-}
-.calc-header .preset-row { display: flex; gap: 6px; flex-wrap: wrap; }
-.preset-btn {
-  background: transparent; color: var(--paper);
-  border: 1px solid rgba(251,248,241,0.4);
-  padding: 8px 14px; font-size: 11px;
-  letter-spacing: 0.08em; text-transform: uppercase;
-  cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif;
-  font-weight: 500;
-  transition: all 0.15s;
-}
-.preset-btn:hover, .preset-btn.active {
-  background: var(--paper); color: var(--ink); border-color: var(--paper);
-}
-
-.calc-body {
-  display: grid;
-  grid-template-columns: 1.4fr 1fr;
-  gap: 0;
-}
-.calc-inputs {
-  padding: 0;
-  border-right: 1.5px solid var(--ink);
-  max-height: 720px;
-  overflow-y: auto;
-}
-.calc-row {
-  display: grid;
-  grid-template-columns: 1fr 80px 90px;
-  align-items: center;
-  gap: 14px;
-  padding: 12px 22px;
-  border-bottom: 0.5px solid var(--rule-soft);
-}
-.calc-row:hover { background: var(--bg); }
-.calc-row.has-value { background: rgba(184,136,31,0.06); }
-.calc-row .sektor-info {
-  min-width: 0;
-}
-.calc-row .sektor-info .n {
-  font-family: 'Fraunces', serif;
-  font-variation-settings: 'opsz' 16, 'wght' 500;
-  font-size: 14px;
-  display: block;
-  line-height: 1.25;
-}
-.calc-row .sektor-info .meta {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10.5px;
-  color: var(--ink-mute);
-  margin-top: 2px;
-}
-.calc-row input[type=number] {
-  width: 100%;
-  padding: 6px 8px;
-  border: 1px solid var(--rule-soft);
-  background: var(--paper);
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 14px;
-  text-align: right;
-  font-weight: 500;
-  color: var(--ink);
-}
-.calc-row input[type=number]:focus {
-  outline: none; border-color: var(--brick); background: var(--paper);
-}
-.calc-row .result-lk {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 13px;
-  text-align: right;
-  color: var(--ink-soft);
-}
-.calc-row.has-value .result-lk { color: var(--moss); font-weight: 600; }
-
-.calc-summary {
-  padding: 24px 28px;
-  background: var(--bg-deep);
-  display: flex; flex-direction: column;
-}
-.calc-summary h4 {
-  font-family: 'Fraunces', serif;
-  font-variation-settings: 'opsz' 24, 'wght' 500;
-  font-size: 17px;
-  letter-spacing: 0.02em;
-  margin-bottom: 4px;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  font-size: 11px;
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  color: var(--ink-mute);
-  font-weight: 600;
-}
-.big-num {
-  font-family: 'JetBrains Mono', monospace;
-  font-variation-settings: 'tnum' 1;
-}
-.summary-main {
-  border-bottom: 1px solid var(--rule-soft);
-  padding-bottom: 18px;
-  margin-bottom: 18px;
-}
-.summary-main .total-lk {
-  font-family: 'Fraunces', serif;
-  font-variation-settings: 'opsz' 144, 'wght' 500;
-  font-size: 56px;
-  line-height: 1;
-  color: var(--brick);
-  margin-top: 8px;
-  letter-spacing: -0.02em;
-}
-.summary-main .total-lk-sub {
-  font-size: 12px;
-  color: var(--ink-mute);
-  margin-top: 4px;
-  letter-spacing: 0.04em;
-}
-.summary-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px 18px;
-}
-.s-stat { }
-.s-stat .lab { font-size: 10px; letter-spacing: 0.1em; color: var(--ink-mute); text-transform: uppercase; }
-.s-stat .v {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 20px;
-  margin-top: 3px;
-  font-weight: 500;
-  line-height: 1.15;
-}
-.s-stat .v.good { color: var(--moss); }
-.s-stat .v.brick { color: var(--brick); }
-.s-stat .u { font-size: 11px; color: var(--ink-mute); margin-left: 2px; }
-
-.summary-equiv {
-  margin-top: 18px; padding-top: 18px;
-  border-top: 1px solid var(--rule-soft);
-}
-.summary-equiv p {
-  font-family: 'Fraunces', serif;
-  font-variation-settings: 'opsz' 16, 'wght' 400;
-  font-style: italic;
-  font-size: 13.5px;
-  line-height: 1.5;
-  color: var(--ink-soft);
-}
-.summary-equiv .eq-num {
-  font-family: 'JetBrains Mono', monospace;
-  font-style: normal;
-  font-weight: 600;
-  color: var(--brick);
-}
-
-.calc-foot {
-  padding: 16px 28px;
-  background: var(--bg);
-  border-top: 0.5px solid var(--rule-soft);
-  display: flex; justify-content: space-between;
-  font-size: 11.5px; color: var(--ink-mute);
-  font-family: 'JetBrains Mono', monospace;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-.calc-foot button {
-  background: transparent; border: 1px solid var(--ink);
-  padding: 6px 12px; font-size: 10px;
-  letter-spacing: 0.08em; text-transform: uppercase;
-  cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif;
-  font-weight: 500;
-  color: var(--ink);
-}
-.calc-foot button:hover { background: var(--ink); color: var(--paper); }
-
-/* ===== CONSTANTS LIST ===== */
-.const-list {
-  background: var(--paper);
-  border: 1.5px solid var(--ink);
-  margin: 24px 0;
-}
-.const-row {
-  display: grid;
-  grid-template-columns: 2fr 1fr 2fr;
-  padding: 14px 22px;
-  border-bottom: 0.5px solid var(--rule-soft);
-  align-items: baseline;
-  gap: 16px;
-}
-.const-row:last-child { border-bottom: none; }
-.const-row .const-name {
-  font-family: 'Fraunces', serif;
-  font-variation-settings: 'opsz' 18, 'wght' 500;
-  font-size: 15px;
-}
-.const-row .const-val {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 16px; font-weight: 600;
-  color: var(--brick);
-  text-align: right;
-}
-.const-row .const-val .u { color: var(--ink-mute); font-size: 11px; margin-left: 4px; font-weight: 400; }
-.const-row .const-src { font-size: 12px; color: var(--ink-mute); font-style: italic; font-family: 'Fraunces', serif; font-variation-settings: 'opsz' 14, 'wght' 350; }
-
-/* ===== CALLOUT ===== */
-.callout {
-  background: var(--paper);
-  border-left: 3px solid var(--brick);
-  padding: 18px 22px;
-  margin: 24px 0;
-  font-family: 'Fraunces', serif;
-  font-variation-settings: 'opsz' 18, 'wght' 400;
-  font-size: 16px;
-  line-height: 1.55;
-  font-style: italic;
-}
-.callout .label {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-style: normal;
-  font-size: 10px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--brick);
-  display: block;
-  margin-bottom: 6px;
-  font-weight: 600;
-}
-
-/* ===== FOOTER ===== */
-footer {
-  background: var(--ink);
-  color: var(--bg);
-  padding: 60px 0 36px;
-  margin-top: 60px;
-}
-footer .footer-grid {
-  display: grid;
-  grid-template-columns: 1.5fr 1fr 1fr;
-  gap: 40px;
-  margin-bottom: 36px;
-}
-footer h4 {
-  font-family: 'Fraunces', serif;
-  font-variation-settings: 'opsz' 24, 'wght' 500;
-  font-size: 18px;
-  color: var(--paper);
-  margin-bottom: 12px;
-}
-footer p, footer li { color: rgba(251,248,241,0.7); font-size: 14px; line-height: 1.6; max-width: none; }
-footer ul { list-style: none; }
-footer li { margin-bottom: 6px; }
-footer a { color: var(--highlight); text-decoration: none; border-bottom: 0.5px solid rgba(244,230,161,0.4); }
-.footer-tag {
-  border-top: 0.5px solid rgba(251,248,241,0.2);
-  padding-top: 24px;
-  display: flex; justify-content: space-between; font-size: 11px;
-  letter-spacing: 0.08em; text-transform: uppercase;
-  color: rgba(251,248,241,0.5);
-  font-family: 'JetBrains Mono', monospace;
-}
-.footer-tag .brand { color: var(--highlight); }
-
-/* ===== MISC ===== */
-hr {
-  border: none;
-  border-top: 1.5px solid var(--ink);
-  margin: 32px 0;
-}
-hr.soft { border-top: 0.5px solid var(--rule-soft); }
-
-.note {
-  font-family: 'Fraunces', serif;
-  font-variation-settings: 'opsz' 14, 'wght' 350;
-  font-style: italic;
-  font-size: 13px;
-  color: var(--ink-mute);
-  margin: 12px 0;
-}
-
-/* ===== RESPONSIVE ===== */
-@media (max-width: 900px) {
-  .calc-body { grid-template-columns: 1fr; }
-  .calc-inputs { border-right: none; border-bottom: 1.5px solid var(--ink); max-height: 460px; }
-  .chart-grid-2 { grid-template-columns: 1fr; }
-  .skenario-grid { grid-template-columns: 1fr; }
-  .footer-grid { grid-template-columns: 1fr; gap: 24px; }
-  .masthead-bottom { grid-template-columns: 1fr; }
-}
-@media (max-width: 640px) {
-  .container, .narrow { padding: 0 20px; }
-  .masthead h1 { font-size: 36px; }
-  .section-header h2 { font-size: 28px; }
-  .calc-row { grid-template-columns: 1fr 70px 70px; padding: 10px 16px; gap: 10px; }
-  .calc-summary { padding: 20px; }
-  .summary-main .total-lk { font-size: 42px; }
-  .summary-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
-  .const-row { grid-template-columns: 1fr; }
-  .const-row .const-val { text-align: left; }
-  .metric-card { padding: 20px 18px; }
-  .chapter { padding: 48px 0 36px; }
-}
-
-/* ===== ANIMATIONS ===== */
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.masthead h1, .masthead .deck { animation: fadeUp 0.8s ease-out both; }
-.masthead .deck { animation-delay: 0.15s; }
-.masthead-bottom { animation: fadeUp 0.8s ease-out 0.3s both; }
-
-/* ===== SIDEBAR & FAB ===== */
-.fab-toggle {
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  z-index: 90;
-  background: var(--ink);
-  color: var(--paper);
-  border: none;
-  padding: 13px 20px;
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 11.5px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  font-weight: 600;
-  cursor: pointer;
-  box-shadow: 0 6px 18px rgba(28,27,26,0.22);
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  transition: all 0.2s;
-}
-.fab-toggle:hover {
-  background: var(--brick);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 22px rgba(28,27,26,0.28);
-}
-.fab-toggle .icon {
-  font-size: 14px; line-height: 1;
-}
-.fab-toggle .badge-mod {
-  display: none;
-  background: var(--gold);
-  color: var(--ink);
-  font-size: 9px;
-  padding: 2px 6px;
-  border-radius: 2px;
-  margin-left: 2px;
-  letter-spacing: 0.06em;
-  font-weight: 700;
-}
-.fab-toggle.modified .badge-mod { display: inline-block; }
-
-.sidebar-overlay {
-  position: fixed; inset: 0;
-  background: rgba(28,27,26,0.45);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.25s;
-  z-index: 100;
-}
-.sidebar-overlay.open { opacity: 1; pointer-events: auto; }
-
-.sidebar {
-  position: fixed;
-  top: 0; right: 0; bottom: 0;
-  width: 480px;
-  max-width: 100vw;
-  background: var(--paper);
-  border-left: 1.5px solid var(--ink);
-  z-index: 110;
-  transform: translateX(100%);
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  display: flex;
-  flex-direction: column;
-  box-shadow: -10px 0 30px rgba(28,27,26,0.15);
-}
-.sidebar.open { transform: translateX(0); }
-
-.sidebar-header {
-  background: var(--ink);
-  color: var(--paper);
-  padding: 22px 26px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1.5px solid var(--ink);
-}
-.sidebar-header h3 {
-  font-family: 'Fraunces', serif;
-  font-variation-settings: 'opsz' 36, 'wght' 500;
-  font-size: 22px;
-  color: var(--paper);
-}
-.sidebar-header h3 em {
-  font-style: italic;
-  color: var(--highlight);
-  font-variation-settings: 'opsz' 36, 'wght' 400, 'SOFT' 80;
-}
-.sidebar-header .sub {
-  font-size: 11px;
-  color: rgba(251,248,241,0.6);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  margin-top: 2px;
-  font-family: 'JetBrains Mono', monospace;
-}
-.sidebar-close {
-  background: transparent;
-  color: var(--paper);
-  border: 1px solid rgba(251,248,241,0.3);
-  width: 34px; height: 34px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 22px;
-  line-height: 1;
-  transition: all 0.15s;
-  border-radius: 0;
-}
-.sidebar-close:hover { background: var(--brick); border-color: var(--brick); }
-
-.sidebar-body {
-  flex: 1;
-  overflow-y: auto;
-}
-.sidebar-section { }
-.sidebar-section-header {
-  padding: 16px 26px 10px;
-  background: var(--bg-deep);
-  border-bottom: 0.5px solid var(--rule-soft);
-}
-.sidebar-section-header .label {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10.5px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--brick);
-  font-weight: 600;
-  display: block;
-}
-.sidebar-section-header .hint {
-  font-family: 'Fraunces', serif;
-  font-variation-settings: 'opsz' 14, 'wght' 350;
-  text-transform: none;
-  font-style: italic;
-  color: var(--ink-soft);
-  font-size: 12.5px;
-  letter-spacing: 0;
-  margin-top: 4px;
-  display: block;
-  line-height: 1.4;
-}
-
-.const-input-row {
-  padding: 14px 26px;
-  border-bottom: 0.5px solid var(--rule-soft);
-  position: relative;
-}
-.const-input-row.modified {
-  background: rgba(184,136,31,0.10);
-  border-left: 3px solid var(--gold);
-  padding-left: 23px;
-}
-.const-input-row .label-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  margin-bottom: 8px;
-  gap: 12px;
-}
-.const-input-row .label {
-  font-family: 'Fraunces', serif;
-  font-variation-settings: 'opsz' 18, 'wght' 500;
-  font-size: 14.5px;
-  color: var(--ink);
-  line-height: 1.25;
-  flex: 1;
-}
-.const-input-row .label .flag {
-  display: inline-block;
-  font-family: 'JetBrains Mono', monospace;
-  font-style: normal;
-  font-size: 9px;
-  color: var(--brick);
-  letter-spacing: 0.08em;
-  margin-left: 6px;
-  vertical-align: middle;
-  text-transform: uppercase;
-  background: rgba(160,66,28,0.10);
-  padding: 1px 5px;
-  border-radius: 2px;
-  font-weight: 600;
-}
-.const-input-wrap {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.const-input-wrap input {
-  width: 140px;
-  padding: 7px 10px;
-  border: 1px solid var(--rule-soft);
-  background: var(--paper);
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 14px;
-  text-align: right;
-  font-weight: 500;
-  color: var(--ink);
-  border-radius: 2px;
-}
-.const-input-wrap input:focus {
-  outline: none;
-  border-color: var(--brick);
-  background: var(--bg);
-}
-.const-input-row.modified input { border-color: var(--gold); }
-.const-input-wrap .unit {
-  font-size: 11.5px;
-  color: var(--ink-mute);
-  font-family: 'JetBrains Mono', monospace;
-  letter-spacing: 0.02em;
-}
-.const-input-row .src {
-  font-family: 'Fraunces', serif;
-  font-variation-settings: 'opsz' 14, 'wght' 350;
-  font-style: italic;
-  font-size: 11.5px;
-  color: var(--ink-mute);
-  margin-top: 6px;
-  line-height: 1.45;
-}
-.const-input-row .src .default {
-  font-family: 'JetBrains Mono', monospace;
-  font-style: normal;
-  background: var(--bg);
-  padding: 1px 5px;
-  font-size: 10.5px;
-  margin-left: 4px;
-  color: var(--ink-soft);
-}
-
-.sidebar-foot {
-  border-top: 1.5px solid var(--ink);
-  padding: 16px 22px;
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  background: var(--bg);
-}
-.sidebar-foot button {
-  flex: 1;
-  padding: 11px 14px;
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 11px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  font-weight: 600;
-  cursor: pointer;
-  border: 1px solid var(--ink);
-  background: var(--paper);
-  color: var(--ink);
-  transition: all 0.15s;
-  border-radius: 0;
-}
-.sidebar-foot button:hover { background: var(--bg-deep); }
-.sidebar-foot .btn-reset {
-  color: var(--brick);
-  border-color: var(--brick);
-}
-.sidebar-foot .btn-reset:hover { background: var(--brick); color: var(--paper); }
-.sidebar-foot .btn-reset:disabled {
-  opacity: 0.35; cursor: not-allowed;
-  border-color: var(--rule-soft); color: var(--ink-mute);
-}
-.sidebar-foot .btn-reset:disabled:hover { background: var(--paper); color: var(--ink-mute); }
-.sidebar-foot .btn-primary { background: var(--ink); color: var(--paper); }
-.sidebar-foot .btn-primary:hover { background: var(--brick); border-color: var(--brick); }
-
-.cta-open-sidebar {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  background: var(--ink);
-  color: var(--paper);
-  padding: 14px 26px;
-  font-size: 12px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  font-weight: 600;
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-.cta-open-sidebar:hover { background: var(--brick); transform: translateY(-1px); }
-.cta-open-sidebar .icon { font-size: 15px; }
-
-@media (max-width: 640px) {
-  .sidebar { width: 100vw; }
-  .fab-toggle { bottom: 14px; right: 14px; padding: 10px 14px; font-size: 11px; }
-  .fab-toggle span:not(.icon):not(.badge-mod) { display: none; }
-}
+/* Panel */
+.panel-toggle{font-family:'IBM Plex Mono',monospace;font-size:13px;padding:13px 24px;background:var(--ink);color:var(--paper);border:none;cursor:pointer;border-radius:2px;letter-spacing:0.03em}
+.panel-toggle:hover{background:var(--amber);color:var(--ink)}
+.panel-overlay{display:none;position:fixed;inset:0;background:rgba(26,24,21,0.7);z-index:1000;align-items:flex-start;justify-content:center;padding:40px 20px;overflow-y:auto}
+.panel-overlay.open{display:flex}
+.panel{background:var(--paper);width:100%;max-width:680px;border:1px solid var(--ink);box-shadow:8px 8px 0 var(--amber)}
+.panel-head{display:flex;justify-content:space-between;align-items:flex-start;padding:22px 28px;background:var(--ink);color:var(--paper)}
+.panel-head h3{font-size:22px;font-weight:500;color:var(--paper)}
+.panel-close{background:none;border:1px solid var(--paper);color:var(--paper);width:34px;height:34px;cursor:pointer;font-size:20px;line-height:1}
+.panel-close:hover{background:var(--amber);color:var(--ink);border-color:var(--amber)}
+.panel-body{padding:24px 28px;max-height:60vh;overflow-y:auto}
+.param-row{display:grid;grid-template-columns:1fr 120px;gap:14px;align-items:center;padding:11px 0;border-bottom:1px solid var(--line)}
+.param-row label{font-size:13.5px;color:var(--ink-2)}
+.param-row label small{display:block;color:var(--muted);font-size:11px;font-family:'IBM Plex Mono',monospace}
+.param-row input{text-align:right;border:1px solid var(--rule);background:var(--bg);padding:7px 10px;font-family:'IBM Plex Mono',monospace;font-size:13px;border-radius:2px}
+.param-row input:focus{outline:none;border-color:var(--amber)}
+.panel-foot{display:flex;justify-content:space-between;padding:18px 28px;border-top:1px solid var(--rule)}
+.panel-reset{background:none;border:1px solid var(--rule);padding:9px 18px;cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:12px;border-radius:2px}
+.panel-done{background:var(--ink);color:var(--paper);border:none;padding:9px 18px;cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:12px;border-radius:2px}
 
 </style>
 </head>
 <body>
 
-<!-- ===== MASTHEAD ===== -->
-<header class="masthead">
-  <div class="container">
-    <div class="masthead-top">
-      <span class="brand">#SemuaBisaDihitung — N°.07</span>
-      <span class="meta">JAWA BARAT · INPUT-OUTPUT · MULTIPLIER ANALYSIS</span>
-    </div>
-    <h1>Berapa lapangan kerja yang dibuka satu triliun rupiah <em>investasi?</em></h1>
-    <p class="deck">Analisis multiplier Input-Output untuk 185 sektor ekonomi Indonesia, dikalibrasi ke baseline Jawa Barat 2025. Per Rp 1 triliun, sektor mana yang paling padat karya, paling besar menarik rantai pasoknya, dan paling efektif menurunkan kemiskinan.</p>
-    <div class="masthead-bottom">
-      <div class="byline">
-        <span class="label">Sumber Data Utama</span>
-        Tabel Input-Output Indonesia 185 Produk <strong>BPS 2016</strong> · Baseline Makro Jabar Q1 2026 <strong>BPS Jabar</strong> · Asumsi share Jabar berbasis konsentrasi industri
-      </div>
-      <a href="#kalkulator" class="toc-link">Buka Kalkulator</a>
-    </div>
-  </div>
-</header>
-
-<!-- ===== TOC ===== -->
-<nav class="toc">
-  <div class="container">
-    <ol class="toc-list">
-      <li><a href="#konsep"><span class="num">§ 01</span><span class="ti">Lima metrik kunci</span></a></li>
-      <li><a href="#tutorial"><span class="num">§ 02</span><span class="ti">Tutorial: hitung Padi</span></a></li>
-      <li><a href="#tabel"><span class="num">§ 03</span><span class="ti">Tabel 21 sektor target</span></a></li>
-      <li><a href="#visual"><span class="num">§ 04</span><span class="ti">Visualisasi</span></a></li>
-      <li><a href="#skenario"><span class="num">§ 05</span><span class="ti">Empat skenario investasi</span></a></li>
-      <li><a href="#kalkulator"><span class="num">§ 06</span><span class="ti">Kalkulator kebijakan</span></a></li>
-      <li><a href="#konstanta"><span class="num">§ 07</span><span class="ti">Konstanta & sumber</span></a></li>
-    </ol>
+<nav class="topnav">
+  <div class="wrap">
+    <span class="brand">#SemuaBisaDihitung · <b>N°.07 JABAR</b></span>
+    <a href="#kalkulator" class="cta">Buka Kalkulator</a>
   </div>
 </nav>
 
-<!-- ===== §1 KONSEP ===== -->
-<section class="chapter" id="konsep">
-  <div class="container">
-    <div class="section-header">
-      <div class="kicker">§ 01 — Konsep Dasar</div>
-      <h2>Lima metrik yang dihitung untuk <em>setiap</em> sektor.</h2>
-      <div class="dek">Semua angka di laman ini diturunkan dari lima formula berikut. Input-nya hanya satu matriks transaksi antar-sektor dari BPS, sisanya adalah aljabar linear.</div>
-    </div>
+<header class="hero">
+  <div class="wrap">
+    <div class="kicker">Input-Output · Multiplier Analysis · Provinsi Jawa Barat</div>
+    <h1 class="hero-title">Berapa lapangan kerja yang dibuka satu triliun rupiah <em>investasi?</em></h1>
+    <div class="hero-badge">★ UPGRADE: kini pakai Tabel IO Provinsi Jabar langsung</div>
+    <p class="hero-lede">Analisis multiplier Input-Output untuk 52 industri Jawa Barat. Per Rp 1 triliun investasi: sektor mana yang paling padat karya, paling besar menarik rantai pasoknya, dan paling efektif menurunkan kemiskinan — kini <b>tanpa asumsi share Jabar</b> karena datanya sudah Jabar-spesifik.</p>
+    <p class="hero-source">Sumber: <b>Tabel Input-Output Provinsi Jawa Barat 52 Industri, 2016</b> (BPS Jabar) · Baseline Makro Jabar <b>Q1 2026</b> (BPS Jabar) · Transaksi domestik atas dasar harga produsen</p>
+    <a href="#kalkulator" class="btn-primary">Buka Kalkulator →</a>
+  </div>
+</header>
 
-    <p class="lead">Multiplier analysis menjawab pertanyaan sederhana yang sering ditanyakan policymaker: jika kita mengalokasikan Rp 1 triliun ke suatu sektor, berapa <em>seluruh ekonomi</em> bergerak — bukan hanya output langsungnya, tapi juga rantai pasok di hulu yang ikut tertarik, dan upah pekerja yang ikut tercipta di sepanjang rantai itu.</p>
+<div class="toc-strip">
+  <div class="wrap">
+    <ol>
+      <li><a href="#konsep"><span class="sn">01</span>Lima metrik kunci</a></li>
+      <li><a href="#tutorial"><span class="sn">02</span>Tutorial: I-01 Tani Pangan</a></li>
+      <li><a href="#tabel"><span class="sn">03</span>Tabel 52 industri</a></li>
+      <li><a href="#visual"><span class="sn">04</span>Visualisasi</a></li>
+      <li><a href="#skenario"><span class="sn">05</span>Empat skenario</a></li>
+      <li><a href="#kalkulator"><span class="sn">06</span>Kalkulator</a></li>
+      <li><a href="#konstanta"><span class="sn">07</span>Konstanta & sumber</a></li>
+    </ol>
+  </div>
+</div>
 
-    <p>Modelnya: Wassily Leontief, 1936. Idenya: setiap industri menggunakan output industri lain sebagai inputnya. Maka satu suntikan permintaan akhir di sektor <em>j</em> akan merambat ke seluruh ekonomi melalui inverse matrix $(I-A)^{-1}$ — disebut <strong>Leontief Inverse</strong>. Jumlah kolom <em>j</em>-nya adalah <em>output multiplier</em>. Dengan ditambah koefisien tenaga kerja, kita dapat <em>income multiplier</em>, dan dari sana bisa diturunkan estimasi lapangan kerja per Rp 1 triliun investasi.</p>
+<section id="konsep">
+  <div class="wrap">
+    <div class="section-tag">§ 01 — Konsep Dasar</div>
+    <h2 class="section-title">Lima metrik yang dihitung untuk <em>setiap</em> industri.</h2>
+    <p class="section-intro">Semua angka di laman ini diturunkan dari lima formula berikut. Input-nya hanya satu matriks transaksi antar-industri dari Tabel IO Provinsi Jawa Barat, sisanya aljabar linear.</p>
+    <p class="section-intro spaced">Model: Wassily Leontief, 1936. Setiap industri memakai output industri lain sebagai input. Satu suntikan permintaan akhir di sektor <em>j</em> merambat ke seluruh ekonomi Jabar lewat inverse matrix $(I-A)^{-1}$ — <b>Leontief Inverse</b>. Karena tabelnya sudah Provinsi Jabar, hasilnya langsung dampak di Jawa Barat tanpa perlu kalibrasi share.</p>
 
-    <div class="metrics-grid">
+    <div class="metric-grid">
       <div class="metric-card">
-        <div class="num">METRIK 1</div>
+        <div class="mnum">METRIK 1</div>
         <h3>Output Multiplier</h3>
-        <div class="formula">$\text{Mult}_j = \sum_i (I-A)^{-1}_{ij}$</div>
-        <div class="desc">Rp output total ekonomi terbangkit per Rp 1 final demand di sektor <em>j</em>. Mengukur "seberapa luas industri menarik ekonomi lain". <strong>Padat rantai pasok = multiplier tinggi.</strong></div>
+        <div class="formula-render">$\text{Mult}_j = \sum_i (I-A)^{-1}_{ij}$</div>
+        <p>Rp output total ekonomi Jabar terbangkit per Rp 1 final demand di sektor <em>j</em>. Mengukur "seberapa luas industri menarik ekonomi lain". <b>Padat rantai pasok = multiplier tinggi.</b></p>
       </div>
       <div class="metric-card">
-        <div class="num">METRIK 2</div>
+        <div class="mnum">METRIK 2</div>
+        <h3>Forward Linkage</h3>
+        <div class="formula-render">$\text{FL}_i = \sum_j (I-A)^{-1}_{ij}$</div>
+        <p>Seberapa banyak output sektor <em>i</em> dipakai sebagai input oleh sektor lain. <b>Tinggi = sektor "feeder" yang menopang banyak industri.</b></p>
+      </div>
+      <div class="metric-card">
+        <div class="mnum">METRIK 3</div>
         <h3>Income Multiplier</h3>
-        <div class="formula">$\text{IM}_j = \sum_i l_i \cdot (I-A)^{-1}_{ij}$</div>
-        <div class="desc">Rp upah pekerja terbangkit per Rp 1 final demand di sektor <em>j</em>, di mana $l_i = L_i / X_i$. Mengukur padat-upah. <strong>Sektor labor-intensive punya IM tinggi.</strong></div>
+        <div class="formula-render">$\text{IM}_j = \sum_i l_i \cdot (I-A)^{-1}_{ij}$</div>
+        <p>Rp upah pekerja terbangkit per Rp 1 final demand di sektor <em>j</em>, dengan $l_i = L_i/X_i$. Mengukur padat-upah. <b>Sektor labor-intensive punya IM tinggi.</b></p>
       </div>
       <div class="metric-card">
-        <div class="num">METRIK 3</div>
+        <div class="mnum">METRIK 4</div>
         <h3>TK / Rp 1 Miliar</h3>
-        <div class="formula">$\dfrac{\text{IM}_j \times 10^3}{w}$</div>
-        <div class="desc">Jumlah orang dapat lapangan kerja per Rp 1 miliar output nasional, dengan upah rata-rata $w = $ Rp 36 jt/tahun. Indikator standar "labor intensity" di analisis IO.</div>
+        <div class="formula-render">$\dfrac{\text{IM}_j \times 10^3}{w}$</div>
+        <p>Orang yang dapat lapangan kerja per Rp 1 miliar output, upah rata-rata $w =$ Rp 36 jt/tahun. Indikator standar "labor intensity".</p>
       </div>
-      <div class="metric-card">
-        <div class="num">METRIK 4</div>
+      <div class="metric-card feat">
+        <div class="mnum">METRIK 5 · ANGKA UTAMA</div>
         <h3>TK / Rp 1 Triliun di Jabar</h3>
-        <div class="formula">$\dfrac{\text{IM}_j \times 10^6}{w} \times s_j$</div>
-        <div class="desc">Jumlah orang dapat kerja di Jabar per Rp 1 triliun investasi, sudah dikalikan share Jabar $s_j$ — estimasi proporsi output sektor yang berlokasi di Jawa Barat. <strong>Inilah angka utama simulasi.</strong></div>
+        <div class="formula-render">$\dfrac{\text{IM}_j \times 10^6}{w}$</div>
+        <p>Orang dapat kerja di Jabar per Rp 1 triliun investasi. <b>Tidak perlu share Jabar lagi</b> — karena Tabel IO sudah Provinsi Jabar, hasilnya langsung Jabar. Inilah angka utama simulasi.</p>
       </div>
       <div class="metric-card">
-        <div class="num">METRIK 5</div>
-        <h3>Share Jabar</h3>
-        <div class="formula">$s_j \in [0, 1]$</div>
-        <div class="desc">Estimasi proporsi output sektor <em>j</em> nasional yang berlokasi di Jabar. Padi ~15%, Teh ~40%, Kendaraan ~70%. <strong>Sumber ketidakpastian terbesar</strong> — untuk presisi: pakai Tabel IO Jabar langsung dari BPS Jabar.</div>
+        <div class="mnum">KLASIFIKASI</div>
+        <h3>Kuadran Rasmussen</h3>
+        <div class="formula-render">$nBL_j > 1 \;\wedge\; nFL_i > 1$</div>
+        <p>Normalisasi BL & FL terhadap rata-rata. <b>Key Sector</b> = di atas rata-rata di kedua arah — motor utama ekonomi. Klasifikasi peran tiap industri.</p>
       </div>
     </div>
 
-    <div class="callout">
-      <span class="label">Konvensi Notasi</span>
-      $X_i$ = total input sektor <em>i</em>, $L_i$ = kompensasi tenaga kerja sektor <em>i</em>, $Z_{ij}$ = transaksi dari <em>i</em> ke <em>j</em>, $A_{ij} = Z_{ij}/X_j$ = koefisien teknis, $(I-A)^{-1}$ = matriks Leontief Inverse, $l_i = L_i/X_i$ = labor coefficient.
+    <div class="quad-legend">
+      <div class="quad-cell">
+        <span class="qd" style="background:var(--amber)"></span>
+        <div class="qax">nBL&gt;1 · nFL&gt;1</div>
+        <h5>Key Sector</h5>
+        <p>Motor utama. Menarik supply chain & dipakai banyak sektor. 9 dari 52.</p>
+      </div>
+      <div class="quad-cell">
+        <span class="qd" style="background:var(--moss)"></span>
+        <div class="qax">nBL&gt;1 · nFL&lt;1</div>
+        <h5>Strong Backward</h5>
+        <p>Pull strategy. Investasi disini menarik rantai pasok. 15 dari 52.</p>
+      </div>
+      <div class="quad-cell">
+        <span class="qd" style="background:var(--teal)"></span>
+        <div class="qax">nBL&lt;1 · nFL&gt;1</div>
+        <h5>Strong Forward</h5>
+        <p>Feeder. Sektor hulu yang dibutuhkan industri lain. 6 dari 52.</p>
+      </div>
+      <div class="quad-cell">
+        <span class="qd" style="background:var(--rust)"></span>
+        <div class="qax">nBL&lt;1 · nFL&lt;1</div>
+        <h5>Independent</h5>
+        <p>Linkage lemah. Masuk target hanya kalau ada alasan strategis. 22 dari 52.</p>
+      </div>
+    </div>
+
+    <div class="notation-box">
+      <b>Konvensi Notasi</b> &nbsp; $X_i$ = total input sektor i · $L_i$ = kompensasi TK sektor i · $Z_{ij}$ = transaksi domestik i ke j · $A_{ij}=Z_{ij}/X_j$ = koefisien teknis · $(I-A)^{-1}$ = Leontief Inverse · $l_i=L_i/X_i$ = labor coefficient · $w$ = upah rata-rata Rp 36 jt/tahun
     </div>
   </div>
 </section>
 
-<!-- ===== §2 TUTORIAL ===== -->
-<section class="chapter" id="tutorial">
-  <div class="container">
-    <div class="section-header">
-      <div class="kicker">§ 02 — Walkthrough</div>
-      <h2>Tutorial pelan-pelan: <em>hitung multiplier Padi</em> dari nol.</h2>
-      <div class="dek">Sektor Padi (kode 001), enam langkah dari data BPS sampai estimasi lapangan kerja. Logika yang sama berlaku untuk semua 185 sektor.</div>
-    </div>
+<section id="tutorial">
+  <div class="wrap">
+    <div class="section-tag">§ 02 — Walkthrough</div>
+    <h2 class="section-title">Tutorial pelan-pelan: <em>hitung multiplier Tani Pangan</em> dari nol.</h2>
+    <p class="section-intro spaced">Sektor Pertanian Tanaman Pangan (kode I-01), enam langkah dari data BPS Jabar sampai estimasi lapangan kerja. Logika sama berlaku untuk semua 52 industri.</p>
 
-    <div class="tutorial">
-      <div class="tutorial-header">
-        <div class="badge">STUDI KASUS</div>
-        <h3>Padi · Sektor 001 · Hulu Pangan · Share Jabar diasumsikan 15%</h3>
+    <div style="background:var(--paper);border:1px solid var(--ink);padding:8px 0">
+      <div style="padding:18px 28px;border-bottom:1px solid var(--rule)">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.1em;color:var(--muted);margin-bottom:6px">STUDI KASUS</div>
+        <div class="serif" style="font-size:22px;font-weight:600">Pertanian Tanaman Pangan · Kode I-01 · Kuadran Independent</div>
       </div>
 
-      <div class="tutorial-step">
-        <div class="step-no">01</div>
-        <div class="step-body">
-          <h4>Ambil data source dari Tabel IO BPS</h4>
-          <p>Dari Tabel IO Indonesia 185 Produk 2016, ambil kolom Padi. Yang kita butuhkan: <strong>Total Input (X)</strong> dan <strong>Kompensasi TK (L)</strong>.</p>
-          <div class="result">
-            <span class="mono">X<sub>Padi</sub></span> = <span class="num">Rp 235.702.311 juta</span>  &nbsp;·&nbsp;
-            <span class="mono">L<sub>Padi</sub></span> = <span class="num">Rp 77.485.083 juta</span>
+      <div class="tut-steps">
+        <div class="tut-step">
+          <div class="tut-n serif">01</div>
+          <div class="tut-body">
+            <h4>Ambil data source dari Tabel IO Jabar</h4>
+            <p>Dari Tabel IO Provinsi Jawa Barat 52 Industri 2016, ambil kolom I-01. Yang dibutuhkan: <b>Total Input (X)</b> dan <b>Kompensasi TK (L)</b>.</p>
+            <div class="tut-formula mono">X<sub>I-01</sub> = Rp 52.624.076 juta &nbsp;·&nbsp; L<sub>I-01</sub> = Rp 20.305.554 juta</div>
+          </div>
+        </div>
+
+        <div class="tut-step">
+          <div class="tut-n serif">02</div>
+          <div class="tut-body">
+            <h4>Hitung Output Multiplier</h4>
+            <p>Jumlahkan kolom I-01 di matriks Leontief Inverse $(I-A)^{-1}$. Operasi paling sederhana: tinggal SUM.</p>
+            <div class="tut-render">$\text{Mult}_{\text{I-01}} = \sum_i (I-A)^{-1}_{i,\text{I-01}} = 1{,}173$</div>
+            <p>Setiap Rp 1 permintaan akhir Tani Pangan menghasilkan total Rp 1,17 output di ekonomi Jabar. Relatif rendah — pertanian punya rantai pasok pendek.</p>
+          </div>
+        </div>
+
+        <div class="tut-step">
+          <div class="tut-n serif">03</div>
+          <div class="tut-body">
+            <h4>Hitung Labor Coefficient untuk semua 52 industri</h4>
+            <p>Untuk setiap sektor <em>i</em>, $l_i = L_i / X_i$ — upah per unit output. Untuk I-01 sendiri:</p>
+            <div class="tut-render">$l_{\text{I-01}} = \dfrac{20.305.554}{52.624.076} = 0{,}3859$</div>
+            <p>Setiap Rp 1 output Tani Pangan menghasilkan Rp 0,39 upah pekerja — sangat <em>labor-intensive</em>, lebih tinggi dari rata-rata.</p>
+          </div>
+        </div>
+
+        <div class="tut-step">
+          <div class="tut-n serif">04</div>
+          <div class="tut-body">
+            <h4>Hitung Income Multiplier</h4>
+            <p>Dot product antara vektor labor_coef (52 elemen) dengan kolom I-01 di Leontief Inverse. Di Excel: <code>SUMPRODUCT</code>.</p>
+            <div class="tut-render">$\text{IM}_{\text{I-01}} = \sum_{i=1}^{52} l_i \cdot (I-A)^{-1}_{i,\text{I-01}} = 0{,}4340$</div>
+            <p>Setiap Rp 1 permintaan akhir Tani Pangan menghasilkan total Rp 0,43 upah pekerja di seluruh rantai produksinya.</p>
+          </div>
+        </div>
+
+        <div class="tut-step">
+          <div class="tut-n serif">05</div>
+          <div class="tut-body">
+            <h4>Konversi ke TK per Rp 1 Miliar</h4>
+            <p>Rp 1 miliar = 1.000 juta. Income Mult × 1.000 = total upah (juta Rp). Bagi upah/orang (36 jt/tahun) = jumlah orang.</p>
+            <div class="tut-render">$\text{TK/Rp 1M} = \dfrac{0{,}4340 \times 1000}{36} = 12{,}06 \text{ orang}$</div>
+            <p>Setiap Rp 1 miliar investasi di Tani Pangan Jabar menciptakan sekitar 12 lapangan kerja.</p>
+          </div>
+        </div>
+
+        <div class="tut-step">
+          <div class="tut-n serif">06</div>
+          <div class="tut-body">
+            <h4>Konversi ke TK per Rp 1 Triliun di Jabar</h4>
+            <p>Naikkan unit dari miliar ke triliun (×1.000). <b>Tidak perlu kalikan share Jabar</b> — data sudah Jabar-spesifik.</p>
+            <div class="tut-render">$\text{TK/Rp 1T (Jabar)} = 12{,}06 \times 1000 = 12{.}057 \text{ orang}$</div>
+            <p>Setiap Rp 1 triliun investasi di Tani Pangan Jabar membuka ±12.057 lapangan kerja di provinsi ini.</p>
           </div>
         </div>
       </div>
 
-      <div class="tutorial-step">
-        <div class="step-no">02</div>
-        <div class="step-body">
-          <h4>Hitung Output Multiplier</h4>
-          <p>Jumlahkan kolom Padi (kolom <em>j</em> = 001) di matriks Leontief Inverse $(I-A)^{-1}$. Operasi paling sederhana di seluruh perhitungan: tinggal SUM.</p>
-          <p>$\text{Mult}_{\text{Padi}} = \sum_i (I-A)^{-1}_{i,\text{Padi}} = 1{,}377$</p>
-          <div class="result">
-            Setiap Rp 1 permintaan akhir Padi menghasilkan total <span class="num">Rp 1,38</span> output di seluruh ekonomi (langsung + tidak langsung lewat rantai pasok bibit, pupuk, alat, distribusi, dsb).
-          </div>
-        </div>
-      </div>
-
-      <div class="tutorial-step">
-        <div class="step-no">03</div>
-        <div class="step-body">
-          <h4>Hitung Labor Coefficient untuk semua 185 sektor</h4>
-          <p>Untuk setiap sektor <em>i</em>, $l_i = L_i / X_i$ — yaitu upah per unit output. Untuk Padi sendiri:</p>
-          <p>$l_{\text{Padi}} = \dfrac{77.485.083}{235.702.311} = 0{,}3287$</p>
-          <div class="result">
-            Setiap Rp 1 output Padi menghasilkan <span class="num">Rp 0,33</span> untuk upah pekerja — Padi adalah sektor yang sangat <em>labor-intensive</em>.
-          </div>
-        </div>
-      </div>
-
-      <div class="tutorial-step">
-        <div class="step-no">04</div>
-        <div class="step-body">
-          <h4>Hitung Income Multiplier</h4>
-          <p>Dot product antara vektor labor_coef (185 elemen) dengan kolom Padi di Leontief Inverse. Di Excel: <code>SUMPRODUCT</code>.</p>
-          <p>$\text{IM}_{\text{Padi}} = \sum_{i=1}^{185} l_i \cdot (I-A)^{-1}_{i,\text{Padi}} = 0{,}4023$</p>
-          <div class="result">
-            Setiap Rp 1 permintaan akhir Padi menghasilkan total <span class="num">Rp 0,40</span> upah pekerja di seluruh rantai produksi padi.
-          </div>
-        </div>
-      </div>
-
-      <div class="tutorial-step">
-        <div class="step-no">05</div>
-        <div class="step-body">
-          <h4>Konversi ke TK per Rp 1 Miliar</h4>
-          <p>Rp 1 miliar = 1.000 juta. Income Mult × 1.000 = total upah dalam juta Rp. Bagi dengan upah/orang (36 juta/tahun) = jumlah orang.</p>
-          <p>$\text{TK/Rp 1M} = \dfrac{0{,}4023 \times 1000}{36} = 11{,}17 \text{ orang}$</p>
-          <div class="result">
-            Setiap Rp 1 miliar investasi di Padi (nasional) menciptakan sekitar <span class="num">11 lapangan kerja</span>.
-          </div>
-        </div>
-      </div>
-
-      <div class="tutorial-step">
-        <div class="step-no">06</div>
-        <div class="step-body">
-          <h4>Konversi ke TK per Rp 1 Triliun di Jabar</h4>
-          <p>Naikkan unit dari miliar ke triliun (×1.000), lalu kalikan share Jabar (15% untuk Padi).</p>
-          <p>$\text{TK/Rp 1T (Jabar)} = 11{,}17 \times 1000 \times 0{,}15 = 1{.}676 \text{ orang}$</p>
-          <div class="result">
-            Setiap Rp 1 triliun investasi di Padi yang jatuh di Jabar akan membuka <span class="num">±1.676 lapangan kerja</span> di provinsi ini.
-          </div>
-        </div>
+      <div style="padding:20px 28px;background:#FBF1D5;border-top:1px solid var(--rule);font-size:13.5px;line-height:1.6;color:var(--ink-2)">
+        <b>Perbandingan dengan versi lama:</b> di analisis berbasis IO Indonesia + share Jabar 15%, Padi cuma menghasilkan 1.676 orang/T. Dengan data Jabar langsung, Tani Pangan menghasilkan <b>12.057 orang/T</b> — 7× lebih besar. Bedanya: versi lama menghitung "Rp 1T di sektor padi nasional, porsi Jabar"; versi ini "Rp 1T langsung di pertanian Jabar". Konteks pertanyaan berbeda, dan versi Jabar lebih relevan untuk kebijakan Pemprov.
       </div>
     </div>
-
-    <p class="note">Catatan: angka 1.676 orang/T relatif rendah karena (a) share Jabar Padi hanya 15% — sebagian besar padi nasional bukan di Jabar, dan (b) Padi adalah hulu yang rantai pasoknya pendek. Bandingkan dengan sektor manufaktur ekspor di tabel berikutnya: Alas Kaki bisa mencapai 8.814 orang/T karena share Jabar tinggi (60%) plus rantai pasok manufaktur yang panjang.</p>
   </div>
 </section>
 
-<!-- ===== §3 TABEL SEKTOR ===== -->
-<section class="chapter" id="tabel">
-  <div class="container">
-    <div class="section-header">
-      <div class="kicker">§ 03 — Hasil</div>
-      <h2>Multiplier <em>185 sektor</em>, atau fokus ke 21 sektor target Jabar.</h2>
-      <div class="dek">Pilih view yang kamu butuhkan — semua sektor, kategori tertentu, atau hanya 21 sektor prioritas. Klik header kolom untuk sortir.</div>
+<section id="tabel">
+  <div class="wrap">
+    <div class="section-tag">§ 03 — Hasil</div>
+    <h2 class="section-title">Multiplier <em>52 industri</em> Jawa Barat.</h2>
+    <p class="section-intro spaced">Filter per kuadran Rasmussen atau cari industri tertentu. Klik header kolom untuk sortir. Semua TK dalam unit per Rp 1 Triliun investasi di Jabar.</p>
+
+    <div class="tbl-controls">
+      <input type="text" id="tbl-search" class="tbl-search" placeholder="Cari industri (nama atau kode)…">
+      <button class="fbtn active" data-f="all">Semua · 52</button>
+      <button class="fbtn" data-f="KEY">Key Sector · 9</button>
+      <button class="fbtn" data-f="SBACK">S. Backward · 15</button>
+      <button class="fbtn" data-f="SFORW">S. Forward · 6</button>
+      <button class="fbtn" data-f="INDEP">Independent · 22</button>
     </div>
 
-    <div class="table-filter">
-      <div class="filter-pills" id="filter-pills">
-        <button class="filter-btn active" data-filter="target">21 Sektor Target <span class="count" id="cnt-target">·21</span></button>
-        <button class="filter-btn" data-filter="all">Semua Sektor <span class="count" id="cnt-all">·…</span></button>
-        <!-- category buttons added dynamically -->
-      </div>
-      <div class="filter-search">
-        <input type="search" id="tabel-search" placeholder="Cari sektor (nama / kode)…">
-      </div>
-    </div>
-
-    <div class="table-meta">
-      <span id="table-meta-info">Menampilkan 21 sektor target · semua TK dalam unit per Rp 1 Triliun · <strong>Nasional × Share Jabar = Jabar</strong></span>
-      <span id="table-meta-count">21 sektor</span>
-    </div>
-
-    <div class="table-wrap">
-      <table class="data" id="tabel21">
-        <thead>
-          <tr id="tabel-head">
-            <!-- filled by JS -->
-          </tr>
-        </thead>
-        <tbody id="tabel21-body">
-          <!-- filled by JS -->
-        </tbody>
+    <div class="tbl-scroll">
+      <table id="sektor-tbl">
+        <thead><tr>
+          <th data-s="kode">Kode</th>
+          <th data-s="nama">Industri</th>
+          <th data-s="quad">Kuadran</th>
+          <th data-s="om" class="r">Output Mult</th>
+          <th data-s="fl" class="r">Forward Link</th>
+          <th data-s="im" class="r">Income Mult</th>
+          <th data-s="tkM" class="r">TK/Rp 1M</th>
+          <th data-s="tkT" class="r sorted-desc">TK/Rp 1T</th>
+        </tr></thead>
+        <tbody id="sektor-tbody"></tbody>
       </table>
     </div>
-
-    <p class="note">Sektor yang termasuk <strong>21 target Jabar</strong> ditandai titik <span style="display:inline-block;width:6px;height:6px;background:#A0421C;border-radius:50%;vertical-align:middle"></span> saat view "Semua Sektor". Semua kolom kuantitatif pakai konvensi Indonesia: <strong>koma</strong> = pemisah desimal (mis. <span class="mono">2,15</span>), <strong>titik</strong> = pemisah ribuan (mis. <span class="mono">11.174</span>). Relasi unit: <span class="mono">TK/Rp 1T (Nasional) × Share Jabar = TK/Rp 1T (Jabar)</span>. Untuk sektor non-target, hanya kolom Nasional yang ditampilkan karena belum punya estimasi share Jabar.</p>
+    <p class="tbl-note mono" id="tbl-count">52 industri</p>
+    <p style="font-size:12.5px;color:var(--muted);margin-top:8px">Konvensi Indonesia: <b>koma</b> = desimal (2,15), <b>titik</b> = ribuan (12.057). Kuadran: <span style="color:var(--amber)">●</span> Key · <span style="color:var(--moss)">●</span> S.Backward · <span style="color:var(--teal)">●</span> S.Forward · <span style="color:var(--rust)">●</span> Independent</p>
   </div>
 </section>
 
-<!-- ===== §4 VISUAL ===== -->
-<section class="chapter" id="visual">
-  <div class="container">
-    <div class="section-header">
-      <div class="kicker">§ 04 — Visualisasi</div>
-      <h2>Empat cara melihat <em>data yang sama</em>.</h2>
-      <div class="dek">Multiplier punya banyak dimensi — berikut empat sudut pandang. Setiap grafik memberi tahu hal berbeda tentang sektor mana yang menjanjikan untuk strategi industri Jabar.</div>
+<section id="visual">
+  <div class="wrap">
+    <div class="section-tag">§ 04 — Visualisasi</div>
+    <h2 class="section-title">Empat cara melihat <em>data yang sama</em>.</h2>
+    <p class="section-intro spaced">Setiap grafik memberi tahu hal berbeda tentang industri mana yang menjanjikan untuk strategi pembangunan Jabar.</p>
+
+    <div class="viz-block">
+      <h3 class="viz-title">1 — Lapangan Kerja per Rp 1 Triliun di Jabar</h3>
+      <p class="viz-desc">15 industri teratas, diurutkan dari terbesar. Sektor jasa padat-upah (Angkutan Rel, Pendidikan) dan pertanian mendominasi labor intensity.</p>
+      <div class="chart-box"><canvas id="chart1"></canvas></div>
     </div>
 
-    <div class="chart-card">
-      <h3>1 — Lapangan Kerja per Rp 1 Triliun di Jabar</h3>
-      <div class="chart-dek">Diurutkan dari yang terbesar. Manufaktur ekspor mendominasi: kendaraan, alas kaki, dan mesin listrik mengubah Rp 1 T jadi 6.000–9.000 lapangan kerja, hampir 4× lipat sektor hulu pangan rata-rata.</div>
-      <div class="chart-canvas-wrap tall"><canvas id="chart-tk"></canvas></div>
+    <div class="viz-block">
+      <h3 class="viz-title">2 — Output Multiplier vs Income Multiplier</h3>
+      <p class="viz-desc">Sumbu X: seberapa luas sektor menarik ekonomi (output mult). Sumbu Y: tambahan upah pekerja (income mult). Warna: kuadran Rasmussen. Pojok kanan-atas = ideal.</p>
+      <div class="chart-box"><canvas id="chart2"></canvas></div>
     </div>
 
-    <div class="chart-card">
-      <h3>2 — Output Multiplier vs Income Multiplier</h3>
-      <div class="chart-dek">Sumbu X: berapa luas sektor menarik ekonomi lain. Sumbu Y: berapa besar tambahan upah pekerja. Ukuran bubble: TK/Rp 1T di Jabar. Pojok kanan-atas = sektor ideal (rantai pasok dalam + padat karya).</div>
-      <div class="chart-canvas-wrap"><canvas id="chart-scatter"></canvas></div>
+    <div class="viz-block">
+      <h3 class="viz-title">3 — Klasifikasi Rasmussen: Backward vs Forward Linkage</h3>
+      <p class="viz-desc">Garis di nilai 1,0 (rata-rata). Kuadran kanan-atas = Key Sector (motor utama). Setiap titik satu industri.</p>
+      <div class="chart-box"><canvas id="chart3"></canvas></div>
     </div>
 
-    <div class="chart-grid-2">
-      <div class="chart-card">
-        <h3>3 — Output Multiplier per Kategori</h3>
-        <div class="chart-dek">Hilirisasi (Hilir Agro + Manufaktur) konsisten menghasilkan output multiplier di atas 2 — artinya rantai pasok lebih dalam.</div>
-        <div class="chart-canvas-wrap"><canvas id="chart-kategori"></canvas></div>
+    <div class="viz-block">
+      <h3 class="viz-title">4 — Output Multiplier Rata-rata per Kategori</h3>
+      <p class="viz-desc">Energi/Utilitas, Konstruksi, dan Industri Pengolahan konsisten di atas — rantai pasok lebih dalam dibanding pertanian & jasa keuangan.</p>
+      <div class="chart-box"><canvas id="chart4"></canvas></div>
+    </div>
+  </div>
+</section>
+
+<section id="skenario">
+  <div class="wrap">
+    <div class="section-tag">§ 05 — Skenario Investasi</div>
+    <h2 class="section-title">Empat strategi alokasi, satu pertanyaan: <em>mana yang efektif?</em></h2>
+    <p class="section-intro spaced">Setiap skenario adalah portofolio alokasi investasi di beberapa industri. Dampak agregat dihitung langsung dari TK/Rp 1T Jabar — tanpa share, karena sudah Jabar.</p>
+
+    <div class="scen-cards">
+      <div class="scen-card" data-scen="A">
+        <div class="scen-letter serif">A</div>
+        <h4>Push Manufaktur Ekspor</h4>
+        <div class="scen-amount mono">Rp 50 T</div>
+        <p>Tekstil, Alas Kaki, Karet, Elektronik, Alat Angkutan</p>
       </div>
-      <div class="chart-card">
-        <h3>4 — Share Jabar per Sektor</h3>
-        <div class="chart-dek">Yang membuat sektor "Jabar-friendly" bukan multiplier-nya saja, tapi seberapa besar industri itu memang berlokasi di Jabar.</div>
-        <div class="chart-canvas-wrap"><canvas id="chart-share"></canvas></div>
+      <div class="scen-card" data-scen="B">
+        <div class="scen-letter serif">B</div>
+        <h4>Hilirisasi Agro</h4>
+        <div class="scen-amount mono">Rp 30 T</div>
+        <p>Tani Pangan, Hortikultura, Ternak, Perikanan, Makanan-Minuman</p>
+      </div>
+      <div class="scen-card" data-scen="C">
+        <div class="scen-letter serif">C</div>
+        <h4>Kombinasi A + B</h4>
+        <div class="scen-amount mono">Rp 80 T</div>
+        <p>Manufaktur ekspor + hilirisasi agro sekaligus</p>
+      </div>
+      <div class="scen-card" data-scen="D">
+        <div class="scen-letter serif">D</div>
+        <h4>Big Push 5 Tahun</h4>
+        <div class="scen-amount mono">Rp 200 T</div>
+        <p>Manufaktur + agro + infrastruktur (listrik, konstruksi, angkutan)</p>
       </div>
     </div>
-  </div>
-</section>
 
-<!-- ===== §5 SKENARIO ===== -->
-<section class="chapter" id="skenario">
-  <div class="container">
-    <div class="section-header">
-      <div class="kicker">§ 05 — Skenario Investasi</div>
-      <h2>Empat strategi alokasi, satu pertanyaan: <em>mana yang paling efektif?</em></h2>
-      <div class="dek">Setiap skenario adalah portofolio alokasi investasi di beberapa sektor target. Dampak agregatnya — lapangan kerja, % TPT terserap, ΔPDRB, Δkemiskinan — dihitung langsung dari TK/Rp 1T Jabar di tabel sebelumnya.</div>
-    </div>
+    <div class="chart-box" style="margin-top:36px"><canvas id="chart-scen"></canvas></div>
 
-    <div class="skenario-grid" id="skenario-cards"></div>
-
-    <div class="chart-card">
-      <h3>Perbandingan dampak empat skenario</h3>
-      <div class="chart-dek">Skenario D (Big Push 5 tahun Rp 200T) jelas menghasilkan dampak terbesar absolut, tapi Skenario A — push manufaktur ekspor — memberi <em>efisiensi tertinggi</em>: ±7.045 lapangan kerja per triliun. Hilirisasi agro saja (B) lebih lambat menyerap tenaga kerja karena rantai pasoknya sebagian besar ada di luar Jabar.</div>
-      <div class="chart-canvas-wrap tall"><canvas id="chart-skenario"></canvas></div>
-    </div>
-
-    <div class="callout">
-      <span class="label">Insight</span>
-      "Manufaktur ekspor padat karya" (Pakaian, Alas Kaki, Karet, Mesin Listrik, Kendaraan) sudah ada di Jabar — sentra Bandung-Bekasi-Karawang. Investasi di sini menyalakan rantai pasok yang sebagian besar juga ada di Jabar. Sebaliknya hilirisasi agro perlu strategi terpisah karena multipliernya tinggi (rantai pasok bagus secara nasional) tapi share Jabar-nya belum sebesar manufaktur.
+    <div style="background:var(--paper);border:1px solid var(--rule);padding:22px 26px;margin-top:28px;font-size:14px;line-height:1.6;color:var(--ink-2)">
+      <b>Insight:</b> Dengan data Jabar langsung, skenario hilirisasi agro (B) jadi <em>jauh lebih kuat</em> dari estimasi versi lama — karena pertanian & makanan-minuman Jabar ternyata sangat padat karya (TK/T tinggi). Manufaktur ekspor (A) tetap efisien tapi tidak lagi mendominasi mutlak. Trade-off antara skala (D) dan efisiensi per rupiah bisa dieksplor di kalkulator bawah.
     </div>
   </div>
 </section>
 
-<!-- ===== §6 KALKULATOR ===== -->
-<section class="chapter" id="kalkulator">
-  <div class="container">
-    <div class="section-header">
-      <div class="kicker">§ 06 — Kebijakan Interaktif</div>
-      <h2>Kalkulator: <em>rancang skenarimu sendiri.</em></h2>
-      <div class="dek">Geser investasi (dalam triliun rupiah) ke sektor mana saja. Total lapangan kerja, % TPT yang terserap, ΔPDRB, dan Δkemiskinan diperbarui real-time pakai TK/Rp 1T Jabar yang sudah dihitung di atas.</div>
-    </div>
+<section id="kalkulator">
+  <div class="wrap">
+    <div class="section-tag">§ 06 — Kebijakan Interaktif</div>
+    <h2 class="section-title">Kalkulator: <em>rancang skenariomu sendiri.</em></h2>
+    <p class="section-intro spaced">Alokasikan investasi (Rp triliun) ke industri mana saja. Total lapangan kerja, % TPT terserap, ΔPDRB, dan Δkemiskinan diperbarui real-time pakai TK/Rp 1T Jabar.</p>
 
-    <div class="calc-wrap">
-      <div class="calc-header">
-        <h3>Mulai dari <em>preset</em>, atau dari nol — geser angkanya.</h3>
+    <div class="calc-shell">
+      <div class="calc-left">
         <div class="preset-row">
-          <button class="preset-btn" data-preset="0">Kosongkan</button>
-          <button class="preset-btn" data-preset="SKENARIO A">Skenario A</button>
-          <button class="preset-btn" data-preset="SKENARIO B">Skenario B</button>
-          <button class="preset-btn" data-preset="SKENARIO C">Skenario C</button>
-          <button class="preset-btn" data-preset="SKENARIO D">Skenario D</button>
+          <button class="preset-btn" data-p="A">Skenario A</button>
+          <button class="preset-btn" data-p="B">Skenario B</button>
+          <button class="preset-btn" data-p="C">Skenario C</button>
+          <button class="preset-btn" data-p="D">Skenario D</button>
+          <button class="preset-btn reset" data-p="reset">Kosongkan</button>
+        </div>
+        <input type="text" id="calc-search" class="calc-search" placeholder="Cari industri untuk ditambahkan…">
+        <div class="calc-list" id="calc-list"></div>
+        <div class="calc-selected" id="calc-selected">
+          <div class="sel-empty">Belum ada industri. Klik preset atau "+ tambah" di atas.</div>
         </div>
       </div>
 
-      <div class="calc-body">
-        <div class="calc-inputs" id="calc-inputs">
-          <!-- filled by JS -->
+      <div class="calc-right">
+        <div class="result-hero">
+          <div class="rh-label mono">TOTAL LAPANGAN KERJA TERBUKA DI JABAR</div>
+          <div class="rh-value serif" id="r-lk">0</div>
+          <div class="rh-sub mono" id="r-lk-sub">orang · dari Rp 0 T investasi</div>
         </div>
-        <div class="calc-summary">
-          <div class="summary-main">
-            <h4>Total Lapangan Kerja Terbuka di Jabar</h4>
-            <div class="total-lk" id="sum-lk">0</div>
-            <div class="total-lk-sub">orang · dari <span class="big-num" id="sum-inv">0</span> Rp triliun investasi total</div>
-          </div>
-
-          <div class="summary-grid">
-            <div class="s-stat">
-              <div class="lab">% TPT Terserap</div>
-              <div class="v good"><span id="sum-tpt">0,00</span><span class="u">%</span></div>
-            </div>
-            <div class="s-stat">
-              <div class="lab">Δ PDRB</div>
-              <div class="v good"><span id="sum-pdrb">0,00</span><span class="u">%</span></div>
-            </div>
-            <div class="s-stat">
-              <div class="lab">Δ Kemiskinan</div>
-              <div class="v good"><span id="sum-miskin">0,00</span><span class="u">pp</span></div>
-            </div>
-            <div class="s-stat">
-              <div class="lab">LK per Rp 1T</div>
-              <div class="v brick"><span id="sum-eff">0</span><span class="u">orang/T</span></div>
-            </div>
-            <div class="s-stat">
-              <div class="lab">Output Mult Rata-rata</div>
-              <div class="v"><span id="sum-om">—</span><span class="u">Rp/Rp</span></div>
-            </div>
-            <div class="s-stat">
-              <div class="lab">Sektor Aktif</div>
-              <div class="v"><span id="sum-nsektor">0</span><span class="u">/ 21</span></div>
-            </div>
-          </div>
-
-          <div class="summary-equiv">
-            <p id="equiv-text">Belum ada investasi. Coba klik salah satu preset di atas atau geser angka di kolom kiri.</p>
-          </div>
+        <div class="result-grid">
+          <div class="rcard"><div class="rc-label mono">% TPT TERSERAP</div><div class="rc-val serif" id="r-tpt">0,00%</div></div>
+          <div class="rcard"><div class="rc-label mono">Δ PDRB</div><div class="rc-val serif" id="r-pdrb">+0,00%</div></div>
+          <div class="rcard"><div class="rc-label mono">Δ KEMISKINAN</div><div class="rc-val serif" id="r-misk">−0,00 pp</div></div>
+          <div class="rcard"><div class="rc-label mono">LK / RP 1T</div><div class="rc-val serif" id="r-eff">0</div></div>
         </div>
-      </div>
-
-      <div class="calc-foot">
-        <span>Baseline: TPT 1,79 juta orang · PDRB Rp 3.196 T · Kemiskinan 6,83% (BPS Jabar, Q1 2026)</span>
-        <button id="btn-clear">Reset semua input</button>
+        <div class="result-note" id="r-note">Belum ada investasi. Klik preset di atas atau geser angka.</div>
+        <div class="result-baseline mono">Baseline: TPT 1,79 jt · PDRB Rp 3.196 T · Kemiskinan 6,83% (BPS Jabar Q1 2026)</div>
       </div>
     </div>
-
-    <p class="note">Catatan metodologi: dampak ΔPDRB dihitung sebagai (Total Investasi × Output Mult rata-rata) / PDRB Jabar Tahunan × 100. Δkemiskinan diasumsikan setiap 2 pekerja baru = 1 orang keluar dari kemiskinan (faktor konservatif 0,5). Estimasi ini <em>upper bound</em> — kenyataannya banyak pekerja baru bukan dari rumah tangga miskin, atau hanya menambah pendapatan rumah tangga yang sudah di atas garis kemiskinan.</p>
+    <p style="font-size:12.5px;color:var(--muted);margin-top:16px;max-width:70ch;line-height:1.5"><b>Metodologi:</b> ΔPDRB = (Total Investasi × Output Mult rata-rata) / PDRB Jabar tahunan × 100. Δkemiskinan: tiap 2 pekerja baru = 1 orang keluar miskin (faktor 0,5). Estimasi <em>upper bound</em> — kenyataannya ada friction & sebagian pekerja bukan dari RT miskin.</p>
   </div>
 </section>
 
-<!-- ===== §7 KONSTANTA ===== -->
-<section class="chapter" id="konstanta">
-  <div class="container">
-    <div class="section-header">
-      <div class="kicker">§ 07 — Transparansi</div>
-      <h2>Asumsi & baseline yang dipakai <em>bisa kamu ubah</em>.</h2>
-      <div class="dek">Semua angka di laman ini di-trace balik ke ±15 konstanta makro yang dipublikasikan BPS Jabar plus dua asumsi metodologis. Kamu bisa buka panel-nya, lihat sumber tiap angka, atau modifikasi untuk uji sensitivitas — perubahan langsung memengaruhi tabel, grafik, dan kalkulator di seluruh laman.</div>
-    </div>
-
-    <div style="text-align: center; margin: 36px 0 28px;">
-      <button class="cta-open-sidebar" data-open-sidebar>
-        <span class="icon">⚙</span>
-        <span>Buka Panel Asumsi &amp; Baseline</span>
-      </button>
-    </div>
-
-    <p class="note">Sumber data utama untuk multiplier-nya sendiri adalah Tabel Input-Output Indonesia 185 Produk tahun 2016 dari BPS — tabel ini adalah konsensus standar untuk analisis dampak. Walaupun terbitan 2016, struktur antar-industri Indonesia relatif stabil dalam jangka pendek-menengah; untuk perubahan struktural besar (misalnya pasca-COVID) sebaiknya digunakan Tabel IO 2020 atau Tabel IO Jabar terbaru saat tersedia. Konstanta makro Jabar di panel mengikuti rilis BPS terbaru — silakan update saat ada rilis baru.</p>
+<section id="konstanta">
+  <div class="wrap">
+    <div class="section-tag">§ 07 — Transparansi</div>
+    <h2 class="section-title">Asumsi & baseline yang dipakai <em>bisa kamu ubah</em>.</h2>
+    <p class="section-intro spaced">Semua angka di-trace ke konstanta makro BPS Jabar plus dua asumsi metodologis. Buka panel untuk modifikasi & uji sensitivitas — perubahan langsung memengaruhi tabel, grafik, dan kalkulator.</p>
+    <button class="panel-toggle" onclick="togglePanel()">⚙ Buka Panel Asumsi & Baseline</button>
+    <p style="font-size:14px;line-height:1.6;color:var(--ink-2);max-width:64ch;margin-top:28px">Sumber data multiplier: <b>Tabel Input-Output Provinsi Jawa Barat 52 Industri 2016</b> (BPS Jabar, transaksi domestik atas dasar harga produsen). Berbeda dari versi sebelumnya yang pakai Tabel IO Indonesia 185 produk + asumsi share Jabar — versi ini langsung data Jabar, jadi <b>tidak ada lagi ketidakpastian dari estimasi share</b>. Trade-off: resolusi 52 industri lebih kasar dari 185 produk.</p>
   </div>
 </section>
 
 <footer>
-  <div class="container">
-    <div class="footer-grid">
+  <div class="wrap">
+    <div class="fgrid">
       <div>
-        <h4>Tentang analisis ini</h4>
-        <p>Disusun untuk menjawab pertanyaan Pak Dedi: berapa lapangan kerja, % penurunan kemiskinan, dan % pertumbuhan ekonomi yang bisa dicapai Jabar lewat alokasi investasi yang lebih tepat sasaran. Bagian dari seri #SemuaBisaDihitung — analisis ekonomi kebijakan publik yang bisa diaudit angka demi angka.</p>
+        <div class="ttl serif">#SemuaBisaDihitung</div>
+        <p>Disusun untuk menjawab pertanyaan Pak Dedi: berapa lapangan kerja, % penurunan kemiskinan, dan % pertumbuhan ekonomi yang bisa dicapai Jabar lewat alokasi investasi tepat sasaran. Analisis kebijakan publik yang bisa diaudit angka demi angka.</p>
       </div>
       <div>
-        <h4>Sumber data</h4>
+        <h4>Sumber Data</h4>
         <ul>
-          <li>BPS — Tabel Input-Output Indonesia 185 Produk, 2016</li>
-          <li>BPS Jabar — TPT, Kemiskinan, PDRB Q1 2026</li>
+          <li>BPS Jabar — Tabel IO Provinsi Jabar 52 Industri, 2016</li>
+          <li>BPS Jabar — TPT Feb 2026, Kemiskinan Sep 2025</li>
+          <li>BPS Jabar — PDRB Q1 2026 (ADHB & ADHK)</li>
           <li>BPS Jabar — Garis Kemiskinan, Maret 2025</li>
-          <li>Estimasi share Jabar — konsentrasi industri & sentra</li>
         </ul>
       </div>
       <div>
         <h4>Keterbatasan</h4>
         <ul>
-          <li>Asumsi share Jabar = sumber ketidakpastian terbesar</li>
+          <li>Resolusi 52 industri (lebih kasar dari 185 produk)</li>
           <li>Tabel IO 2016 — perubahan struktural pasca tidak ter-capture</li>
-          <li>Faktor 0,5 untuk kemiskinan = konservatif & kasar</li>
-          <li>Tidak menghitung crowd-out fiskal atau dampak harga</li>
+          <li>Faktor 0,5 kemiskinan = konservatif & kasar</li>
+          <li>Tidak hitung crowd-out fiskal atau dampak harga</li>
         </ul>
       </div>
     </div>
-    <div class="footer-tag">
-      <span class="brand">#SemuaBisaDihitung</span>
-      <span>Multiplier Analysis Jabar · v.2026.05</span>
+    <div class="foot-base">
+      <span>#SemuaBisaDihitung · Multiplier Analysis Jabar (Data Provinsi)</span>
+      <span>v.2026.05 · Tabel IO Jabar 52 Industri</span>
     </div>
   </div>
 </footer>
 
-<!-- ===== SIDEBAR ===== -->
-<button class="fab-toggle" id="fab-open" aria-label="Buka panel asumsi">
-  <span class="icon">⚙</span>
-  <span>Asumsi &amp; Baseline</span>
-  <span class="badge-mod">DIUBAH</span>
-</button>
-<div class="sidebar-overlay" id="sidebar-overlay"></div>
-<aside class="sidebar" id="sidebar" aria-hidden="true">
-  <header class="sidebar-header">
-    <div>
-      <h3>Asumsi <em>&amp; Baseline</em></h3>
-      <div class="sub">edit untuk uji sensitivitas</div>
+<!-- PANEL ASUMSI -->
+<div class="panel-overlay" id="panel-overlay" onclick="if(event.target===this)togglePanel()">
+  <div class="panel">
+    <div class="panel-head">
+      <div>
+        <div class="mono" style="font-size:11px;letter-spacing:0.1em;color:var(--amber-soft)">⚙ ASUMSI & BASELINE</div>
+        <h3 class="serif">Edit untuk uji sensitivitas</h3>
+      </div>
+      <button class="panel-close" onclick="togglePanel()">×</button>
     </div>
-    <button class="sidebar-close" id="sidebar-close" aria-label="Tutup">×</button>
-  </header>
-  <div class="sidebar-body" id="sidebar-body"></div>
-  <div class="sidebar-foot">
-    <button class="btn-reset" id="btn-reset-const" disabled>Reset Default</button>
-    <button class="btn-primary" id="btn-close-sidebar">Tutup Panel</button>
+    <div class="panel-body" id="panel-body"></div>
+    <div class="panel-foot">
+      <button onclick="resetParams()" class="panel-reset">Reset Default</button>
+      <button onclick="togglePanel()" class="panel-done">Tutup Panel</button>
+    </div>
   </div>
-</aside>
+</div>
 
 <script>
-const S21 = [
-  {k:"001",n:"Padi",c:"Hulu Pangan",sh:0.15,om:1.377213,lc:0.328741,im:0.402257,t1m:11.174,t1t:1676.07,cat:""},
-  {k:"010",n:"Sayur-sayuran",c:"Hulu Hortikultura",sh:0.25,om:1.356557,lc:0.284873,im:0.344723,t1m:9.576,t1t:2393.91,cat:""},
-  {k:"016",n:"Buah-buahan",c:"Hulu Hortikultura",sh:0.2,om:1.299189,lc:0.236295,im:0.288631,t1m:8.018,t1t:1603.51,cat:""},
-  {k:"021",n:"Kopi (mentah)",c:"Hulu Perkebunan",sh:0.15,om:1.263023,lc:0.416004,im:0.478261,t1m:13.285,t1t:1992.75,cat:""},
-  {k:"022",n:"Teh (mentah)",c:"Hulu Perkebunan",sh:0.4,om:1.428152,lc:0.322257,im:0.393054,t1m:10.918,t1t:4367.27,cat:"Teh Jabar (Bandung) dominan nasional"},
-  {k:"026",n:"Ternak (sapi/kambing)",c:"Hulu Peternakan",sh:0.15,om:1.499957,lc:0.339616,im:0.407678,t1m:11.324,t1t:1698.66,cat:""},
-  {k:"027",n:"Susu segar",c:"Hulu Peternakan",sh:0.3,om:1.64458,lc:0.314753,im:0.400798,t1m:11.133,t1t:3339.98,cat:"Sapi perah Lembang/Pangalengan"},
-  {k:"028",n:"Unggas & telur",c:"Hulu Peternakan",sh:0.3,om:1.793435,lc:0.321918,im:0.427842,t1m:11.885,t1t:3565.35,cat:"Peternakan ayam besar di Jabar"},
-  {k:"033",n:"Ikan tangkap",c:"Hulu Perikanan",sh:0.1,om:1.292943,lc:0.312315,im:0.362544,t1m:10.071,t1t:1007.07,cat:""},
-  {k:"034",n:"Udang & crustacea",c:"Hulu Perikanan",sh:0.05,om:1.250795,lc:0.260171,im:0.305179,t1m:8.477,t1t:423.86,cat:""},
-  {k:"053",n:"Pemotongan Hewan (RPH)",c:"Hilir Agro",sh:0.2,om:2.24921,lc:0.154294,im:0.462672,t1m:12.852,t1t:2570.4,cat:"RPH multi-lokasi, multiplier tinggi"},
-  {k:"056",n:"Pengolahan Ikan",c:"Hilir Agro",sh:0.15,om:1.954216,lc:0.104665,im:0.378223,t1m:10.506,t1t:1575.93,cat:""},
-  {k:"063",n:"Penggilingan Beras",c:"Hilir Agro",sh:0.2,om:1.970817,lc:0.061046,im:0.341303,t1m:9.481,t1t:1896.13,cat:""},
-  {k:"064",n:"Roti & Biskuit",c:"Hilir Agro",sh:0.35,om:2.112022,lc:0.166061,im:0.344693,t1m:9.575,t1t:3351.18,cat:""},
-  {k:"068",n:"Kopi Olahan",c:"Hilir Agro",sh:0.3,om:2.020055,lc:0.060828,im:0.37974,t1m:10.548,t1t:3164.5,cat:""},
-  {k:"069",n:"Teh Olahan",c:"Hilir Agro",sh:0.5,om:2.328471,lc:0.150476,im:0.407174,t1m:11.31,t1t:5655.19,cat:"Teh olahan Jabar dominan"},
-  {k:"082",n:"Pakaian Jadi",c:"Manufaktur Ekspor",sh:0.5,om:2.604197,lc:0.187385,im:0.406637,t1m:11.295,t1t:5647.74,cat:"Sentra Bandung Raya, 1.154 perusahaan"},
-  {k:"085",n:"Alas Kaki",c:"Manufaktur Ekspor",sh:0.6,om:2.278358,lc:0.305758,im:0.528823,t1m:14.69,t1t:8813.71,cat:"Sentra Bogor/Bandung, 259 perusahaan"},
-  {k:"109",n:"Barang Karet (Ban)",c:"Manufaktur Ekspor",sh:0.3,om:2.466527,lc:0.162991,im:0.413136,t1m:11.476,t1t:3442.8,cat:"Ban di Bekasi (Bridgestone, Goodyear)"},
-  {k:"124",n:"Mesin/Peralatan Listrik",c:"Manufaktur Ekspor",sh:0.55,om:2.557828,lc:0.17997,im:0.435725,t1m:12.103,t1t:6656.92,cat:"Bekasi-Karawang, 1.585 perusahaan"},
-  {k:"131",n:"Kendaraan Bermotor",c:"Manufaktur Ekspor",sh:0.7,om:2.152962,lc:0.244535,im:0.4743,t1m:13.175,t1t:9222.51,cat:"Toyota/Honda Karawang, 1.144 perusahaan"},
-];
+const SECTORS = [{"kode":"I-01","nama":"Pertanian Tanaman Pangan","kat":"Pertanian & Perikanan","om":1.1729,"fl":1.3588,"im":0.434,"lc":0.3859,"nbl":0.793,"nfl":0.919,"quad":"INDEP","x":52624075,"l":20305554,"tkM":12.06,"tkT":12057.0},{"kode":"I-02","nama":"Pertanian Tanaman Hortikultura Semusim, Hortikultura Tahunan, dan Lainnya","kat":"Pertanian & Perikanan","om":1.1888,"fl":1.1163,"im":0.4575,"lc":0.4064,"nbl":0.804,"nfl":0.755,"quad":"INDEP","x":39556433,"l":16075256,"tkM":12.71,"tkT":12709.0},{"kode":"I-03","nama":"Perkebunan Semusim dan Tahunan","kat":"Pertanian & Perikanan","om":1.2403,"fl":1.2086,"im":0.388,"lc":0.3249,"nbl":0.839,"nfl":0.818,"quad":"INDEP","x":14386339,"l":4673796,"tkM":10.78,"tkT":10777.0},{"kode":"I-04","nama":"Peternakan","kat":"Pertanian & Perikanan","om":1.3384,"fl":1.2089,"im":0.537,"lc":0.4551,"nbl":0.905,"nfl":0.818,"quad":"INDEP","x":29252548,"l":13311505,"tkM":14.92,"tkT":14918.0},{"kode":"I-05","nama":"Jasa Pertanian dan Perburuan","kat":"Pertanian & Perikanan","om":1.2587,"fl":1.0857,"im":0.5316,"lc":0.4766,"nbl":0.851,"nfl":0.734,"quad":"INDEP","x":2764813,"l":1317772,"tkM":14.77,"tkT":14767.0},{"kode":"I-06","nama":"Kehutanan dan Penebangan Kayu","kat":"Pertanian & Perikanan","om":1.2683,"fl":1.1379,"im":0.3192,"lc":0.2649,"nbl":0.858,"nfl":0.77,"quad":"INDEP","x":2534785,"l":671457,"tkM":8.87,"tkT":8867.0},{"kode":"I-07","nama":"Perikanan","kat":"Pertanian & Perikanan","om":1.1375,"fl":1.1078,"im":0.4755,"lc":0.4459,"nbl":0.769,"nfl":0.749,"quad":"INDEP","x":28261548,"l":12602498,"tkM":13.21,"tkT":13207.0},{"kode":"I-08","nama":"Pertambangan Minyak, Gas dan Panas Bumi","kat":"Tambang & Migas","om":1.2172,"fl":2.2163,"im":0.1688,"lc":0.1361,"nbl":0.823,"nfl":1.499,"quad":"SFORW","x":36648779,"l":4989647,"tkM":4.69,"tkT":4688.0},{"kode":"I-09","nama":"Pertambangan Batubara dan Lignit","kat":"Tambang & Migas","om":1.0,"fl":1.0,"im":0.0,"lc":0.0,"nbl":0.676,"nfl":0.676,"quad":"INDEP","x":0,"l":0,"tkM":0.0,"tkT":0.0},{"kode":"I-10","nama":"Pertambangan Bijih Logam","kat":"Tambang & Migas","om":1.1754,"fl":1.0658,"im":0.2738,"lc":0.2408,"nbl":0.795,"nfl":0.721,"quad":"INDEP","x":1463333,"l":352308,"tkM":7.61,"tkT":7606.0},{"kode":"I-11","nama":"Pertambangan dan Penggalian Lainnya","kat":"Tambang & Migas","om":1.4782,"fl":1.2014,"im":0.2564,"lc":0.1677,"nbl":1.0,"nfl":0.813,"quad":"INDEP","x":17574508,"l":2948104,"tkM":7.12,"tkT":7121.0},{"kode":"I-12","nama":"Industri Batubara dan Pengilangan Migas","kat":"Tambang & Migas","om":1.3005,"fl":2.231,"im":0.1613,"lc":0.1181,"nbl":0.88,"nfl":1.509,"quad":"SFORW","x":80325625,"l":9483784,"tkM":4.48,"tkT":4480.0},{"kode":"I-13","nama":"Industri Makanan dan Minuman","kat":"Industri Pengolahan","om":1.6532,"fl":1.2648,"im":0.3171,"lc":0.13,"nbl":1.118,"nfl":0.856,"quad":"SBACK","x":192824767,"l":25057815,"tkM":8.81,"tkT":8809.0},{"kode":"I-14","nama":"Industri Pengolahan Tembakau","kat":"Industri Pengolahan","om":1.1508,"fl":1.0026,"im":0.1369,"lc":0.1023,"nbl":0.778,"nfl":0.678,"quad":"INDEP","x":4427491,"l":453136,"tkM":3.8,"tkT":3804.0},{"kode":"I-15","nama":"Industri Tekstil dan Pakaian Jadi","kat":"Industri Pengolahan","om":1.8023,"fl":2.11,"im":0.3418,"lc":0.1907,"nbl":1.219,"nfl":1.427,"quad":"KEY","x":199852440,"l":38111349,"tkM":9.49,"tkT":9495.0},{"kode":"I-16","nama":"Industri Kulit, Barang dari Kulit dan Alas Kaki","kat":"Industri Pengolahan","om":1.7247,"fl":1.2363,"im":0.4197,"lc":0.2682,"nbl":1.167,"nfl":0.836,"quad":"SBACK","x":54590372,"l":14642600,"tkM":11.66,"tkT":11659.0},{"kode":"I-17","nama":"Industri Kayu, Barang dari Kayu dan Gabus dan Barang Anyaman dari Bambu, Rotan dan Sejenisnya","kat":"Industri Pengolahan","om":1.6311,"fl":1.2501,"im":0.2884,"lc":0.167,"nbl":1.103,"nfl":0.846,"quad":"SBACK","x":22393645,"l":3740575,"tkM":8.01,"tkT":8011.0},{"kode":"I-18","nama":"Industri Kertas dan Barang dari Kertas, Percetakan dan Reproduksi Media Rekaman","kat":"Industri Pengolahan","om":1.7059,"fl":1.4103,"im":0.2935,"lc":0.1665,"nbl":1.154,"nfl":0.954,"quad":"SBACK","x":36890937,"l":6143957,"tkM":8.15,"tkT":8153.0},{"kode":"I-19","nama":"Industri Kimia, Farmasi dan Obat Tradisional","kat":"Industri Pengolahan","om":1.6506,"fl":2.3197,"im":0.2321,"lc":0.1128,"nbl":1.117,"nfl":1.569,"quad":"KEY","x":121611609,"l":13723295,"tkM":6.45,"tkT":6447.0},{"kode":"I-20","nama":"Industri Karet, Barang dari Karet dan Plastik","kat":"Industri Pengolahan","om":1.5992,"fl":1.3781,"im":0.2399,"lc":0.1319,"nbl":1.082,"nfl":0.932,"quad":"SBACK","x":45975339,"l":6061926,"tkM":6.66,"tkT":6664.0},{"kode":"I-21","nama":"Industri Barang Galian bukan Logam","kat":"Industri Pengolahan","om":1.6927,"fl":1.3282,"im":0.3288,"lc":0.1998,"nbl":1.145,"nfl":0.898,"quad":"SBACK","x":34309006,"l":6853474,"tkM":9.13,"tkT":9134.0},{"kode":"I-22","nama":"Industri Logam Dasar","kat":"Industri Pengolahan","om":1.2447,"fl":1.2782,"im":0.1276,"lc":0.0893,"nbl":0.842,"nfl":0.865,"quad":"INDEP","x":31649605,"l":2825926,"tkM":3.54,"tkT":3543.0},{"kode":"I-23","nama":"Industri Barang dari Logam, Komputer, Barang Elektronik, Optik dan Peralatan Listrik","kat":"Industri Pengolahan","om":1.6769,"fl":2.3039,"im":0.3276,"lc":0.2017,"nbl":1.134,"nfl":1.558,"quad":"KEY","x":322022491,"l":64942082,"tkM":9.1,"tkT":9100.0},{"kode":"I-24","nama":"Industri Mesin dan Perlengkapan YTDL","kat":"Industri Pengolahan","om":1.8463,"fl":2.1006,"im":0.2968,"lc":0.1488,"nbl":1.249,"nfl":1.421,"quad":"KEY","x":236610645,"l":35204263,"tkM":8.24,"tkT":8244.0},{"kode":"I-25","nama":"Industri Alat Angkutan","kat":"Industri Pengolahan","om":1.6601,"fl":1.9326,"im":0.3923,"lc":0.2547,"nbl":1.123,"nfl":1.307,"quad":"KEY","x":213934112,"l":54480194,"tkM":10.9,"tkT":10897.0},{"kode":"I-26","nama":"Industri Furnitur","kat":"Industri Pengolahan","om":1.7863,"fl":1.0754,"im":0.2297,"lc":0.0909,"nbl":1.208,"nfl":0.727,"quad":"SBACK","x":15361599,"l":1396726,"tkM":6.38,"tkT":6381.0},{"kode":"I-27","nama":"Industri Pengolahan Lainnya, Jasa Reparasi dan Pemasangan Mesin dan Peralatan","kat":"Industri Pengolahan","om":1.8496,"fl":1.434,"im":0.3763,"lc":0.2058,"nbl":1.251,"nfl":0.97,"quad":"SBACK","x":69931847,"l":14392796,"tkM":10.45,"tkT":10454.0},{"kode":"I-28","nama":"Ketenagalistrikan","kat":"Energi & Utilitas","om":2.7971,"fl":3.4739,"im":0.2506,"lc":0.0584,"nbl":1.892,"nfl":2.35,"quad":"KEY","x":91963841,"l":5368291,"tkM":6.96,"tkT":6962.0},{"kode":"I-29","nama":"Pengadaan Gas dan Produksi Es","kat":"Energi & Utilitas","om":1.3357,"fl":1.2824,"im":0.1458,"lc":0.0944,"nbl":0.904,"nfl":0.868,"quad":"INDEP","x":16640114,"l":1570028,"tkM":4.05,"tkT":4050.0},{"kode":"I-30","nama":"Pengadaan Air, Pengelolaan Sampah, Limbah, dan Daur Ulang","kat":"Energi & Utilitas","om":1.5025,"fl":1.0667,"im":0.2062,"lc":0.1251,"nbl":1.016,"nfl":0.722,"quad":"SBACK","x":6403237,"l":801192,"tkM":5.73,"tkT":5728.0},{"kode":"I-31","nama":"Konstruksi","kat":"Konstruksi","om":1.6591,"fl":1.8097,"im":0.2446,"lc":0.1177,"nbl":1.122,"nfl":1.224,"quad":"KEY","x":312429620,"l":36762020,"tkM":6.79,"tkT":6794.0},{"kode":"I-32","nama":"Perdagangan Mobil, Sepeda Motor dan Reparasinya","kat":"Perdagangan","om":1.3185,"fl":1.5711,"im":0.4377,"lc":0.3736,"nbl":0.892,"nfl":1.063,"quad":"SFORW","x":70399515,"l":26301055,"tkM":12.16,"tkT":12158.0},{"kode":"I-33","nama":"Perdagangan Besar dan Eceran, Bukan Mobil dan Sepeda Motor","kat":"Perdagangan","om":1.3457,"fl":3.0947,"im":0.3364,"lc":0.2664,"nbl":0.91,"nfl":2.093,"quad":"SFORW","x":318681285,"l":84888690,"tkM":9.34,"tkT":9344.0},{"kode":"I-34","nama":"Angkutan Rel","kat":"Transportasi","om":1.8438,"fl":1.0091,"im":0.5716,"lc":0.4169,"nbl":1.247,"nfl":0.683,"quad":"SBACK","x":1941697,"l":809572,"tkM":15.88,"tkT":15877.0},{"kode":"I-35","nama":"Angkutan Darat","kat":"Transportasi","om":1.6075,"fl":2.2952,"im":0.2361,"lc":0.1294,"nbl":1.087,"nfl":1.553,"quad":"KEY","x":141486137,"l":18313621,"tkM":6.56,"tkT":6559.0},{"kode":"I-36","nama":"Angkutan Laut","kat":"Transportasi","om":1.536,"fl":1.0001,"im":0.1656,"lc":0.059,"nbl":1.039,"nfl":0.676,"quad":"SBACK","x":884616,"l":52191,"tkM":4.6,"tkT":4601.0},{"kode":"I-37","nama":"Angkutan Sungai Danau dan Penyeberangan","kat":"Transportasi","om":1.3809,"fl":1.0,"im":0.2515,"lc":0.1767,"nbl":0.934,"nfl":0.676,"quad":"INDEP","x":6039,"l":1067,"tkM":6.99,"tkT":6987.0},{"kode":"I-38","nama":"Angkutan Udara","kat":"Transportasi","om":1.6156,"fl":1.0565,"im":0.2541,"lc":0.1275,"nbl":1.093,"nfl":0.715,"quad":"SBACK","x":9593394,"l":1222962,"tkM":7.06,"tkT":7058.0},{"kode":"I-39","nama":"Pergudangan dan Jasa Penunjang Angkutan, Pos dan Kurir","kat":"Transportasi","om":1.4801,"fl":1.3141,"im":0.3355,"lc":0.2464,"nbl":1.001,"nfl":0.889,"quad":"SBACK","x":13049826,"l":3216011,"tkM":9.32,"tkT":9319.0},{"kode":"I-40","nama":"Penyediaan Akomodasi","kat":"Akomodasi & Makan","om":1.4602,"fl":1.1053,"im":0.2504,"lc":0.1659,"nbl":0.988,"nfl":0.748,"quad":"INDEP","x":15166660,"l":2516384,"tkM":6.95,"tkT":6954.0},{"kode":"I-41","nama":"Penyediaan Makan Minum","kat":"Akomodasi & Makan","om":1.5532,"fl":1.1644,"im":0.328,"lc":0.1848,"nbl":1.051,"nfl":0.788,"quad":"SBACK","x":127220276,"l":23506829,"tkM":9.11,"tkT":9112.0},{"kode":"I-42","nama":"Jasa Informasi dan Komunikasi","kat":"Info & Komunikasi","om":1.405,"fl":1.9931,"im":0.3084,"lc":0.2266,"nbl":0.95,"nfl":1.348,"quad":"SFORW","x":82895055,"l":18784140,"tkM":8.57,"tkT":8568.0},{"kode":"I-43","nama":"Jasa Perantara Keuangan Selain Bank Sentral","kat":"Jasa Keuangan","om":1.2101,"fl":1.7874,"im":0.3671,"lc":0.3173,"nbl":0.819,"nfl":1.209,"quad":"SFORW","x":44145795,"l":14009092,"tkM":10.2,"tkT":10196.0},{"kode":"I-44","nama":"Asuransi dan Dana Pensiun","kat":"Jasa Keuangan","om":1.3047,"fl":1.0424,"im":0.4453,"lc":0.3683,"nbl":0.883,"nfl":0.705,"quad":"INDEP","x":5634153,"l":2075315,"tkM":12.37,"tkT":12371.0},{"kode":"I-45","nama":"Jasa Keuangan Lainnya","kat":"Jasa Keuangan","om":1.341,"fl":1.3022,"im":0.3908,"lc":0.3018,"nbl":0.907,"nfl":0.881,"quad":"INDEP","x":9528431,"l":2875617,"tkM":10.86,"tkT":10856.0},{"kode":"I-46","nama":"Jasa Penunjang Keuangan","kat":"Jasa Keuangan","om":1.2993,"fl":1.1319,"im":0.3871,"lc":0.3135,"nbl":0.879,"nfl":0.766,"quad":"INDEP","x":2777662,"l":870819,"tkM":10.75,"tkT":10753.0},{"kode":"I-47","nama":"Real Estate","kat":"Real Estate","om":1.1696,"fl":1.2692,"im":0.0733,"lc":0.0379,"nbl":0.791,"nfl":0.859,"quad":"INDEP","x":109105008,"l":4136918,"tkM":2.04,"tkT":2036.0},{"kode":"I-48","nama":"Jasa Perusahaan","kat":"Jasa Perusahaan","om":1.5118,"fl":2.1721,"im":0.4345,"lc":0.3207,"nbl":1.023,"nfl":1.469,"quad":"KEY","x":56033381,"l":17970771,"tkM":12.07,"tkT":12069.0},{"kode":"I-49","nama":"Administrasi Pemerintahan, Pertahanan dan Jaminan Sosial Wajib","kat":"Pemerintahan & Jasa","om":1.4781,"fl":1.0545,"im":0.528,"lc":0.4329,"nbl":1.0,"nfl":0.713,"quad":"INDEP","x":51059077,"l":22103658,"tkM":14.67,"tkT":14668.0},{"kode":"I-50","nama":"Jasa Pendidikan","kat":"Pemerintahan & Jasa","om":1.345,"fl":1.129,"im":0.5469,"lc":0.47,"nbl":0.91,"nfl":0.764,"quad":"INDEP","x":93018018,"l":43719917,"tkM":15.19,"tkT":15192.0},{"kode":"I-51","nama":"Jasa Kesehatan dan Kegiatan Sosial","kat":"Pemerintahan & Jasa","om":1.5286,"fl":1.084,"im":0.3922,"lc":0.2794,"nbl":1.034,"nfl":0.733,"quad":"SBACK","x":40359975,"l":11274966,"tkM":10.9,"tkT":10895.0},{"kode":"I-52","nama":"Jasa  Lainnya","kat":"Pemerintahan & Jasa","om":1.3925,"fl":1.3,"im":0.2412,"lc":0.1665,"nbl":0.942,"nfl":0.879,"quad":"INDEP","x":63628944,"l":10596986,"tkM":6.7,"tkT":6699.0}];
+const SMAP = {};
+SECTORS.forEach(s => SMAP[s.kode] = s);
 
-const S185 = [
-  {k:"001",n:"Padi",c:"Tani",om:1.377213,lc:0.328741,im:0.402257},
-  {k:"002",n:"Jagung",c:"Tani",om:1.264724,lc:0.278295,im:0.332013},
-  {k:"003",n:"Ubi jalar",c:"Tani",om:1.311034,lc:0.212336,im:0.266433},
-  {k:"004",n:"Ubi kayu",c:"Tani",om:1.23615,lc:0.425086,im:0.486003},
-  {k:"005",n:"Umbi-umbian lainnya",c:"Tani",om:1.218209,lc:0.182965,im:0.2238},
-  {k:"006",n:"Kacang tanah",c:"Tani",om:1.297954,lc:0.237197,im:0.295251},
-  {k:"007",n:"Kedelai",c:"Tani",om:1.365865,lc:0.279772,im:0.352337},
-  {k:"008",n:"Kacang-kacangan Lainnya",c:"Tani",om:1.286285,lc:0.208463,im:0.254387},
-  {k:"009",n:"Padi-padian dan Bahan Makanan Lainnya",c:"Tani",om:1.184386,lc:0.216206,im:0.250464},
-  {k:"010",n:"Sayur-sayuran",c:"Tani",om:1.356557,lc:0.284873,im:0.344723},
-  {k:"011",n:"Tanaman Hias",c:"Tani",om:1.450018,lc:0.314293,im:0.399559},
-  {k:"012",n:"Tebu",c:"Tani",om:1.48965,lc:0.334191,im:0.421007},
-  {k:"013",n:"Tembakau",c:"Tani",om:1.531958,lc:0.247896,im:0.344953},
-  {k:"014",n:"Tanaman serat",c:"Tani",om:1.238787,lc:0.109956,im:0.147127},
-  {k:"015",n:"Hasil Perkebunan Lainnya",c:"Tani",om:1.247665,lc:0.369493,im:0.416086},
-  {k:"016",n:"Buah-buahan",c:"Tani",om:1.299189,lc:0.236295,im:0.288631},
-  {k:"017",n:"Tanaman Biofarmaka",c:"Tani",om:1.334731,lc:0.290314,im:0.350862},
-  {k:"018",n:"Karet",c:"Tani",om:1.409591,lc:0.445814,im:0.523199},
-  {k:"019",n:"Kelapa",c:"Ternak/Hutan",om:1.240179,lc:0.337609,im:0.385036},
-  {k:"020",n:"Kelapa Sawit",c:"Ternak/Hutan",om:1.463742,lc:0.380882,im:0.482349},
-  {k:"021",n:"Kopi",c:"Ternak/Hutan",om:1.263023,lc:0.416004,im:0.478261},
-  {k:"022",n:"Teh  ",c:"Ternak/Hutan",om:1.428152,lc:0.322257,im:0.393054},
-  {k:"023",n:"Kakao",c:"Ternak/Hutan",om:1.292101,lc:0.30618,im:0.35976},
-  {k:"024",n:"Cengkeh",c:"Ternak/Hutan",om:1.337643,lc:0.339024,im:0.400846},
-  {k:"025",n:"Jambu Mete",c:"Ternak/Hutan",om:1.21428,lc:0.36141,im:0.401961},
-  {k:"026",n:"Ternak dan Hasil-hasilnya kecuali Susu Segar",c:"Ternak/Hutan",om:1.499957,lc:0.339616,im:0.407678},
-  {k:"027",n:"Susu segar",c:"Ternak/Hutan",om:1.64458,lc:0.314753,im:0.400798},
-  {k:"028",n:"Unggas dan Hasil-hasilnya",c:"Ternak/Hutan",om:1.793435,lc:0.321918,im:0.427842},
-  {k:"029",n:"Hasil Pemeliharaan Hewan Lainnya",c:"Ternak/Hutan",om:1.61992,lc:0.406107,im:0.496328},
-  {k:"030",n:"Jasa Pertanian, Kehutanan dan Perikanan",c:"Ternak/Hutan",om:1.452036,lc:0.385953,im:0.462291},
-  {k:"031",n:"Kayu",c:"Ternak/Hutan",om:1.240257,lc:0.345312,im:0.396139},
-  {k:"032",n:"Hasil Hutan Lainnya",c:"Perikanan",om:1.237579,lc:0.324267,im:0.373932},
-  {k:"033",n:"Ikan",c:"Perikanan",om:1.292943,lc:0.312315,im:0.362544},
-  {k:"034",n:"Udang dan crustacea lainnya",c:"Perikanan",om:1.250795,lc:0.260171,im:0.305179},
-  {k:"035",n:"Biota air lainnya",c:"Perikanan",om:1.310005,lc:0.192572,im:0.242185},
-  {k:"036",n:"Rumput laut dan sejenisnya",c:"Perikanan",om:1.183632,lc:0.50057,im:0.559846},
-  {k:"037",n:"Batubara dan lignit",c:"Tambang",om:1.797378,lc:0.10705,im:0.246773},
-  {k:"038",n:"Minyak Bumi",c:"Tambang",om:1.443059,lc:0.150092,im:0.235735},
-  {k:"039",n:"Gas Bumi dan Panas Bumi",c:"Tambang",om:1.474423,lc:0.138356,im:0.224111},
-  {k:"040",n:"Pasir besi dan bijih besi",c:"Tambang",om:1.434519,lc:0.373411,im:0.444023},
-  {k:"041",n:"Bijih Timah",c:"Tambang",om:1.640363,lc:0.166254,im:0.276036},
-  {k:"042",n:"Bijih Bauksit",c:"Tambang",om:1.495389,lc:0.163517,im:0.240627},
-  {k:"043",n:"Bijih Tembaga",c:"Tambang",om:1.495044,lc:0.147202,im:0.229753},
-  {k:"044",n:"Bijih Nikel",c:"Tambang",om:1.7866,lc:0.118004,im:0.249085},
-  {k:"045",n:"Barang Tambang Logam Lainnya",c:"Tambang",om:1.615719,lc:0.196779,im:0.307492},
-  {k:"046",n:"Bijih Emas",c:"Tambang",om:1.682556,lc:0.267948,im:0.390331},
-  {k:"047",n:"Bijih Perak",c:"Tambang",om:1.763101,lc:0.291873,im:0.421583},
-  {k:"048",n:"Barang Galian Segala Jenis",c:"Tambang",om:1.740892,lc:0.282658,im:0.413222},
-  {k:"049",n:"Barang Tambang Mineral Bukan Logam",c:"Tambang",om:1.457627,lc:0.362933,im:0.443135},
-  {k:"050",n:"Garam Kasar",c:"Tambang",om:1.536391,lc:0.31737,im:0.415162},
-  {k:"051",n:"Jasa pertambangan minyak bumi dan gas alam",c:"Tambang",om:1.54488,lc:0.268912,im:0.361948},
-  {k:"052",n:"Jasa pertambangan dan penggalian lainnya",c:"Tambang",om:1.509533,lc:0.161086,im:0.251642},
-  {k:"053",n:"Hasil Pemotongan Hewan",c:"Makanan",om:2.24921,lc:0.154294,im:0.462672},
-  {k:"054",n:"Hasil Pengolahan Dan Pengawetan Daging",c:"Makanan",om:2.40013,lc:0.119574,im:0.409255},
-  {k:"055",n:"Ikan Kering dan Ikan Asin",c:"Makanan",om:1.943397,lc:0.119616,im:0.389654},
-  {k:"056",n:"Hasil Pengolahan dan Pengawetan Ikan",c:"Makanan",om:1.954216,lc:0.104665,im:0.378223},
-  {k:"057",n:"Hasil Pengolahan dan Pengawetan Buah-buahan dan Sayur-sayuran ",c:"Makanan",om:1.979046,lc:0.082712,im:0.289333},
-  {k:"058",n:"Minyak Hewani dan Minyak Nabati",c:"Makanan",om:2.177665,lc:0.04725,im:0.334149},
-  {k:"059",n:"Kopra",c:"Makanan",om:2.010851,lc:0.038621,im:0.215088},
-  {k:"060",n:"Makanan dan Minuman Terbuat dari Susu",c:"Makanan",om:2.129233,lc:0.173288,im:0.396749},
-  {k:"061",n:"Tepung Lainnya",c:"Makanan",om:2.112608,lc:0.108973,im:0.37002},
-  {k:"062",n:"Tepung gandum dan tepung meslin",c:"Makanan",om:1.87166,lc:0.072487,im:0.257448},
-  {k:"063",n:"Hasil Penggilingan Padi Dan Penyosohan Beras",c:"Makanan",om:1.970817,lc:0.061046,im:0.341303},
-  {k:"064",n:"Roti, Biskuit dan Sejenisnya",c:"Makanan",om:2.112022,lc:0.166061,im:0.344693},
-  {k:"065",n:"Gula",c:"Makanan",om:2.134451,lc:0.124128,im:0.308415},
-  {k:"066",n:"Coklat dan Kembang Gula",c:"Makanan",om:2.122968,lc:0.052877,im:0.275117},
-  {k:"067",n:"Mie, Macaroni dan Sejenisnya",c:"Makanan",om:2.345419,lc:0.058394,im:0.280683},
-  {k:"068",n:"Kopi Olahan",c:"Makanan",om:2.020055,lc:0.060828,im:0.37974},
-  {k:"069",n:"Teh Olahan",c:"Makanan",om:2.328471,lc:0.150476,im:0.407174},
-  {k:"070",n:"Kedele Olahan",c:"Makanan",om:2.060711,lc:0.116239,im:0.348037},
-  {k:"071",n:"Makanan Lainnya",c:"Makanan",om:2.105703,lc:0.110519,im:0.33816},
-  {k:"072",n:"Makanan Hewan Olahan",c:"Makanan",om:2.173208,lc:0.029762,im:0.252875},
-  {k:"073",n:"Minuman Beralkohol",c:"Makanan",om:1.668002,lc:0.381643,im:0.513416},
-  {k:"074",n:"Minuman Tak Beralkohol",c:"Makanan",om:2.116385,lc:0.263334,im:0.459343},
-  {k:"075",n:"Rokok",c:"Makanan",om:1.83513,lc:0.141759,im:0.305058},
-  {k:"076",n:"Tembakau Olahan",c:"Makanan",om:1.951447,lc:0.138568,im:0.349061},
-  {k:"077",n:"Benang",c:"Tekstil/Kayu",om:2.259089,lc:0.144275,im:0.301295},
-  {k:"078",n:"Tekstil",c:"Tekstil/Kayu",om:2.550824,lc:0.128535,im:0.336768},
-  {k:"079",n:"Permadani,Tali & Penutup Lantai Lainnya",c:"Tekstil/Kayu",om:2.336655,lc:0.136501,im:0.308079},
-  {k:"080",n:"Barang dari Tekstil Selain Kain dan Pakaian Jadi",c:"Tekstil/Kayu",om:2.530077,lc:0.150015,im:0.355297},
-  {k:"081",n:"Barang-barang Rajutan",c:"Tekstil/Kayu",om:2.551321,lc:0.137107,im:0.346787},
-  {k:"082",n:"Pakaian Jadi",c:"Tekstil/Kayu",om:2.604197,lc:0.187385,im:0.406637},
-  {k:"083",n:"Hasil Pengawetan Dan Penyamakan Kulit",c:"Tekstil/Kayu",om:2.572006,lc:0.203383,im:0.49878},
-  {k:"084",n:"Barang-barang dari Kulit",c:"Tekstil/Kayu",om:2.314981,lc:0.268158,im:0.519509},
-  {k:"085",n:"Alas Kaki",c:"Tekstil/Kayu",om:2.278358,lc:0.305758,im:0.528823},
-  {k:"086",n:"Kayu Gergajian dan Olahan",c:"Tekstil/Kayu",om:1.934822,lc:0.166267,im:0.398865},
-  {k:"087",n:"Kayu Lapis dan Sejenisnya",c:"Tekstil/Kayu",om:1.94782,lc:0.170723,im:0.373628},
-  {k:"088",n:"Bahan Bangunan Dari Kayu",c:"Tekstil/Kayu",om:2.041647,lc:0.172736,im:0.391617},
-  {k:"089",n:"Barang-barang Lainnya Dari Kayu, Gabus, Bambu dan Rotan",c:"Tekstil/Kayu",om:2.000704,lc:0.175347,im:0.396937},
-  {k:"090",n:"Bubur Kertas",c:"Tekstil/Kayu",om:2.394041,lc:0.134779,im:0.402198},
-  {k:"091",n:"Kertas ",c:"Tekstil/Kayu",om:2.348785,lc:0.175844,im:0.400002},
-  {k:"092",n:"Barang-Barang Dari Kertas Dan Karton",c:"Tekstil/Kayu",om:2.528173,lc:0.153966,im:0.411622},
-  {k:"093",n:"Barang Cetakan",c:"Tekstil/Kayu",om:2.723379,lc:0.128426,im:0.412586},
-  {k:"094",n:"Barang-barang Lainnya dari Bahan Bukan Logam",c:"Tekstil/Kayu",om:2.170974,lc:0.222746,im:0.425394},
-  {k:"095",n:"Barang-barang Hasil Kilang Minyak dan Gas",c:"Tekstil/Kayu",om:1.735783,lc:0.07988,im:0.199351},
-  {k:"096",n:"Kimia Dasar Kecuali Pupuk",c:"Kimia/Karet",om:2.115295,lc:0.035346,im:0.2066},
-  {k:"097",n:"Pupuk",c:"Kimia/Karet",om:2.0422,lc:0.097796,im:0.268588},
-  {k:"098",n:"Damar Sintetis, Bahan Plastik dan Serat Sintetis",c:"Kimia/Karet",om:2.39118,lc:0.077253,im:0.252205},
-  {k:"099",n:"Pestisida",c:"Kimia/Karet",om:2.33465,lc:0.108069,im:0.276833},
-  {k:"100",n:"Cat dan tinta cetak",c:"Kimia/Karet",om:2.359839,lc:0.214679,im:0.394042},
-  {k:"101",n:"Vernis Dan Lak",c:"Kimia/Karet",om:2.41286,lc:0.198268,im:0.393194},
-  {k:"102",n:"Sabun dan bahan pembersih",c:"Kimia/Karet",om:2.427237,lc:0.074444,im:0.272042},
-  {k:"103",n:"Kosmetik",c:"Kimia/Karet",om:2.27505,lc:0.083256,im:0.282312},
-  {k:"104",n:"Barang-barang kimia lainnya",c:"Kimia/Karet",om:2.123639,lc:0.198991,im:0.374382},
-  {k:"105",n:"Produk farmasi",c:"Kimia/Karet",om:2.291042,lc:0.232503,im:0.459915},
-  {k:"106",n:"Obat Tradisional",c:"Kimia/Karet",om:2.219,lc:0.150527,im:0.378115},
-  {k:"107",n:"Ban",c:"Kimia/Karet",om:2.416251,lc:0.089583,im:0.350966},
-  {k:"108",n:"Karet Remah dan Karet Asap",c:"Kimia/Karet",om:2.031664,lc:0.084238,im:0.435507},
-  {k:"109",n:"Barang-barang Lainnya dari Karet",c:"Kimia/Karet",om:2.466527,lc:0.162991,im:0.413136},
-  {k:"110",n:"Barang-Barang  dari Plastik",c:"Kimia/Karet",om:2.53116,lc:0.117852,im:0.296917},
-  {k:"111",n:"Kaca dan Barang-barang dari Kaca",c:"Logam/Mesin",om:2.055703,lc:0.229842,im:0.395392},
-  {k:"112",n:"Barang-Barang dari tanah liat, keramik dan porselen",c:"Logam/Mesin",om:2.1231,lc:0.240835,im:0.430831},
-  {k:"113",n:"Semen",c:"Logam/Mesin",om:2.136971,lc:0.149729,im:0.321919},
-  {k:"114",n:"Besi dan Baja Dasar",c:"Logam/Mesin",om:2.251416,lc:0.164616,im:0.360074},
-  {k:"115",n:"Logam Dasar Bukan Besi",c:"Logam/Mesin",om:2.140412,lc:0.052155,im:0.266393},
-  {k:"116",n:"Barang-barang hasil Pengecoran  logam",c:"Logam/Mesin",om:2.199163,lc:0.111961,im:0.330754},
-  {k:"117",n:"Bahan Bangunan dari Logam",c:"Logam/Mesin",om:2.165532,lc:0.182259,im:0.370624},
-  {k:"118",n:"Senjata dan amunisi, metalurgi dan jasa pembuatan barang logam",c:"Logam/Mesin",om:2.168835,lc:0.229696,im:0.422074},
-  {k:"119",n:"Alat-alat dapur, pertukangan, perabot rumahtangga dan kantor dari logam",c:"Logam/Mesin",om:2.12831,lc:0.24532,im:0.427373},
-  {k:"120",n:"Barang-barang Logam Lainnya",c:"Logam/Mesin",om:2.407431,lc:0.169773,im:0.38584},
-  {k:"121",n:"Barang-barang Elektronik, Komunikasi dan Perlengkapannya",c:"Logam/Mesin",om:2.411455,lc:0.172533,im:0.404592},
-  {k:"122",n:"Alat Ukur, Fotografi, Optik dan Jam",c:"Logam/Mesin",om:2.492779,lc:0.169833,im:0.41677},
-  {k:"123",n:"Mesin Pembangkit Dan Motor Listrik",c:"Logam/Mesin",om:2.52637,lc:0.190879,im:0.425545},
-  {k:"124",n:"Mesin Listrik Dan Perlengkapannya",c:"Logam/Mesin",om:2.557828,lc:0.17997,im:0.435725},
-  {k:"125",n:"Baterai Dan Aki",c:"Logam/Mesin",om:2.39206,lc:0.192504,im:0.392377},
-  {k:"126",n:"Perlengkapan Listrik Lainnya",c:"Logam/Mesin",om:2.316551,lc:0.257505,im:0.443204},
-  {k:"127",n:"Alat Listrik Untuk Rumah Tangga",c:"Logam/Mesin",om:2.496842,lc:0.208677,im:0.442961},
-  {k:"128",n:"Mesin Penggerak Mula",c:"Logam/Mesin",om:2.602644,lc:0.125614,im:0.407159},
-  {k:"129",n:"Mesin untuk keperluan kantor dan akunting, dan bagian serta perlengkapannya",c:"Logam/Mesin",om:2.442377,lc:0.153498,im:0.370443},
-  {k:"130",n:"Mesin lainnya dan perlengkapannya",c:"Logam/Mesin",om:2.544205,lc:0.165935,im:0.409865},
-  {k:"131",n:"Kendaraan Bermotor Kecuali Sepeda Motor",c:"Kendaraan/Lain",om:2.152962,lc:0.244535,im:0.4743},
-  {k:"132",n:"Kapal Dan Jasa Perbaikannya",c:"Kendaraan/Lain",om:2.180206,lc:0.276531,im:0.506349},
-  {k:"133",n:"Kereta Api Dan Jasa Perbaikannya",c:"Kendaraan/Lain",om:2.418207,lc:0.199902,im:0.439204},
-  {k:"134",n:"Pesawat Terbang Dan Jasa Perbaikannya",c:"Kendaraan/Lain",om:2.231939,lc:0.221519,im:0.441226},
-  {k:"135",n:"Alat Pengangkutan Lainnya",c:"Kendaraan/Lain",om:2.241652,lc:0.227148,im:0.437575},
-  {k:"136",n:"Sepeda Motor",c:"Kendaraan/Lain",om:2.216662,lc:0.240917,im:0.458021},
-  {k:"137",n:"Perabotan Rumah Tangga dan Kantor Selain dari Logam",c:"Kendaraan/Lain",om:2.226402,lc:0.209599,im:0.430902},
-  {k:"138",n:"Perhiasan",c:"Kendaraan/Lain",om:2.431013,lc:0.173047,im:0.37328},
-  {k:"139",n:"Alat-Alat Musik",c:"Kendaraan/Lain",om:2.453433,lc:0.176585,im:0.417441},
-  {k:"140",n:"Alat-Alat Olahraga",c:"Kendaraan/Lain",om:2.19863,lc:0.204136,im:0.406793},
-  {k:"141",n:"Alat Permainan dan mainan anak-anak",c:"Kendaraan/Lain",om:2.310566,lc:0.155165,im:0.355799},
-  {k:"142",n:"Alat Kedokteran",c:"Kendaraan/Lain",om:1.986001,lc:0.283372,im:0.43269},
-  {k:"143",n:"Barang-barang hasil industri pengolahan lainnya",c:"Kendaraan/Lain",om:2.163259,lc:0.279527,im:0.469293},
-  {k:"144",n:"Jasa perawatan dan perbaikan produk-produk logam pabrikan, mesin-mesin dan peralatan",c:"Kendaraan/Lain",om:2.172293,lc:0.144724,im:0.347126},
-  {k:"145",n:"Listrik",c:"Jasa",om:2.919792,lc:0.042677,im:0.257627},
-  {k:"146",n:"Hasil gas alam dan buatan, pengadaan uap air/air panas, udara dingin dan produk es",c:"Jasa",om:1.54587,lc:0.07973,im:0.170604},
-  {k:"147",n:"Pengadaan Air",c:"Jasa",om:1.402003,lc:0.07997,im:0.143331},
-  {k:"148",n:"Pengelolaan Sampah, Limbah dan Daur Ulang",c:"Jasa",om:2.271204,lc:0.202475,im:0.394706},
-  {k:"149",n:"Bangunan Tempat Tinggal Dan Bukan Tempat Tinggal",c:"Jasa",om:2.246368,lc:0.212576,im:0.442994},
-  {k:"150",n:"Bangunan & Instalasi Listrik, Gas, Air Minum Dan Komunikasi",c:"Jasa",om:2.289689,lc:0.076032,im:0.305021},
-  {k:"151",n:"Prasarana Pertanian",c:"Jasa",om:2.156775,lc:0.173865,im:0.40137},
-  {k:"152",n:"Jalan, Jembatan, dan Pelabuhan",c:"Jasa",om:2.157094,lc:0.222373,im:0.448837},
-  {k:"153",n:"Bangunan Lainnya",c:"Jasa",om:2.206663,lc:0.1716,im:0.391863},
-  {k:"154",n:"Perdagangan Mobil dan Sepeda Motor",c:"Jasa",om:1.558325,lc:0.337781,im:0.437805},
-  {k:"155",n:"Reparasi dan Perawatan Mobil dan Sepeda Motor",c:"Jasa",om:1.589929,lc:0.32,im:0.422771},
-  {k:"156",n:"Perdagangan selain Mobil dan Sepeda Motor",c:"Jasa",om:1.565505,lc:0.304745,im:0.405788},
-  {k:"157",n:"Jasa Angkutan Rel",c:"Jasa",om:2.060233,lc:0.357796,im:0.563373},
-  {k:"158",n:"Jasa Angkutan Darat Selain Angkutan Rel",c:"Jasa",om:1.954313,lc:0.118472,im:0.28691},
-  {k:"159",n:"Jasa Angkutan Laut",c:"Jasa",om:2.248901,lc:0.091877,im:0.300613},
-  {k:"160",n:"Jasa Angkutan Sungai Danau dan Penyeberangan",c:"Jasa",om:2.161444,lc:0.154688,im:0.360802},
-  {k:"161",n:"Jasa Angkutan Udara",c:"Jasa",om:2.172482,lc:0.156642,im:0.350397},
-  {k:"162",n:"Jasa Penunjang Angkutan",c:"Jasa",om:1.843655,lc:0.213214,im:0.360683},
-  {k:"163",n:"Jasa Pos dan Kurir",c:"Jasa",om:1.931391,lc:0.248185,im:0.399485},
-  {k:"164",n:"Penyediaan Akomodasi",c:"Jasa",om:1.686011,lc:0.212589,im:0.34531},
-  {k:"165",n:"Penyediaan Makan dan Minum",c:"Jasa",om:2.044886,lc:0.225324,im:0.432384},
-  {k:"166",n:"Hasil-hasil Penerbitan",c:"Jasa",om:2.207465,lc:0.169619,im:0.377144},
-  {k:"167",n:"Jasa Penyiaran dan pemrograman, Film dan Hasil Perekaman Suara",c:"Jasa",om:1.858113,lc:0.179546,im:0.333555},
-  {k:"168",n:"Jasa Telekomunikasi",c:"Jasa",om:1.579417,lc:0.175188,im:0.284647},
-  {k:"169",n:"Jasa Konsultasi komputer dan teknologi informasi",c:"Jasa",om:1.899537,lc:0.20041,im:0.350064},
-  {k:"170",n:"Jasa Keuangan Perbankan",c:"Jasa",om:1.459937,lc:0.355296,im:0.45097},
-  {k:"171",n:"Jasa asuransi",c:"Jasa",om:1.515899,lc:0.282792,im:0.397632},
-  {k:"172",n:"Jasa Dana Pensiun",c:"Jasa",om:1.398607,lc:0.488811,im:0.577249},
-  {k:"173",n:"Jasa Lembaga Keuangan Lainnya",c:"Jasa",om:1.590328,lc:0.317645,im:0.443787},
-  {k:"174",n:"Jasa Real Estate",c:"Jasa",om:1.45678,lc:0.067305,im:0.159544},
-  {k:"175",n:"Jasa Profesional, Ilmiah dan Teknis",c:"Jasa",om:1.925084,lc:0.173832,im:0.348652},
-  {k:"177",n:"Jasa Pemerintahan Umum",c:"Jasa",om:1.911157,lc:0.379734,im:0.537615},
-  {k:"178",n:"Jasa Pendidikan Pemerintah",c:"Jasa",om:1.674579,lc:0.581688,im:0.70242},
-  {k:"179",n:"Jasa Kesehatan Pemerintah",c:"Jasa",om:2.055507,lc:0.369708,im:0.573997},
-  {k:"180",n:"Jasa Pemerintahan Lainnya",c:"Jasa",om:1.998342,lc:0.399082,im:0.566738},
-  {k:"181",n:"Jasa Pendidikan Swasta",c:"Jasa",om:1.729403,lc:0.40835,im:0.537261},
-  {k:"182",n:"Jasa Kesehatan & Kegiatan Sosial Swasta",c:"Jasa",om:1.986463,lc:0.217674,im:0.398889},
-  {k:"183",n:"Jasa Kesenian, Hiburan Dan Rekreasi",c:"Jasa",om:1.931488,lc:0.152316,im:0.320439},
-  {k:"184",n:"Reparasi Barang Rumahtangga dan Pribadi Lainnya",c:"Jasa",om:1.901512,lc:0.248666,im:0.41247},
-  {k:"185",n:"Jasa Lainnya",c:"Jasa",om:1.752743,lc:0.483405,im:0.616841},
-];
-
-const KONST = {
-  WAGE_PER_WORKER: 36,  // Upah rata-rata Jabar (Rp juta/orang/tahun)
-  POOR_REDUCTION_FACTOR: 0.5,  // Faktor konversi kemiskinan (orang miskin/pekerja baru)
-  MISKIN_PCT: 6.83,  // Tingkat Kemiskinan (% penduduk)
-  MISKIN_JML: 3550000,  // Jumlah Penduduk Miskin (orang)
-  TPT_PCT: 6.81,  // Tingkat Pengangguran Terbuka (%)
-  TPT_JML: 1790000,  // Jumlah Pengangguran (orang)
-  ANG_KERJA: 26290000,  // Angkatan Kerja (orang)
-  BEKERJA: 24510000,  // Penduduk Bekerja (orang)
-  PDRB_Q3: 799.11,  // PDRB Q1 2026 ADHB (Rp triliun)
-  PDRB_ANNUAL: 3196.44,  // PDRB Tahunan (estimasi) (Rp triliun)
-  GROWTH_YOY: 5.79,  // Pertumbuhan Ekonomi y-o-y (% (Q3 2025))
-  GARIS_MISKIN: 547752,  // Garis Kemiskinan (Rp/kapita/bulan)
-  IND_SHARE: 40.08,  // Share Industri di PDRB (% PDRB)
-  TANI_SHARE: 7.5,  // Share Pertanian di PDRB (% PDRB)
-  PDRB_ADHK: 475.41,  // PDRB Q1 2026 ADHK (Rp triliun)
+let PARAMS = {
+  wage: 36, poorFactor: 0.5, pdrbAnnual: 3196.44,
+  tptJml: 1790000, miskinPct: 6.83, miskinJml: 3550000, popJabar: 52000000
 };
+const DEFAULTS = {...PARAMS};
 
-const SCEN = {
-  "SKENARIO A": [
-    {k:"082",n:"Pakaian Jadi",inv:8},
-    {k:"085",n:"Alas Kaki",inv:8},
-    {k:"109",n:"Barang Karet (Ban)",inv:8},
-    {k:"124",n:"Mesin/Peralatan Listrik",inv:12},
-    {k:"131",n:"Kendaraan Bermotor",inv:14},
-  ],
-  "SKENARIO B": [
-    {k:"053",n:"Pemotongan Hewan (RPH)",inv:5},
-    {k:"063",n:"Penggilingan Beras",inv:6},
-    {k:"064",n:"Roti & Biskuit",inv:5},
-    {k:"068",n:"Kopi Olahan",inv:4},
-    {k:"069",n:"Teh Olahan",inv:5},
-    {k:"056",n:"Pengolahan Ikan",inv:5},
-  ],
-  "SKENARIO C": [
-    {k:"082",n:"Pakaian Jadi",inv:8},
-    {k:"085",n:"Alas Kaki",inv:8},
-    {k:"109",n:"Barang Karet (Ban)",inv:8},
-    {k:"124",n:"Mesin/Peralatan Listrik",inv:12},
-    {k:"131",n:"Kendaraan Bermotor",inv:14},
-    {k:"053",n:"Pemotongan Hewan (RPH)",inv:5},
-    {k:"063",n:"Penggilingan Beras",inv:6},
-    {k:"064",n:"Roti & Biskuit",inv:5},
-    {k:"068",n:"Kopi Olahan",inv:4},
-    {k:"069",n:"Teh Olahan",inv:5},
-    {k:"056",n:"Pengolahan Ikan",inv:5},
-  ],
-  "SKENARIO D": [
-    {k:"082",n:"Pakaian Jadi",inv:18},
-    {k:"085",n:"Alas Kaki",inv:18},
-    {k:"109",n:"Barang Karet (Ban)",inv:17},
-    {k:"124",n:"Mesin/Peralatan Listrik",inv:28},
-    {k:"131",n:"Kendaraan Bermotor",inv:32},
-    {k:"053",n:"Pemotongan Hewan (RPH)",inv:13},
-    {k:"063",n:"Penggilingan Beras",inv:14},
-    {k:"064",n:"Roti & Biskuit",inv:12},
-    {k:"068",n:"Kopi Olahan",inv:10},
-    {k:"069",n:"Teh Olahan",inv:13},
-    {k:"056",n:"Pengolahan Ikan",inv:13},
-    {k:"001",n:"Padi",inv:6},
-    {k:"027",n:"Susu segar",inv:3},
-    {k:"028",n:"Unggas & telur",inv:3},
-  ],
-};
+const QCOLOR = {KEY:'#C8923A', SBACK:'#5E7A3A', SFORW:'#3A6E7A', INDEP:'#A8453A'};
+const QNAME = {KEY:'Key Sector', SBACK:'S.Backward', SFORW:'S.Forward', INDEP:'Independent'};
 
-const COMP = {"Total Investasi": {"A": 50, "B": 30, "C": 80, "D": 200, "unit": "Rp Triliun"}, "Total Lapangan Kerja": {"A": 352232.09673823445, "B": 89798.28254880049, "C": 442030.3792870349, "D": 1056944.765177558, "unit": "orang"}, "% TPT Terserap": {"A": 19.67777076749913, "B": 5.016663829541926, "C": 24.694434597041056, "D": 59.047193585338434, "unit": "%"}, "\u0394 PDRB": {"A": 3.7729073398997435, "B": 1.9763847203877125, "C": 5.618674022309213, "D": 13.188730309036417, "unit": "%"}, "\u0394 Kemiskinan": {"A": -0.3388373550312875, "B": -0.08638341828286018, "C": -0.42522077331414765, "D": -1.016751091008834, "unit": "pp"}, "LK per Rp 1 Triliun": {"A": 7044.641934764689, "B": 2993.2760849600163, "C": 5525.379741087936, "D": 5284.72382588779, "unit": "orang/T"}, "Output Mult rata-rata": {"A": 2.411974387509827, "B": 2.1057983918786998, "C": 2.2449692989837575, "D": 2.107849255450818, "unit": "Rp/Rp"}};
-// ===== HELPERS =====
-const fmt = (n, d=0) => {
-  if (n === null || n === undefined || isNaN(n)) return '—';
-  return new Intl.NumberFormat('id-ID', {minimumFractionDigits:d, maximumFractionDigits:d}).format(n);
-};
-const fmtPct = (n, d=2) => isNaN(n) ? '—' : (n>=0?'+':'')+n.toFixed(d).replace('.', ',');
-const fmtSigned = (n, d=2) => isNaN(n) ? '—' : (n>0?'+':'')+n.toFixed(d).replace('.', ',');
+const fmtID = (n,d=0) => n.toLocaleString('id-ID',{minimumFractionDigits:d,maximumFractionDigits:d});
+const fmt2 = n => n.toLocaleString('id-ID',{minimumFractionDigits:2,maximumFractionDigits:2});
 
-// ===== EDITABLE CONSTANTS =====
-// Snapshot defaults (deep clone primitives — KONST is flat)
-const KONST_DEFAULT = Object.assign({}, KONST);
+// recompute TK/T based on current wage
+function tkT(s){ return s.im * 1e6 / PARAMS.wage; }
+function tkM(s){ return s.im * 1000 / PARAMS.wage; }
 
-// Definition for sidebar UI + sources.
-// active=true means changing this triggers recompute of calculator/scenarios.
-const CONST_DEFS = [
-  // group, key, label, unit, source, decimals, active, step
-  ['Asumsi Metodologis', 'WAGE_PER_WORKER', 'Upah rata-rata Jabar', 'Rp juta/orang/tahun',
-    'UMK rata-rata Jabar ~Rp 3 juta/bulan × 12. Untuk industri padat modal upah riil lebih tinggi.', 1, true, 0.5],
-  ['Asumsi Metodologis', 'POOR_REDUCTION_FACTOR', 'Faktor konversi kemiskinan', 'orang miskin/pekerja baru',
-    'Asumsi konservatif: tiap 1 pekerja baru = 0,5 orang keluar dari kemiskinan.', 2, true, 0.05],
-
-  ['Baseline Makro Jabar — Aktif di Perhitungan', 'TPT_JML', 'Jumlah Pengangguran', 'orang',
-    'BPS Jabar, Februari 2026', 0, true, 10000],
-  ['Baseline Makro Jabar — Aktif di Perhitungan', 'MISKIN_JML', 'Jumlah Penduduk Miskin', 'orang',
-    'BPS Jabar, September 2025', 0, true, 10000],
-  ['Baseline Makro Jabar — Aktif di Perhitungan', 'MISKIN_PCT', 'Tingkat Kemiskinan', '% penduduk',
-    'BPS Jabar, September 2025', 2, true, 0.01],
-  ['Baseline Makro Jabar — Aktif di Perhitungan', 'PDRB_ANNUAL', 'PDRB Tahunan (estimasi)', 'Rp triliun',
-    'Annualized Q1 2026 (= 799,11 × 4)', 2, true, 10],
-
-  ['Baseline Konteks', 'TPT_PCT', 'Tingkat Pengangguran Terbuka', '%',
-    'BPS Jabar, Februari 2026', 2, false, 0.01],
-  ['Baseline Konteks', 'ANG_KERJA', 'Angkatan Kerja', 'orang',
-    'BPS Jabar, Agustus 2025', 0, false, 10000],
-  ['Baseline Konteks', 'BEKERJA', 'Penduduk Bekerja', 'orang',
-    'BPS Jabar, Agustus 2025', 0, false, 10000],
-  ['Baseline Konteks', 'PDRB_Q3', 'PDRB Q1 2026 ADHB', 'Rp triliun',
-    'BPS Jabar, Q1 2026', 2, false, 1],
-  ['Baseline Konteks', 'PDRB_ADHK', 'PDRB Q1 2026 ADHK (riil)', 'Rp triliun',
-    'BPS Jabar, Q1 2026 basis riil', 2, false, 1],
-  ['Baseline Konteks', 'GROWTH_YOY', 'Pertumbuhan Ekonomi y-o-y', '%',
-    'BPS Jabar, Q1 2026 LPE y-o-y', 2, false, 0.01],
-  ['Baseline Konteks', 'GARIS_MISKIN', 'Garis Kemiskinan', 'Rp/kapita/bulan',
-    'BPS Jabar, Maret 2025', 0, false, 1000],
-  ['Baseline Konteks', 'IND_SHARE', 'Share Industri di PDRB', '% PDRB',
-    'BPS Jabar, 2025', 2, false, 0.1],
-  ['Baseline Konteks', 'TANI_SHARE', 'Share Pertanian di PDRB', '% PDRB',
-    'Estimasi BPS Jabar, 2025', 1, false, 0.1],
-].map(arr => ({
-  group: arr[0], key: arr[1], label: arr[2], unit: arr[3],
-  source: arr[4], decimals: arr[5], active: arr[6], step: arr[7]
+// ============ TABLE ============
+let tF='all', tQ='', tSort={col:'tkT',dir:'desc'};
+function renderTable(){
+  let rows = SECTORS.filter(s=>{
+    if(tF!=='all' && s.quad!==tF) return false;
+    if(tQ){const q=tQ.toLowerCase(); if(!s.nama.toLowerCase().includes(q)&&!s.kode.toLowerCase().includes(q))return false;}
+    return true;
+  });
+  rows.sort((a,b)=>{
+    let va=a[tSort.col], vb=b[tSort.col];
+    if(tSort.col==='tkT'){va=tkT(a);vb=tkT(b);}
+    if(tSort.col==='tkM'){va=tkM(a);vb=tkM(b);}
+    if(typeof va==='string')return tSort.dir==='asc'?va.localeCompare(vb):vb.localeCompare(va);
+    return tSort.dir==='asc'?va-vb:vb-va;
+  });
+  document.getElementById('sektor-tbody').innerHTML = rows.map(s=>`<tr>
+    <td class="mono" style="color:var(--muted);font-size:11.5px">${s.kode}</td>
+    <td>${s.nama}</td>
+    <td><span class="qd-pill" style="background:${QCOLOR[s.quad]}">${QNAME[s.quad]}</span></td>
+    <td class="r">${fmt2(s.om)}</td>
+    <td class="r">${fmt2(s.fl)}</td>
+    <td class="r">${fmt2(s.im)}</td>
+    <td class="r">${fmt2(tkM(s))}</td>
+    <td class="r" style="font-weight:600">${fmtID(tkT(s))}</td>
+  </tr>`).join('');
+  document.getElementById('tbl-count').textContent = `Menampilkan ${rows.length} dari 52 industri`;
+  document.querySelectorAll('#sektor-tbl th').forEach(th=>{
+    th.classList.remove('sorted-asc','sorted-desc');
+    if(th.dataset.s===tSort.col) th.classList.add('sorted-'+tSort.dir);
+  });
+}
+document.querySelectorAll('.fbtn').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.fbtn').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active'); tF=b.dataset.f; renderTable();
+}));
+document.getElementById('tbl-search').addEventListener('input',e=>{tQ=e.target.value;renderTable();});
+document.querySelectorAll('#sektor-tbl th[data-s]').forEach(th=>th.addEventListener('click',()=>{
+  if(tSort.col===th.dataset.s)tSort.dir=tSort.dir==='asc'?'desc':'asc';
+  else{tSort.col=th.dataset.s;tSort.dir='desc';}
+  renderTable();
 }));
 
-// Recompute derived sektor values whenever WAGE_PER_WORKER changes.
-// Output Mult and Income Mult come from the IO matrix (technological constants),
-// but TK/Rp 1M, TK/Rp 1T (Nasional), TK/Rp 1T (Jabar) all depend on wage.
-function recomputeDerived() {
-  const w = KONST.WAGE_PER_WORKER;
-  // Update S21 (used by calculator) AND ALL_S (used by table + charts)
-  S21.forEach(s => {
-    s.t1m = s.im * 1000 / w;
-    s.t1t = s.im * 1000000 / w * s.sh;   // TK/Rp 1T Jabar
+// ============ CHARTS ============
+let charts={};
+const FONT_MONO="'IBM Plex Mono',monospace";
+function makeCharts(){
+  Object.values(charts).forEach(c=>{if(c)c.destroy();});
+  const top15=[...SECTORS].sort((a,b)=>tkT(b)-tkT(a)).slice(0,15);
+  // Chart 1: bar TK/T
+  charts.c1=new Chart(document.getElementById('chart1'),{
+    type:'bar',
+    data:{labels:top15.map(s=>s.nama.length>28?s.nama.slice(0,26)+'…':s.nama),
+      datasets:[{data:top15.map(s=>Math.round(tkT(s))),backgroundColor:top15.map(s=>QCOLOR[s.quad]),borderWidth:0}]},
+    options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},
+      tooltip:{callbacks:{label:c=>fmtID(c.parsed.x)+' orang/T'}}},
+      scales:{x:{ticks:{font:{family:FONT_MONO,size:10},callback:v=>fmtID(v)},grid:{color:'rgba(26,24,21,0.06)'}},
+        y:{ticks:{font:{family:FONT_MONO,size:10}},grid:{display:false}}}}
   });
-  // ALL_S is built later, so guard:
-  if (typeof ALL_S !== 'undefined') {
-    ALL_S.forEach(s => {
-      s.t1m = s.im * 1000 / w;
-      s.t1t_nas = s.im * 1000000 / w;
-      if (s.is21 && s.sh != null) s.t1t_jbr = s.im * 1000000 / w * s.sh;
-    });
-  }
+  // Chart 2: bubble OM vs IM
+  const byQuad={};SECTORS.forEach(s=>{(byQuad[s.quad]=byQuad[s.quad]||[]).push(s);});
+  charts.c2=new Chart(document.getElementById('chart2'),{
+    type:'bubble',
+    data:{datasets:Object.keys(byQuad).map(q=>({label:QNAME[q],
+      data:byQuad[q].map(s=>({x:s.om,y:s.im,r:Math.max(4,Math.sqrt(tkT(s))/12),nama:s.nama})),
+      backgroundColor:QCOLOR[q]+'cc',borderColor:QCOLOR[q],borderWidth:1}))},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{family:FONT_MONO,size:11},usePointStyle:true}},
+      tooltip:{callbacks:{label:c=>c.raw.nama+': OM '+fmt2(c.raw.x)+', IM '+fmt2(c.raw.y)}}},
+      scales:{x:{title:{display:true,text:'Output Multiplier',font:{family:FONT_MONO,size:11}},ticks:{font:{family:FONT_MONO,size:10}},grid:{color:'rgba(26,24,21,0.06)'}},
+        y:{title:{display:true,text:'Income Multiplier',font:{family:FONT_MONO,size:11}},ticks:{font:{family:FONT_MONO,size:10}},grid:{color:'rgba(26,24,21,0.06)'}}}}
+  });
+  // Chart 3: Rasmussen scatter nBL vs nFL
+  charts.c3=new Chart(document.getElementById('chart3'),{
+    type:'scatter',
+    data:{datasets:Object.keys(byQuad).map(q=>({label:QNAME[q],
+      data:byQuad[q].map(s=>({x:s.nbl,y:s.nfl,nama:s.nama})),
+      backgroundColor:QCOLOR[q],pointRadius:5,pointHoverRadius:7}))},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{family:FONT_MONO,size:11},usePointStyle:true}},
+      tooltip:{callbacks:{label:c=>c.raw.nama+': nBL '+fmt2(c.raw.x)+', nFL '+fmt2(c.raw.y)}}},
+      scales:{x:{title:{display:true,text:'Normalized Backward Linkage',font:{family:FONT_MONO,size:11}},ticks:{font:{family:FONT_MONO,size:10}},grid:{color:'rgba(26,24,21,0.06)'}},
+        y:{title:{display:true,text:'Normalized Forward Linkage',font:{family:FONT_MONO,size:11}},ticks:{font:{family:FONT_MONO,size:10}},grid:{color:'rgba(26,24,21,0.06)'}}}}
+  });
+  // add reference lines at 1.0 via plugin
+  // Chart 4: avg OM per kategori
+  const katMap={};SECTORS.forEach(s=>{(katMap[s.kat]=katMap[s.kat]||[]).push(s.om);});
+  const katArr=Object.entries(katMap).map(([k,v])=>({k,avg:v.reduce((a,b)=>a+b,0)/v.length})).sort((a,b)=>b.avg-a.avg);
+  charts.c4=new Chart(document.getElementById('chart4'),{
+    type:'bar',
+    data:{labels:katArr.map(x=>x.k),datasets:[{data:katArr.map(x=>x.avg),backgroundColor:'#C8923A',borderWidth:0}]},
+    options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},
+      tooltip:{callbacks:{label:c=>'OM rata-rata '+fmt2(c.parsed.x)}}},
+      scales:{x:{ticks:{font:{family:FONT_MONO,size:10}},grid:{color:'rgba(26,24,21,0.06)'},suggestedMin:1},
+        y:{ticks:{font:{family:FONT_MONO,size:10}},grid:{display:false}}}}
+  });
 }
 
-const KAT_CLASS = {'Hulu Pangan':'hulu','Hulu Hortikultura':'hulu','Hulu Perkebunan':'hulu','Hulu Peternakan':'hulu','Hulu Perikanan':'hulu','Hilir Agro':'hilir','Manufaktur Ekspor':'manuf','Jasa':'jasa','Tani':'hulu','Tambang':'hilir','Industri':'manuf'};
-const KAT_COLOR = {'Hulu Pangan':'#5A7F3D','Hulu Hortikultura':'#5A7F3D','Hulu Perkebunan':'#5A7F3D','Hulu Peternakan':'#5A7F3D','Hulu Perikanan':'#5A7F3D','Hilir Agro':'#B8881F','Manufaktur Ekspor':'#A0421C'};
-
-// ===== §3 TABEL SEKTOR =====
-// Build merged dataset: 185 sektor + flag is21 + share/t1t from S21 where available
-const S21_map = {};
-S21.forEach(s => S21_map[s.k] = s);
-const ALL_S = S185.map(s => {
-  const t = S21_map[s.k];
-  return {
-    k: s.k,
-    n: s.n,
-    c_broad: s.c || 'Lainnya',     // BPS broad: Tani, Industri, Jasa, etc.
-    c_target: t ? t.c : null,       // 21-target finer kategori
-    om: s.om,
-    lc: s.lc,
-    im: s.im,
-    t1m: s.im * 1000 / 36,          // TK per Rp 1M Nasional (still computed for tutorial)
-    t1t_nas: s.im * 1000000 / 36,   // TK per Rp 1T Nasional = TK/Rp 1M × 1.000
-    sh: t ? t.sh : null,
-    t1t_jbr: t ? t.t1t : null,
-    is21: !!t
-  };
-});
-
-// Map BPS broad category → color class
-const BROAD_KAT_CLASS = {
-  'Tani': 'hulu', 'Ternak/Hutan': 'hulu', 'Perikanan': 'hulu',
-  'Tambang': 'tambang',
-  'Makanan': 'hilir',
-  'Tekstil/Kayu': 'manuf', 'Kimia/Karet': 'manuf', 'Logam/Mesin': 'manuf', 'Kendaraan/Lain': 'manuf',
-  'Jasa': 'jasa', 'Lainnya': ''
+// ============ CALCULATOR ============
+let SEL={}, calcQ='';
+const PRESETS={
+  A:[['I-15',12],['I-16',8],['I-20',8],['I-23',10],['I-25',12]],
+  B:[['I-01',6],['I-02',4],['I-04',6],['I-07',4],['I-13',10]],
+  C:[['I-15',12],['I-16',8],['I-20',8],['I-23',10],['I-25',12],['I-01',6],['I-02',4],['I-04',6],['I-07',4],['I-13',10]],
+  D:[['I-15',22],['I-16',14],['I-19',12],['I-20',14],['I-23',22],['I-25',24],['I-01',10],['I-02',6],['I-04',10],['I-07',6],['I-13',18],['I-28',12],['I-31',20],['I-35',10]],
+  reset:[]
 };
+function applyPreset(p){SEL={};PRESETS[p].forEach(([k,v])=>{if(SMAP[k])SEL[k]={inv:v};});renderCalcList();renderSel();recompute();}
+document.querySelectorAll('.preset-btn').forEach(b=>b.addEventListener('click',()=>applyPreset(b.dataset.p)));
+document.querySelectorAll('.scen-card').forEach(c=>c.addEventListener('click',()=>{applyPreset(c.dataset.scen);document.getElementById('kalkulator').scrollIntoView({behavior:'smooth'});}));
 
-// Build category filter buttons from data
-const broadCats = {};
-ALL_S.forEach(s => { broadCats[s.c_broad] = (broadCats[s.c_broad] || 0) + 1; });
-const catOrder = ['Tani','Ternak/Hutan','Perikanan','Tambang','Makanan','Tekstil/Kayu','Kimia/Karet','Logam/Mesin','Kendaraan/Lain','Jasa']
-  .filter(c => broadCats[c]);
+function addSel(k){if(SEL[k])return;SEL[k]={inv:5};renderCalcList();renderSel();recompute();}
+function rmSel(k){delete SEL[k];renderCalcList();renderSel();recompute();}
+function updInv(k,v){if(!SEL[k])return;const n=parseFloat(v);if(!isNaN(n))SEL[k].inv=Math.max(0,n);recompute();}
 
-const pillsEl = document.getElementById('filter-pills');
-// Inject actual total count into "Semua" pill
-document.getElementById('cnt-all').textContent = '·' + ALL_S.length;
-catOrder.forEach(c => {
-  const btn = document.createElement('button');
-  btn.className = 'filter-btn';
-  btn.dataset.filter = 'cat:' + c;
-  btn.innerHTML = `${c} <span class="count">·${broadCats[c]}</span>`;
-  pillsEl.appendChild(btn);
-});
+function renderCalcList(){
+  let list=[...SECTORS].sort((a,b)=>tkT(b)-tkT(a));
+  if(calcQ){const q=calcQ.toLowerCase();list=list.filter(s=>s.nama.toLowerCase().includes(q)||s.kode.toLowerCase().includes(q));}
+  list=list.slice(0,40);
+  document.getElementById('calc-list').innerHTML=list.map(s=>`<div class="calc-list-row">
+    <span class="kd">${s.kode}</span>
+    <div class="nm">${s.nama}<small>${fmtID(tkT(s))} TK/T · ${QNAME[s.quad]}</small></div>
+    <button class="${SEL[s.kode]?'added':''}" onclick="addSel('${s.kode}')">${SEL[s.kode]?'✓':'+ tambah'}</button>
+  </div>`).join('')||'<div style="padding:18px;text-align:center;color:var(--muted);font-size:12.5px">Tidak ada hasil</div>';
+}
+function renderSel(){
+  const ks=Object.keys(SEL);
+  if(!ks.length){document.getElementById('calc-selected').innerHTML='<div class="sel-empty">Belum ada industri. Klik preset atau "+ tambah" di atas.</div>';return;}
+  document.getElementById('calc-selected').innerHTML=ks.map(k=>{const s=SMAP[k];return `<div class="sel-row">
+    <div class="snm">${s.nama}<small>${s.kode} · ${QNAME[s.quad]}</small></div>
+    <input type="number" class="sel-input" value="${SEL[k].inv}" min="0" step="1" onchange="updInv('${k}',this.value)">
+    <button class="sel-rm" onclick="rmSel('${k}')">×</button>
+  </div>`;}).join('');
+}
+function recompute(){
+  let totLK=0,totInv=0,wOM=0;
+  Object.keys(SEL).forEach(k=>{const s=SMAP[k],inv=SEL[k].inv;totLK+=inv*tkT(s);totInv+=inv;wOM+=s.om*inv;});
+  const avgOM=totInv>0?wOM/totInv:0;
+  const pctTPT=totLK/PARAMS.tptJml*100;
+  const dMisk=totLK*PARAMS.poorFactor*PARAMS.miskinPct/PARAMS.miskinJml;
+  const dPDRB=totInv*avgOM/PARAMS.pdrbAnnual*100;
+  const eff=totInv>0?totLK/totInv:0;
+  document.getElementById('r-lk').textContent=fmtID(totLK);
+  document.getElementById('r-lk-sub').textContent=`orang · dari Rp ${fmtID(totInv,totInv%1?1:0)} T investasi · ${Object.keys(SEL).length} industri`;
+  document.getElementById('r-tpt').textContent=fmt2(pctTPT)+'%';
+  document.getElementById('r-pdrb').textContent='+'+fmt2(dPDRB)+'%';
+  document.getElementById('r-misk').textContent='−'+fmtID(dMisk,3)+' pp';
+  document.getElementById('r-eff').textContent=fmtID(eff);
+  const note=document.getElementById('r-note');
+  if(totInv===0)note.textContent='Belum ada investasi. Klik preset di atas atau geser angka.';
+  else note.innerHTML=`Investasi <b style="color:var(--amber-soft)">Rp ${fmtID(totInv,totInv%1?1:0)} T</b> di ${Object.keys(SEL).length} industri membuka <b style="color:var(--amber-soft)">${fmtID(totLK)} lapangan kerja</b> — setara ${fmt2(pctTPT)}% pengangguran Jabar. Kemiskinan turun ke ${fmt2(PARAMS.miskinPct-dMisk)}%.`;
+}
+document.getElementById('calc-search').addEventListener('input',e=>{calcQ=e.target.value;renderCalcList();});
 
-let currentFilter = 'target';
-let currentSearch = '';
-let sortKey = 't1t', sortDir = -1;
-
-// Column definitions per mode
-const COLS_TARGET = [
-  {k:'no', label:'No.', cls:'num'},
-  {k:'kode', label:'Kode'},
-  {k:'nama', label:'Sektor'},
-  {k:'kategori', label:'Kategori'},
-  {k:'share', label:'Share Jabar', cls:'num'},
-  {k:'om', label:'Output Mult', cls:'num'},
-  {k:'im', label:'Income Mult', cls:'num'},
-  {k:'t1t_nas', label:'TK/Rp 1T (Nasional)', cls:'num'},
-  {k:'t1t', label:'TK/Rp 1T (Jabar)', cls:'num'}
+// ============ PANEL ============
+const PARAM_DEFS=[
+  ['wage','Upah rata-rata','Rp juta/orang/tahun'],
+  ['poorFactor','Faktor kemiskinan','orang miskin/pekerja'],
+  ['pdrbAnnual','PDRB Jabar tahunan','Rp triliun'],
+  ['tptJml','Jumlah pengangguran','orang'],
+  ['miskinPct','Tingkat kemiskinan','%'],
+  ['miskinJml','Jumlah penduduk miskin','orang'],
+  ['popJabar','Total penduduk Jabar','orang'],
 ];
-const COLS_ALL = [
-  {k:'no', label:'No.', cls:'num'},
-  {k:'kode', label:'Kode'},
-  {k:'nama', label:'Sektor'},
-  {k:'kategori', label:'Kategori'},
-  {k:'lc', label:'Labor Coef', cls:'num'},
-  {k:'om', label:'Output Mult', cls:'num'},
-  {k:'im', label:'Income Mult', cls:'num'},
-  {k:'t1t_nas', label:'TK/Rp 1T (Nasional)', cls:'num'}
-];
-
-function getFiltered() {
-  let list;
-  if (currentFilter === 'target') list = ALL_S.filter(s => s.is21);
-  else if (currentFilter === 'all') list = ALL_S.slice();
-  else if (currentFilter.startsWith('cat:')) {
-    const c = currentFilter.slice(4);
-    list = ALL_S.filter(s => s.c_broad === c);
-  } else list = ALL_S.slice();
-  
-  if (currentSearch) {
-    const q = currentSearch.toLowerCase();
-    list = list.filter(s => s.n.toLowerCase().includes(q) || s.k.includes(q));
-  }
-  return list;
+function buildPanel(){
+  document.getElementById('panel-body').innerHTML=PARAM_DEFS.map(([k,lbl,unit])=>`<div class="param-row">
+    <label>${lbl}<small>${unit}</small></label>
+    <input type="number" id="param-${k}" value="${PARAMS[k]}" onchange="updParam('${k}',this.value)">
+  </div>`).join('');
 }
+function updParam(k,v){const n=parseFloat(v);if(!isNaN(n)){PARAMS[k]=n;renderTable();makeCharts();renderCalcList();renderSel();recompute();}}
+function resetParams(){PARAMS={...DEFAULTS};buildPanel();renderTable();makeCharts();renderCalcList();recompute();}
+function togglePanel(){document.getElementById('panel-overlay').classList.toggle('open');}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')document.getElementById('panel-overlay').classList.remove('open');});
 
-function renderTabel() {
-  const mode = currentFilter === 'target' ? 'target' : 'all';
-  const cols = mode === 'target' ? COLS_TARGET : COLS_ALL;
-  const list = getFiltered();
-  
-  // Sort
-  const sorted = [...list].sort((a, b) => {
-    let av, bv;
-    switch (sortKey) {
-      case 'no': av = ALL_S.indexOf(a); bv = ALL_S.indexOf(b); break;
-      case 'kode': av = a.k; bv = b.k; break;
-      case 'nama': av = a.n; bv = b.n; break;
-      case 'kategori': av = mode==='target' ? (a.c_target||'') : a.c_broad; bv = mode==='target' ? (b.c_target||'') : b.c_broad; break;
-      case 'share': av = a.sh ?? -1; bv = b.sh ?? -1; break;
-      case 'om': av = a.om; bv = b.om; break;
-      case 'im': av = a.im; bv = b.im; break;
-      case 'lc': av = a.lc; bv = b.lc; break;
-      case 't1t_nas': av = a.t1t_nas; bv = b.t1t_nas; break;
-      case 't1t': av = a.t1t_jbr ?? -1; bv = b.t1t_jbr ?? -1; break;
-      default: av = a.om; bv = b.om;
-    }
-    if (typeof av === 'string') return av.localeCompare(bv) * sortDir;
-    return (av - bv) * sortDir;
+// ============ SCENARIO CHART ============
+function makeScenChart(){
+  const scenData={};
+  ['A','B','C','D'].forEach(p=>{
+    let lk=0,inv=0;PRESETS[p].forEach(([k,v])=>{const s=SMAP[k];if(s){lk+=v*tkT(s);inv+=v;}});
+    scenData[p]={lk,inv,tpt:lk/PARAMS.tptJml*100};
   });
-  
-  // Render thead
-  const theadEl = document.getElementById('tabel-head');
-  theadEl.innerHTML = cols.map(c => 
-    `<th data-sort="${c.k}" ${c.cls?`class="${c.cls}"`:''}>${c.label}</th>`
-  ).join('');
-  // Attach sort handlers
-  theadEl.querySelectorAll('th').forEach(th => {
-    th.addEventListener('click', () => {
-      const k = th.dataset.sort;
-      if (sortKey === k) sortDir = -sortDir;
-      else { sortKey = k; sortDir = (['nama','kode','kategori'].includes(k)) ? 1 : -1; }
-      renderTabel();
-    });
-    if (th.dataset.sort === sortKey) th.classList.add(sortDir === 1 ? 'sort-asc' : 'sort-desc');
-  });
-  
-  // Render tbody
-  const tbody = document.getElementById('tabel21-body');
-  if (sorted.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="${cols.length}" style="text-align:center;padding:32px;color:var(--ink-mute);font-style:italic">Tidak ada sektor yang cocok dengan pencarian.</td></tr>`;
-  } else {
-    tbody.innerHTML = sorted.map((s, i) => {
-      const kat = mode === 'target' ? (s.c_target || s.c_broad) : s.c_broad;
-      const kc = mode === 'target' ? (KAT_CLASS[s.c_target] || '') : (BROAD_KAT_CLASS[s.c_broad] || '');
-      const targetMark = (mode === 'all' || mode === 'target') === false || mode === 'target' ? '' : (s.is21 ? '<span class="target-mark" title="Termasuk 21 sektor target"></span>' : '');
-      
-      let cells = '';
-      cols.forEach(c => {
-        if (c.k === 'no') cells += `<td class="num">${ALL_S.indexOf(s) + 1}</td>`;
-        else if (c.k === 'kode') cells += `<td><span class="kode">${s.k}</span></td>`;
-        else if (c.k === 'nama') cells += `<td>${targetMark}<span class="sektor-name">${s.n}</span></td>`;
-        else if (c.k === 'kategori') cells += `<td><span class="kategori-tag ${kc}">${kat}</span></td>`;
-        else if (c.k === 'share') cells += s.sh != null ? `<td class="num">${(s.sh*100).toFixed(0)}%</td>` : `<td class="num na">—</td>`;
-        else if (c.k === 'om') cells += `<td class="num">${s.om.toFixed(2).replace('.', ',')}</td>`;
-        else if (c.k === 'im') cells += `<td class="num">${s.im.toFixed(2).replace('.', ',')}</td>`;
-        else if (c.k === 'lc') cells += `<td class="num">${s.lc.toFixed(3).replace('.', ',')}</td>`;
-        else if (c.k === 't1t_nas') cells += `<td class="num">${fmt(s.t1t_nas, 0)}</td>`;
-        else if (c.k === 't1t') cells += s.t1t_jbr != null ? `<td class="num"><strong>${fmt(s.t1t_jbr, 0)}</strong></td>` : `<td class="num na">—</td>`;
-      });
-      return `<tr>${cells}</tr>`;
-    }).join('');
-  }
-  
-  // Meta line
-  const infoEl = document.getElementById('table-meta-info');
-  const countEl = document.getElementById('table-meta-count');
-  let infoTxt = '';
-  if (currentFilter === 'target') infoTxt = 'Menampilkan <strong>21 sektor target</strong> · semua TK dalam unit per Rp 1 Triliun · Nasional × Share Jabar = Jabar';
-  else if (currentFilter === 'all') infoTxt = '<strong>Semua sektor</strong> · sektor target ditandai <span class="target-mark"></span> · TK/Rp 1T = labor terbangkit di seluruh Indonesia';
-  else infoTxt = 'Kategori <strong>' + currentFilter.slice(4) + '</strong> · sektor target ditandai <span class="target-mark"></span>';
-  if (currentSearch) infoTxt += ' · filter pencarian: <strong>"' + currentSearch + '"</strong>';
-  infoEl.innerHTML = infoTxt;
-  countEl.textContent = sorted.length + ' sektor';
-}
-
-// Filter button handlers (target + all + dynamic categories)
-pillsEl.addEventListener('click', (e) => {
-  const btn = e.target.closest('.filter-btn');
-  if (!btn) return;
-  pillsEl.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  currentFilter = btn.dataset.filter;
-  // When switching modes, reset sortKey if it doesn't exist in new column set
-  const cols = currentFilter === 'target' ? COLS_TARGET : COLS_ALL;
-  if (!cols.some(c => c.k === sortKey)) {
-    sortKey = currentFilter === 'target' ? 't1t' : 't1t_nas';
-    sortDir = -1;
-  }
-  renderTabel();
-});
-
-document.getElementById('tabel-search').addEventListener('input', (e) => {
-  currentSearch = e.target.value.trim();
-  renderTabel();
-});
-
-renderTabel();
-
-// ===== §4 CHARTS =====
-// Color helper
-const INK = '#1C1B1A', BRICK = '#A0421C', MOSS = '#2D4A2B', GOLD = '#B8881F', SEPIA = '#8B6F47', PAPER='#FBF8F1', RULE='#CDC3AE';
-const FONT = "'Plus Jakarta Sans', sans-serif";
-const MONO = "'JetBrains Mono', monospace";
-
-Chart.defaults.font.family = FONT;
-Chart.defaults.color = INK;
-Chart.defaults.borderColor = RULE;
-
-// Helper: target sektor view from ALL_S (auto-updates with KONST changes)
-const targetSektors = () => ALL_S.filter(s => s.is21);
-
-// Recompute now that ALL_S exists (initial pass)
-recomputeDerived();
-
-// Chart instances (filled by createCharts)
-let chartTK, chartScatter, chartKategori, chartShare, chartSkenario;
-
-function createCharts() {
-
-// 1. TK per Rp 1T — horizontal bar
-const tkSorted = [...targetSektors()].sort((a, b) => b.t1t_jbr - a.t1t_jbr);
-chartTK = new Chart(document.getElementById('chart-tk'), {
-  type: 'bar',
-  data: {
-    labels: tkSorted.map(s => s.n),
-    datasets: [{
-      label: 'TK per Rp 1T (Jabar)',
-      data: tkSorted.map(s => s.t1t_jbr),
-      backgroundColor: tkSorted.map(s => KAT_COLOR[s.c_target] || SEPIA),
-      borderColor: tkSorted.map(s => KAT_COLOR[s.c_target] || SEPIA),
-      borderWidth: 1
-    }]
-  },
-  options: {
-    indexAxis: 'y',
-    maintainAspectRatio: false,
-    plugins: {
-      legend: { display: false },
-      tooltip: {
-        backgroundColor: INK, titleColor: PAPER, bodyColor: PAPER,
-        titleFont: {family: FONT, weight:'600'},
-        bodyFont: {family: MONO},
-        padding: 12, cornerRadius: 0,
-        callbacks: {
-          label: ctx => `${fmt(ctx.parsed.x,0)} orang per Rp 1T`,
-          afterLabel: ctx => {
-            const s = [...targetSektors()].sort((a,b) => b.t1t_jbr - a.t1t_jbr)[ctx.dataIndex];
-            return `Share Jabar ${(s.sh*100).toFixed(0)}% · IM ${s.im.toFixed(2).replace('.', ',')}`;
-          }
-        }
-      }
-    },
-    scales: {
-      x: {
-        beginAtZero: true,
-        grid: { color: 'rgba(28,27,26,0.06)' },
-        ticks: { font: {family: MONO, size: 11}, callback: v => fmt(v,0) }
-      },
-      y: {
-        grid: { display: false },
-        ticks: { font: {family: FONT, size: 11.5, weight: 500} }
-      }
-    }
-  }
-});
-
-// 2. Scatter — Output mult vs Income mult, bubble = TK/T
-const scatterCats = ['Hulu Pangan','Hulu Hortikultura','Hulu Perkebunan','Hulu Peternakan','Hulu Perikanan','Hilir Agro','Manufaktur Ekspor'];
-chartScatter = new Chart(document.getElementById('chart-scatter'), {
-  type: 'bubble',
-  data: {
-    datasets: scatterCats.map(k => ({
-      label: k,
-      data: targetSektors().filter(s => s.c_target === k).map(s => ({x: s.om, y: s.im, r: Math.sqrt(s.t1t_jbr/100)+3, label: s.n, t1t: s.t1t_jbr, sh: s.sh})),
-      backgroundColor: (KAT_COLOR[k] || SEPIA) + 'BB',
-      borderColor: KAT_COLOR[k] || SEPIA,
-      borderWidth: 1.5
-    }))
-  },
-  options: {
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        position: 'top', align: 'start',
-        labels: { font: {family: FONT, size: 11.5}, usePointStyle: true, pointStyle: 'circle', boxHeight: 10, padding: 14 }
-      },
-      tooltip: {
-        backgroundColor: INK, titleColor: PAPER, bodyColor: PAPER,
-        cornerRadius: 0, padding: 12,
-        callbacks: {
-          title: ctx => ctx[0].raw.label,
-          label: ctx => `OM: ${ctx.raw.x.toFixed(2).replace('.', ',')} · IM: ${ctx.raw.y.toFixed(2).replace('.', ',')}`,
-          afterLabel: ctx => `${fmt(ctx.raw.t1t,0)} TK/Rp 1T · share ${(ctx.raw.sh*100).toFixed(0)}%`
-        }
-      }
-    },
-    scales: {
-      x: {
-        title: { display: true, text: 'Output Multiplier (Rp/Rp)', font: {family: FONT, size: 12, weight: 500} },
-        grid: { color: 'rgba(28,27,26,0.06)' },
-        ticks: { font: {family: MONO, size: 11} }
-      },
-      y: {
-        title: { display: true, text: 'Income Multiplier (Rp/Rp)', font: {family: FONT, size: 12, weight: 500} },
-        grid: { color: 'rgba(28,27,26,0.06)' },
-        ticks: { font: {family: MONO, size: 11} }
-      }
-    }
-  }
-});
-
-// 3. Output mult per kategori (static — depends on OM only, not constants)
-const groupKat = {};
-targetSektors().forEach(s => {
-  if(!groupKat[s.c_target]) groupKat[s.c_target] = [];
-  groupKat[s.c_target].push(s.om);
-});
-const katLabels = Object.keys(groupKat);
-const katAvg = katLabels.map(k => groupKat[k].reduce((a,b)=>a+b,0)/groupKat[k].length);
-chartKategori = new Chart(document.getElementById('chart-kategori'), {
-  type: 'bar',
-  data: {
-    labels: katLabels,
-    datasets: [{
-      label: 'Rata-rata Output Multiplier',
-      data: katAvg,
-      backgroundColor: katLabels.map(k => KAT_COLOR[k] || SEPIA),
-      borderWidth: 0
-    }]
-  },
-  options: {
-    maintainAspectRatio: false,
-    indexAxis: 'y',
-    plugins: {
-      legend: { display: false },
-      tooltip: {
-        backgroundColor: INK, titleColor: PAPER, bodyColor: PAPER, cornerRadius: 0,
-        callbacks: { label: ctx => `OM rata-rata: ${ctx.parsed.x.toFixed(2).replace('.', ',')}` }
-      }
-    },
-    scales: {
-      x: { beginAtZero: true, grid: { color: 'rgba(28,27,26,0.06)' }, ticks: { font: {family: MONO, size: 11} } },
-      y: { grid: { display: false }, ticks: { font: {family: FONT, size: 11.5, weight: 500} } }
-    }
-  }
-});
-
-// 4. Share Jabar (static — share is not editable as a constant)
-const shareSorted = [...targetSektors()].sort((a, b) => b.sh - a.sh);
-chartShare = new Chart(document.getElementById('chart-share'), {
-  type: 'bar',
-  data: {
-    labels: shareSorted.map(s => s.n),
-    datasets: [{
-      data: shareSorted.map(s => s.sh * 100),
-      backgroundColor: shareSorted.map(s => KAT_COLOR[s.c_target] || SEPIA),
-      borderWidth: 0
-    }]
-  },
-  options: {
-    maintainAspectRatio: false,
-    indexAxis: 'y',
-    plugins: {
-      legend: { display: false },
-      tooltip: {
-        backgroundColor: INK, titleColor: PAPER, bodyColor: PAPER, cornerRadius: 0,
-        callbacks: { label: ctx => `Share Jabar: ${ctx.parsed.x.toFixed(0)}%` }
-      }
-    },
-    scales: {
-      x: { beginAtZero: true, max: 100, grid: { color: 'rgba(28,27,26,0.06)' }, ticks: { font: {family: MONO, size: 11}, callback: v => v+'%' } },
-      y: { grid: { display: false }, ticks: { font: {family: FONT, size: 10.5} } }
-    }
-  }
-});
-
-} // end createCharts
-
-// Update only the charts that depend on editable constants
-function updateCharts() {
-  // Chart 1: TK Jabar bar
-  const tkSorted = [...targetSektors()].sort((a, b) => b.t1t_jbr - a.t1t_jbr);
-  chartTK.data.labels = tkSorted.map(s => s.n);
-  chartTK.data.datasets[0].data = tkSorted.map(s => s.t1t_jbr);
-  chartTK.data.datasets[0].backgroundColor = tkSorted.map(s => KAT_COLOR[s.c_target] || SEPIA);
-  chartTK.data.datasets[0].borderColor = tkSorted.map(s => KAT_COLOR[s.c_target] || SEPIA);
-  chartTK.update();
-
-  // Chart 2: scatter — t1t bubble size depends on wage
-  const scatterCats = ['Hulu Pangan','Hulu Hortikultura','Hulu Perkebunan','Hulu Peternakan','Hulu Perikanan','Hilir Agro','Manufaktur Ekspor'];
-  scatterCats.forEach((k, i) => {
-    chartScatter.data.datasets[i].data = targetSektors().filter(s => s.c_target === k).map(s => ({x: s.om, y: s.im, r: Math.sqrt(s.t1t_jbr/100)+3, label: s.n, t1t: s.t1t_jbr, sh: s.sh}));
-  });
-  chartScatter.update();
-
-  // Chart 5: skenario — depends on ALL active constants
-  if (chartSkenario) {
-    const metrics = ['SKENARIO A','SKENARIO B','SKENARIO C','SKENARIO D'].map(k => computeScen(k));
-    chartSkenario.data.datasets[0].data = metrics.map(m => m.lk);
-    chartSkenario.data.datasets[1].data = metrics.map(m => m.tpt);
-    chartSkenario.data.datasets[2].data = metrics.map(m => m.pdrb);
-    chartSkenario.update();
-  }
-}
-
-createCharts();
-
-// ===== §5 SKENARIO CARDS =====
-const scenContainer = document.getElementById('skenario-cards');
-const scenTitles = {
-  'SKENARIO A': { t: 'Skenario A — Push Manufaktur Ekspor', d: 'Stimulus & insentif fiskal untuk 5 industri manufaktur ekspor besar Jabar', no: 'A' },
-  'SKENARIO B': { t: 'Skenario B — Hilirisasi Agro', d: 'Bangun rantai nilai dari komoditas mentah ke produk olahan bernilai tambah tinggi', no: 'B' },
-  'SKENARIO C': { t: 'Skenario C — Kombinasi A + B', d: 'Push manufaktur ekspor (Rp 50T) + hilirisasi agro (Rp 30T)', no: 'C' },
-  'SKENARIO D': { t: 'Skenario D — Big Push (5 Tahun)', d: 'Strategi pembangunan agresif Rp 200T over 5 tahun, semua sektor prioritas', no: 'D' },
-};
-
-// Compute scenario metrics from current state (SCEN allocations × current ALL_S × current KONST)
-function computeScen(sname) {
-  const items = SCEN[sname] || [];
-  const sektorMap = {};
-  ALL_S.forEach(s => { sektorMap[s.k] = s; });
-  let totalInv = 0, totalLK = 0, sumOm = 0, n = 0;
-  items.forEach(it => {
-    const s = sektorMap[it.k];
-    if (!s) return;
-    totalInv += it.inv;
-    totalLK += it.inv * (s.t1t_jbr ?? 0);
-    sumOm += s.om;
-    n++;
-  });
-  const PDRB = KONST.PDRB_ANNUAL;
-  const TPT = KONST.TPT_JML;
-  const MISKIN_PCT = KONST.MISKIN_PCT;
-  const MISKIN_JML = KONST.MISKIN_JML;
-  const POOR_F = KONST.POOR_REDUCTION_FACTOR;
-  const omAvg = n > 0 ? sumOm / n : 0;
-  return {
-    inv: totalInv,
-    lk: totalLK,
-    tpt: totalLK / TPT * 100,
-    pdrb: totalInv * omAvg / PDRB * 100,
-    miskin: -totalLK * POOR_F * MISKIN_PCT / MISKIN_JML,
-    eff: totalInv > 0 ? totalLK / totalInv : 0,
-    omAvg: omAvg
-  };
-}
-
-function renderScenarioCards() {
-  scenContainer.innerHTML = ['SKENARIO A','SKENARIO B','SKENARIO C','SKENARIO D'].map(k => {
-    const meta = scenTitles[k];
-    const m = computeScen(k);
-    return `<div class="skenario-card">
-      <span class="scen-no">${meta.no}</span>
-      <h3>${meta.t}</h3>
-      <div class="scen-dek">${meta.d}</div>
-      <div class="scen-metrics">
-        <div class="scen-metric"><div class="label">Total Investasi</div><div class="value">Rp ${fmt(m.inv,0)}<span class="unit">T</span></div></div>
-        <div class="scen-metric"><div class="label">Lapangan Kerja</div><div class="value brick">${fmt(m.lk,0)}</div></div>
-        <div class="scen-metric"><div class="label">% TPT Terserap</div><div class="value good">${m.tpt.toFixed(2).replace('.', ',')}<span class="unit">%</span></div></div>
-        <div class="scen-metric"><div class="label">Δ PDRB</div><div class="value good">+${m.pdrb.toFixed(2).replace('.', ',')}<span class="unit">%</span></div></div>
-        <div class="scen-metric"><div class="label">Δ Kemiskinan</div><div class="value good">${m.miskin.toFixed(2).replace('.', ',')}<span class="unit">pp</span></div></div>
-        <div class="scen-metric"><div class="label">LK per Rp 1T</div><div class="value">${fmt(m.eff,0)}<span class="unit">org/T</span></div></div>
-      </div>
-    </div>`;
-  }).join('');
-}
-renderScenarioCards();
-
-// Skenario chart — also derives from computeScen
-const scenMetricsInit = ['SKENARIO A','SKENARIO B','SKENARIO C','SKENARIO D'].map(k => computeScen(k));
-chartSkenario = new Chart(document.getElementById('chart-skenario'), {
-  type: 'bar',
-  data: {
-    labels: ['A — Push Manufaktur', 'B — Hilirisasi Agro', 'C — Kombinasi', 'D — Big Push'],
-    datasets: [
-      {
-        label: 'Total Lapangan Kerja (orang)',
-        data: scenMetricsInit.map(m => m.lk),
-        backgroundColor: BRICK + 'E0',
-        borderColor: BRICK,
-        borderWidth: 1,
-        yAxisID: 'y'
-      },
-      {
-        label: '% TPT Terserap',
-        data: scenMetricsInit.map(m => m.tpt),
-        backgroundColor: MOSS + 'E0',
-        borderColor: MOSS,
-        borderWidth: 1,
-        yAxisID: 'y1'
-      },
-      {
-        label: 'Δ PDRB (%)',
-        data: scenMetricsInit.map(m => m.pdrb),
-        backgroundColor: GOLD + 'E0',
-        borderColor: GOLD,
-        borderWidth: 1,
-        yAxisID: 'y1'
-      }
-    ]
-  },
-  options: {
-    maintainAspectRatio: false,
-    plugins: {
-      legend: { position: 'top', align: 'start', labels: { font: {family: FONT, size: 12}, usePointStyle: true, padding: 16 } },
-      tooltip: {
-        backgroundColor: INK, titleColor: PAPER, bodyColor: PAPER, cornerRadius: 0, padding: 12,
-        callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.dataset.yAxisID==='y' ? fmt(ctx.parsed.y,0) : ctx.parsed.y.toFixed(2).replace('.', ',')+'%'}` }
-      }
-    },
-    scales: {
-      x: { grid: { display: false }, ticks: { font: {family: FONT, size: 11.5, weight: 500} } },
-      y: { type:'linear', position: 'left', beginAtZero: true, title: {display: true, text: 'Lapangan Kerja (orang)', font: {family: FONT, size: 11}}, grid: { color: 'rgba(28,27,26,0.06)' }, ticks: { font: {family: MONO, size: 11}, callback: v => fmt(v,0) } },
-      y1: { type:'linear', position: 'right', beginAtZero: true, title: {display: true, text: '% TPT / ΔPDRB', font: {family: FONT, size: 11}}, grid: { display: false }, ticks: { font: {family: MONO, size: 11}, callback: v => v+'%' } }
-    }
-  }
-});
-
-// ===== §6 KALKULATOR =====
-const calcContainer = document.getElementById('calc-inputs');
-let invest = {}; // kode -> investasi (T)
-S21.forEach(s => invest[s.k] = 0);
-
-function renderCalcRows() {
-  calcContainer.innerHTML = S21.map(s => {
-    const kc = KAT_CLASS[s.c] || '';
-    const v = invest[s.k] || 0;
-    const lk = v * s.t1t;
-    return `<div class="calc-row ${v>0?'has-value':''}" data-kode="${s.k}">
-      <div class="sektor-info">
-        <span class="n">${s.n}</span>
-        <span class="meta">${s.k} · ${s.c} · ${fmt(s.t1t,0)}/T</span>
-      </div>
-      <input type="number" min="0" max="100" step="0.5" value="${v||''}" placeholder="0" data-kode="${s.k}">
-      <div class="result-lk">${v>0 ? fmt(lk,0)+' org' : '—'}</div>
-    </div>`;
-  }).join('');
-  document.querySelectorAll('#calc-inputs input').forEach(inp => {
-    inp.addEventListener('input', e => {
-      const k = e.target.dataset.kode;
-      invest[k] = parseFloat(e.target.value) || 0;
-      updateRowResult(k);
-      updateSummary();
-    });
+  if(charts.scen)charts.scen.destroy();
+  charts.scen=new Chart(document.getElementById('chart-scen'),{
+    type:'bar',
+    data:{labels:['A · Push Manufaktur','B · Hilirisasi Agro','C · Kombinasi','D · Big Push'],
+      datasets:[
+        {label:'Lapangan Kerja (ribu orang)',data:['A','B','C','D'].map(p=>Math.round(scenData[p].lk/1000)),backgroundColor:'#C8923A',yAxisID:'y',borderWidth:0},
+        {label:'% TPT Terserap',data:['A','B','C','D'].map(p=>scenData[p].tpt),backgroundColor:'#3A6E7A',yAxisID:'y1',borderWidth:0}
+      ]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{family:FONT_MONO,size:11},usePointStyle:true}}},
+      scales:{
+        y:{position:'left',title:{display:true,text:'Lapangan Kerja (ribu)',font:{family:FONT_MONO,size:10}},ticks:{font:{family:FONT_MONO,size:10},callback:v=>fmtID(v)},grid:{color:'rgba(26,24,21,0.06)'}},
+        y1:{position:'right',title:{display:true,text:'% TPT',font:{family:FONT_MONO,size:10}},ticks:{font:{family:FONT_MONO,size:10}},grid:{display:false}},
+        x:{ticks:{font:{family:FONT_MONO,size:10}},grid:{display:false}}}}
   });
 }
 
-function updateRowResult(k) {
-  const s = S21.find(x => x.k === k);
-  const v = invest[k];
-  const row = document.querySelector(`.calc-row[data-kode="${k}"]`);
-  if(!row) return;
-  if(v > 0) row.classList.add('has-value');
-  else row.classList.remove('has-value');
-  row.querySelector('.result-lk').innerHTML = v>0 ? fmt(v*s.t1t,0)+' org' : '—';
-}
-
-function updateSummary() {
-  let totalInv = 0, totalLK = 0, sumOm = 0, nActive = 0;
-  S21.forEach(s => {
-    const v = invest[s.k];
-    if(v > 0) {
-      totalInv += v;
-      totalLK += v * s.t1t;
-      sumOm += s.om;
-      nActive++;
-    }
-  });
-  const PDRB = KONST.PDRB_ANNUAL; // 3196.44
-  const TPT = KONST.TPT_JML;       // 1,790,000
-  const MISKIN_PCT = KONST.MISKIN_PCT; // 6.83
-  const MISKIN_JML = KONST.MISKIN_JML; // 3,550,000
-  const POOR_F = KONST.POOR_REDUCTION_FACTOR; // 0.5
-
-  const tpt_pct = totalLK / TPT * 100;
-  // Simple average OM (matches Excel methodology)
-  const omAvg = nActive > 0 ? sumOm / nActive : 0;
-  const pdrb_pct = totalInv * omAvg / PDRB * 100;
-  const dKemiskinan = -totalLK * POOR_F * MISKIN_PCT / MISKIN_JML;
-  const eff = totalInv > 0 ? totalLK / totalInv : 0;
-
-  document.getElementById('sum-lk').textContent = fmt(totalLK, 0);
-  document.getElementById('sum-inv').textContent = fmt(totalInv, 1).replace(',0','');
-  document.getElementById('sum-tpt').textContent = tpt_pct.toFixed(2).replace('.', ',');
-  document.getElementById('sum-pdrb').textContent = (totalInv>0 ? '+' : '') + pdrb_pct.toFixed(2).replace('.', ',');
-  document.getElementById('sum-miskin').textContent = totalInv>0 ? dKemiskinan.toFixed(2).replace('.', ',') : '0,00';
-  document.getElementById('sum-eff').textContent = fmt(eff, 0);
-  document.getElementById('sum-om').textContent = omAvg > 0 ? omAvg.toFixed(2).replace('.', ',') : '—';
-  document.getElementById('sum-nsektor').textContent = nActive;
-
-  const equivEl = document.getElementById('equiv-text');
-  if(totalInv === 0) {
-    equivEl.innerHTML = 'Belum ada investasi. Coba klik salah satu preset di atas atau geser angka di kolom kiri.';
-  } else {
-    const newPoor = MISKIN_PCT + dKemiskinan;
-    const totalPDRBNew = PDRB * (1 + pdrb_pct/100);
-    equivEl.innerHTML = `Investasi <span class="eq-num">Rp ${fmt(totalInv,1).replace(',0','')} T</span> di <span class="eq-num">${nActive}</span> sektor membuka <span class="eq-num">±${fmt(totalLK,0)}</span> lapangan kerja — setara ${tpt_pct.toFixed(1).replace('.',',')}% dari TPT Jabar. Tingkat kemiskinan turun dari <span class="eq-num">6,83%</span> jadi <span class="eq-num">${newPoor.toFixed(2).replace('.',',')}%</span>.`;
-  }
-}
-
-document.querySelectorAll('.preset-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    const p = btn.dataset.preset;
-    S21.forEach(s => invest[s.k] = 0);
-    if(p && SCEN[p]) {
-      SCEN[p].forEach(it => {
-        if(invest.hasOwnProperty(it.k)) invest[it.k] = it.inv;
-      });
-    }
-    renderCalcRows();
-    updateSummary();
-  });
+// ============ INIT ============
+window.addEventListener('load',()=>{
+  renderTable(); renderCalcList(); renderSel(); recompute(); buildPanel();
+  if(typeof Chart!=='undefined'){makeCharts();makeScenChart();}
 });
-document.getElementById('btn-clear').addEventListener('click', () => {
-  document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
-  S21.forEach(s => invest[s.k] = 0);
-  renderCalcRows();
-  updateSummary();
-});
-
-renderCalcRows();
-updateSummary();
-
-// ===== §7 + SIDEBAR =====
-// Build sidebar UI (replaces the old const-list section)
-const sidebarBody = document.getElementById('sidebar-body');
-const fabToggle = document.getElementById('fab-open');
-const sidebar = document.getElementById('sidebar');
-const overlay = document.getElementById('sidebar-overlay');
-const resetBtn = document.getElementById('btn-reset-const');
-
-function fmtConstVal(v, d) {
-  if (typeof v !== 'number') return String(v);
-  // Avoid trailing zeros for whole-decimal numbers
-  return v.toFixed(d).replace('.', ',').replace(/,?0+$/, m => m.startsWith(',') && m.length > 1 ? '' : m);
-}
-
-function renderSidebar() {
-  // Group by section
-  const groups = {};
-  CONST_DEFS.forEach(d => {
-    if (!groups[d.group]) groups[d.group] = [];
-    groups[d.group].push(d);
-  });
-
-  let modCount = 0;
-  let html = '';
-  Object.keys(groups).forEach(gname => {
-    const hint = gname.includes('Aktif') ? 'Mempengaruhi perhitungan %TPT, ΔPDRB, dan Δkemiskinan.' :
-                 gname === 'Asumsi Metodologis' ? 'Parameter dasar — upah menentukan semua TK, faktor kemiskinan menentukan konversi pekerja→penurunan miskin.' :
-                 'Konteks baseline — tidak masuk ke rumus, hanya untuk transparansi.';
-    html += `<div class="sidebar-section">
-      <div class="sidebar-section-header">
-        <span class="label">${gname}</span>
-        <span class="hint">${hint}</span>
-      </div>`;
-    groups[gname].forEach(def => {
-      const cur = KONST[def.key];
-      const def_v = KONST_DEFAULT[def.key];
-      const modified = cur !== def_v;
-      if (modified) modCount++;
-      const flag = def.active ? '<span class="flag">AKTIF</span>' : '';
-      const stepAttr = def.step ? `step="${def.step}"` : '';
-      html += `<div class="const-input-row ${modified ? 'modified' : ''}" data-key="${def.key}">
-        <div class="label-row">
-          <div class="label">${def.label}${flag}</div>
-        </div>
-        <div class="const-input-wrap">
-          <input type="number" ${stepAttr} value="${cur}" data-key="${def.key}" data-decimals="${def.decimals}">
-          <span class="unit">${def.unit}</span>
-        </div>
-        <div class="src">${def.source}${modified ? ` · default: <span class="default">${fmtConstVal(def_v, def.decimals)}</span>` : ''}</div>
-      </div>`;
-    });
-    html += `</div>`;
-  });
-  sidebarBody.innerHTML = html;
-
-  // Reflect modified state on FAB + reset button
-  fabToggle.classList.toggle('modified', modCount > 0);
-  resetBtn.disabled = modCount === 0;
-
-  // Attach input handlers
-  sidebarBody.querySelectorAll('input').forEach(inp => {
-    inp.addEventListener('input', (e) => {
-      const k = e.target.dataset.key;
-      const v = parseFloat(e.target.value);
-      if (isNaN(v)) return;
-      KONST[k] = v;
-      rerenderAll();
-    });
-  });
-}
-
-// Master re-render — called whenever a KONST value changes
-function rerenderAll() {
-  recomputeDerived();
-  renderTabel();       // §3 (uses ALL_S — already reactive)
-  updateCharts();      // §4 + §5 chart
-  renderScenarioCards(); // §5 cards
-  if (typeof updateSummary === 'function') {
-    renderCalcRows();   // §6 — recompute row results
-    updateSummary();    // §6 — recompute summary
-  }
-  // Lightweight re-render of sidebar to reflect modified flags (don't lose focus)
-  // Update only the flag/source bits per row, not the whole input
-  refreshSidebarFlags();
-}
-
-function refreshSidebarFlags() {
-  let modCount = 0;
-  document.querySelectorAll('.const-input-row').forEach(row => {
-    const k = row.dataset.key;
-    const def = CONST_DEFS.find(d => d.key === k);
-    if (!def) return;
-    const cur = KONST[k];
-    const def_v = KONST_DEFAULT[k];
-    const modified = cur !== def_v;
-    if (modified) modCount++;
-    row.classList.toggle('modified', modified);
-    const src = row.querySelector('.src');
-    if (src) {
-      src.innerHTML = `${def.source}${modified ? ` · default: <span class="default">${fmtConstVal(def_v, def.decimals)}</span>` : ''}`;
-    }
-  });
-  fabToggle.classList.toggle('modified', modCount > 0);
-  resetBtn.disabled = modCount === 0;
-}
-
-// Sidebar open/close handlers
-function openSidebar() {
-  sidebar.classList.add('open');
-  overlay.classList.add('open');
-  sidebar.setAttribute('aria-hidden', 'false');
-}
-function closeSidebar() {
-  sidebar.classList.remove('open');
-  overlay.classList.remove('open');
-  sidebar.setAttribute('aria-hidden', 'true');
-}
-fabToggle.addEventListener('click', openSidebar);
-document.getElementById('sidebar-close').addEventListener('click', closeSidebar);
-document.getElementById('btn-close-sidebar').addEventListener('click', closeSidebar);
-overlay.addEventListener('click', closeSidebar);
-document.querySelectorAll('[data-open-sidebar]').forEach(el => el.addEventListener('click', openSidebar));
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape' && sidebar.classList.contains('open')) closeSidebar();
-});
-
-// Reset handler
-resetBtn.addEventListener('click', () => {
-  Object.keys(KONST_DEFAULT).forEach(k => { KONST[k] = KONST_DEFAULT[k]; });
-  renderSidebar(); // full re-render of sidebar inputs to reflect default values
-  recomputeDerived();
-  renderTabel();
-  updateCharts();
-  renderScenarioCards();
-  renderCalcRows();
-  updateSummary();
-});
-
-renderSidebar();
-
-// ===== Smooth scroll for TOC =====
-document.querySelectorAll('a[href^="#"]').forEach(a => {
-  a.addEventListener('click', e => {
-    const tgt = document.querySelector(a.getAttribute('href'));
-    if(tgt) { e.preventDefault(); tgt.scrollIntoView({behavior:'smooth', block:'start'}); }
-  });
-});
-
+// fallback if load already fired
+if(document.readyState==='complete'){renderTable();renderCalcList();renderSel();recompute();buildPanel();if(typeof Chart!=='undefined'){makeCharts();makeScenChart();}}
 </script>
 </body>
 </html>
