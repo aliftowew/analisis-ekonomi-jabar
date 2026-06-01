@@ -206,6 +206,16 @@ code{font-family:'IBM Plex Mono',monospace;font-size:12.5px;background:rgba(200,
 .panel-reset{background:none;border:1px solid var(--rule);padding:9px 18px;cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:12px;border-radius:2px}
 .panel-done{background:var(--ink);color:var(--paper);border:none;padding:9px 18px;cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:12px;border-radius:2px}
 
+
+.calc-quad-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;align-items:center;padding:8px 0;border-bottom:1px dashed var(--rule)}
+.calc-quad-label{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.05em;color:var(--muted);margin-right:6px;text-transform:uppercase}
+.quad-btn{font-family:'IBM Plex Mono',monospace;font-size:10.5px;padding:5px 10px;border:1px solid var(--rule);background:var(--paper);cursor:pointer;border-radius:3px;color:var(--ink-2);letter-spacing:0.02em;font-weight:500}
+.quad-btn:hover{border-color:var(--amber);color:var(--ink)}
+.quad-btn.active{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.quad-btn[data-q="KEY"].active{background:var(--amber);color:var(--ink);border-color:var(--amber)}
+.quad-btn[data-q="SBACK"].active{background:var(--moss);color:#fff;border-color:var(--moss)}
+.quad-btn[data-q="SFORW"].active{background:var(--teal);color:#fff;border-color:var(--teal)}
+.quad-btn[data-q="INDEP"].active{background:var(--rust);color:#fff;border-color:var(--rust)}
 </style>
 </head>
 <body>
@@ -525,6 +535,14 @@ code{font-family:'IBM Plex Mono',monospace;font-size:12.5px;background:rgba(200,
           <button class="preset-btn reset" data-p="reset">Kosongkan</button>
         </div>
         <input type="text" id="calc-search" class="calc-search" placeholder="Cari industri untuk ditambahkan…">
+        <div class="calc-quad-row">
+          <span class="calc-quad-label">Filter kuadran Rasmussen:</span>
+          <button class="quad-btn active" data-q="all">Semua (52)</button>
+          <button class="quad-btn" data-q="KEY">★ Key (9)</button>
+          <button class="quad-btn" data-q="SBACK">⊕ S.Back (15)</button>
+          <button class="quad-btn" data-q="SFORW">⊖ S.Forw (6)</button>
+          <button class="quad-btn" data-q="INDEP">○ Indep (22)</button>
+        </div>
         <div class="calc-list" id="calc-list"></div>
         <div class="calc-selected" id="calc-selected">
           <div class="sel-empty">Belum ada industri. Klik preset atau "+ tambah" di atas.</div>
@@ -729,7 +747,7 @@ function makeCharts(){
 }
 
 // ============ CALCULATOR ============
-let SEL={}, calcQ='';
+let SEL={}, calcQ='', calcQuad='all';
 const PRESETS={
   A:[['I-15',12],['I-16',8],['I-20',8],['I-23',10],['I-25',12]],
   B:[['I-01',6],['I-02',4],['I-04',6],['I-07',4],['I-13',10]],
@@ -739,6 +757,10 @@ const PRESETS={
 };
 function applyPreset(p){SEL={};PRESETS[p].forEach(([k,v])=>{if(SMAP[k])SEL[k]={inv:v};});renderCalcList();renderSel();recompute();}
 document.querySelectorAll('.preset-btn').forEach(b=>b.addEventListener('click',()=>applyPreset(b.dataset.p)));
+document.querySelectorAll('.quad-btn').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.quad-btn').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active'); calcQuad=b.dataset.q; renderCalcList();
+}));
 document.querySelectorAll('.scen-card').forEach(c=>c.addEventListener('click',()=>{applyPreset(c.dataset.scen);document.getElementById('kalkulator').scrollIntoView({behavior:'smooth'});}));
 
 function addSel(k){if(SEL[k])return;SEL[k]={inv:5};renderCalcList();renderSel();recompute();}
@@ -747,8 +769,9 @@ function updInv(k,v){if(!SEL[k])return;const n=parseFloat(v);if(!isNaN(n))SEL[k]
 
 function renderCalcList(){
   let list=[...SECTORS].sort((a,b)=>tkT(b)-tkT(a));
+  if(calcQuad!=='all'){list=list.filter(s=>s.quad===calcQuad);}
   if(calcQ){const q=calcQ.toLowerCase();list=list.filter(s=>s.nama.toLowerCase().includes(q)||s.kode.toLowerCase().includes(q));}
-  list=list.slice(0,40);
+  list=list.slice(0,60);
   document.getElementById('calc-list').innerHTML=list.map(s=>`<div class="calc-list-row">
     <span class="kd">${s.kode}</span>
     <div class="nm">${s.nama}<small>${fmtID(tkT(s))} TK/T · ${QNAME[s.quad]}</small></div>
