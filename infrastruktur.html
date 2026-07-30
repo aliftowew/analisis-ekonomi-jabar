@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Analisis Dampak Infrastruktur TA 2026 — Jawa Barat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#FBF7EE;--paper:#FAF4E6;--ink:#1A1815;--ink-2:#3D3833;--muted:#7A7068;--line:#D9CFB8;--rule:#C8BC9F;--amber:#C8923A;--amber-soft:#E8B96A;--amber-bg:#F5E5C2;--rust:#A8453A;--moss:#5E7A3A;--teal:#3A6E7A;--navy:#1A3A6E;--hi:#FFEB9C}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--ink);line-height:1.55}
+.wrap{max-width:1080px;margin:0 auto;padding:0 22px}
+.serif{font-family:'Fraunces',serif}
+.mono{font-family:'IBM Plex Mono',monospace}
+.topnav{position:sticky;top:0;z-index:100;background:rgba(251,247,238,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--rule)}
+.topnav .wrap{display:flex;align-items:center;justify-content:space-between;padding:12px 22px}
+.brand{display:flex;align-items:center;gap:10px;font-size:13.5px;letter-spacing:.02em}
+.brand img{height:30px}
+.topnav a.back{font-size:13px;color:var(--ink);text-decoration:none;border:1px solid var(--rule);padding:7px 14px;border-radius:20px}
+.topnav a.back:hover{background:var(--amber-bg)}
+header.hero{padding:52px 0 36px;border-bottom:1px solid var(--rule)}
+.kicker{display:flex;align-items:center;gap:12px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--amber)}
+.kicker img{height:44px}
+h1{font-family:'Fraunces',serif;font-size:clamp(28px,4.4vw,44px);font-weight:600;line-height:1.12;margin:14px 0 12px;max-width:20ch}
+.lede{font-size:16px;color:var(--ink-2);max-width:64ch}
+section{padding:44px 0;border-bottom:1px solid var(--rule)}
+h2.sec{font-family:'Fraunces',serif;font-size:clamp(21px,3vw,28px);font-weight:600;margin-bottom:6px}
+p.intro{font-size:14px;color:var(--ink-2);max-width:70ch;margin-bottom:22px}
+table{width:100%;border-collapse:collapse;background:var(--paper);font-size:13.5px}
+th{background:var(--ink);color:var(--paper);padding:10px 10px;text-align:left;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;font-weight:500}
+th.r,td.r{text-align:right}
+td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:middle}
+td.r{font-family:'IBM Plex Mono',monospace;font-variant-numeric:tabular-nums;white-space:nowrap}
+tbody tr:hover td{background:var(--amber-bg)}
+input[type=number],select{width:100%;padding:7px 8px;border:1px solid var(--rule);border-radius:6px;background:#fff;font:500 13px 'IBM Plex Mono',monospace;color:var(--ink)}
+input:focus,select:focus{outline:2px solid var(--amber)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin:22px 0}
+.kpi{background:var(--ink);color:var(--paper);border-radius:10px;padding:16px}
+.kpi .l{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--amber-soft)}
+.kpi .v{font-family:'IBM Plex Mono',monospace;font-size:clamp(17px,2.2vw,23px);font-weight:600;margin-top:6px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:26px}
+@media(max-width:820px){.grid2{grid-template-columns:1fr}}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:18px}
+.card h3{font-family:'Fraunces',serif;font-size:18px;margin-bottom:4px}
+.card .src{font-size:11px;color:var(--muted);margin-bottom:12px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:6px 0;border-bottom:1px dashed var(--line);font-size:13px}
+.row:last-child{border-bottom:none}
+.row b{font-family:'IBM Plex Mono',monospace;white-space:nowrap}
+.row input{max-width:120px;text-align:right}
+.res{background:var(--amber-bg);border-radius:8px;padding:10px 12px;margin-top:12px;display:flex;justify-content:space-between;align-items:center}
+.res b{font-family:'IBM Plex Mono',monospace;font-size:16px}
+.note{font-size:12px;color:var(--muted);margin-top:10px;border-left:3px solid var(--amber);padding-left:10px}
+footer{padding:30px 0 50px;font-size:12px;color:var(--muted)}
+/* ===== LOGIN GATE ===== */
+#login-gate[hidden]{display:none!important}
+#login-gate{position:fixed;inset:0;z-index:9999;background:var(--paper,#FBF7EE);display:flex;align-items:center;justify-content:center;padding:20px}
+#login-gate .lg-card{width:100%;max-width:400px;background:#fff;border:1px solid #ddd4c2;border-radius:12px;padding:36px 32px;box-shadow:0 12px 40px rgba(0,0,0,.10);text-align:center}
+#login-gate img{height:74px;margin-bottom:14px}
+#login-gate h2{font-size:19px;margin:0 0 4px;color:#1a1a1a}
+#login-gate p{font-size:12.5px;color:#6b6455;margin:0 0 20px}
+#login-gate label{display:block;text-align:left;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#6b6455;margin:12px 0 4px}
+#login-gate input{width:100%;box-sizing:border-box;padding:11px 12px;border:1px solid #ccc2ac;border-radius:8px;font-size:14px;background:#fdfbf6}
+#login-gate input:focus{outline:2px solid #C8923A;border-color:#C8923A}
+#login-gate button{width:100%;margin-top:20px;padding:12px;border:0;border-radius:8px;background:#1a1a1a;color:#fff;font-weight:700;font-size:14px;cursor:pointer}
+#login-gate button:hover{background:#C8923A}
+#login-gate .lg-err{display:none;margin-top:12px;font-size:12.5px;color:#A8453A;font-weight:600}
+body.locked>*:not(#login-gate){filter:blur(6px);pointer-events:none;user-select:none}
+</style>
+</head>
+<body class="locked">
+<div id="login-gate" hidden>
+  <div class="lg-card">
+    <img src="logo.svg" alt="Lambang Jawa Barat">
+    <h2>Analisis Ekonomi Jawa Barat</h2>
+    <p>Akses terbatas — masukkan kredensial Anda</p>
+    <form id="lg-form">
+      <label for="lg-user">Username</label>
+      <input id="lg-user" autocomplete="username" required>
+      <label for="lg-pass">Password</label>
+      <input id="lg-pass" type="password" autocomplete="current-password" required>
+      <button type="submit">Masuk →</button>
+      <div class="lg-err" id="lg-err">Username atau password salah.</div>
+    </form>
+  </div>
+</div>
+<script>
+(function(){
+  var HASH="19b7098964c45fc7c70b3b37f8fd4ed647099ac71a7ab8bf87731415bd8ca06d";
+  var gate=document.getElementById('login-gate');
+  var errBox=document.getElementById('lg-err');
+
+  // SHA-256 murni JS — fallback bila crypto.subtle tak tersedia (mis. dibuka via file://)
+  function sha256js(ascii){
+    function rr(v,a){return(v>>>a)|(v<<(32-a));}
+    var mathPow=Math.pow,maxWord=mathPow(2,32),result='',words=[],asciiBitLength=ascii.length*8;
+    var hash=sha256js.h=sha256js.h||[],k=sha256js.k=sha256js.k||[],primeCounter=k.length,isComposite={};
+    for(var candidate=2;primeCounter<64;candidate++){
+      if(!isComposite[candidate]){
+        for(var i=0;i<313;i+=candidate)isComposite[i]=candidate;
+        hash[primeCounter]=(mathPow(candidate,0.5)*maxWord)|0;
+        k[primeCounter++]=(mathPow(candidate,1/3)*maxWord)|0;
+      }
+    }
+    ascii+='\x80';
+    while(ascii.length%64-56)ascii+='\x00';
+    for(i=0;i<ascii.length;i++){
+      var j=ascii.charCodeAt(i);
+      if(j>>8)return'';
+      words[i>>2]|=j<<((3-i)%4)*8;
+    }
+    words[words.length]=(asciiBitLength/maxWord)|0;
+    words[words.length]=asciiBitLength;
+    for(j=0;j<words.length;){
+      var w=words.slice(j,j+=16),oldHash=hash;
+      hash=hash.slice(0,8);
+      for(i=0;i<64;i++){
+        var w15=w[i-15],w2=w[i-2];
+        var a=hash[0],e=hash[4];
+        var temp1=hash[7]+(rr(e,6)^rr(e,11)^rr(e,25))+((e&hash[5])^((~e)&hash[6]))+k[i]+(w[i]=(i<16)?w[i]:(w[i-16]+(rr(w15,7)^rr(w15,18)^(w15>>>3))+w[i-7]+(rr(w2,17)^rr(w2,19)^(w2>>>10)))|0);
+        var temp2=(rr(a,2)^rr(a,13)^rr(a,22))+((a&hash[1])^(a&hash[2])^(hash[1]&hash[2]));
+        hash=[(temp1+temp2)|0].concat(hash);
+        hash[4]=(hash[4]+temp1)|0;
+      }
+      for(i=0;i<8;i++)hash[i]=(hash[i]+oldHash[i])|0;
+    }
+    for(i=0;i<8;i++)for(j=3;j+1;j--){
+      var b=(hash[i]>>(j*8))&255;
+      result+=((b>>4).toString(16))+((b&15).toString(16));
+    }
+    return result;
+  }
+
+  function digest(text){
+    if(window.crypto&&crypto.subtle&&crypto.subtle.digest){
+      return crypto.subtle.digest('SHA-256',new TextEncoder().encode(text))
+        .then(function(buf){return Array.prototype.map.call(new Uint8Array(buf),function(x){return x.toString(16).padStart(2,'0');}).join('');})
+        .catch(function(){return Promise.resolve(sha256js(text));});
+    }
+    return Promise.resolve(sha256js(text));
+  }
+
+  function lock(){gate.hidden=false;gate.style.display='flex';document.body.classList.add('locked');}
+  function unlock(){gate.hidden=true;gate.style.display='none';document.body.classList.remove('locked');}
+  function showErr(msg){errBox.textContent=msg;errBox.style.display='block';}
+
+  var saved=null;
+  try{saved=sessionStorage.getItem('jbr_auth');}catch(e){}
+  if(saved===HASH){unlock();}else{lock();}
+
+  document.getElementById('lg-form').addEventListener('submit',function(e){
+    e.preventDefault();
+    var u=document.getElementById('lg-user').value.trim();
+    var pw=document.getElementById('lg-pass').value;
+    digest(u+':'+pw).then(function(d){
+      if(d===HASH){
+        try{sessionStorage.setItem('jbr_auth',d);}catch(err){}
+        unlock();
+      }else{
+        showErr('Username atau password salah.');
+        document.getElementById('lg-pass').value='';
+      }
+    }).catch(function(){
+      showErr('Terjadi kendala teknis saat memverifikasi. Muat ulang halaman dan coba lagi.');
+    });
+  });
+})();
+</script>
+
+<nav class="topnav"><div class="wrap">
+  <span class="brand"><img src="logo.svg" alt="Jabar">Analisis Infrastruktur · <b>TA 2026</b></span>
+  <a class="back" href="index.html">← Kalkulator Multiplier</a>
+</div></nav>
+
+<header class="hero"><div class="wrap">
+  <div class="kicker"><img src="logo.svg" alt="Jabar">Input-Output · BOK · Keselamatan · Pangan · Provinsi Jawa Barat</div>
+  <h1>Dampak enam kategori infrastruktur, dihitung — bukan diklaim.</h1>
+  <p class="lede">Kalkulator dampak untuk paket Jalan &amp; Jembatan, Pendidikan, Kesehatan, Perhubungan (APJ), Sumber Daya Air, dan Perumahan TA 2026. Model I-O 52 industri Jabar untuk dampak ekonomi; parameter manfaat langsung dari Polda Jabar, BPS, Bina Marga, dan literatur internasional. Semua angka bisa diubah — hasil menghitung ulang seketika.</p>
+</div></header>
+
+<section id="io"><div class="wrap">
+  <h2 class="sec serif">1 · Dampak Ekonomi — Alokasi Multi-Sektor</h2>
+  <p class="intro">Tiap kategori belanja dipetakan ke sektor I-O-nya: pekerjaan fisik → Konstruksi, alat kesehatan &amp; APJ → Industri Logam/Elektronik, konsultansi → Jasa Perusahaan. Ubah dana atau pemetaan; ΔOutput memakai multiplier output, ΔNTB memakai multiplier nilai tambah, lapangan kerja memakai rasio orang/Rp&nbsp;1&nbsp;T dari kalkulator utama.</p>
+  <table id="alloc-tbl"><thead><tr><th>Kategori</th><th style="min-width:230px">Sektor I-O</th><th class="r" style="min-width:150px">Dana (Rp)</th><th class="r">Δ Output</th><th class="r">Δ NTB</th><th class="r">Kerja (org)</th></tr></thead><tbody></tbody></table>
+  <div class="kpis">
+    <div class="kpi"><div class="l">Total Dana</div><div class="v" id="k-dana"></div></div>
+    <div class="kpi"><div class="l">Δ Output Ekonomi</div><div class="v" id="k-dx"></div></div>
+    <div class="kpi"><div class="l">Δ Nilai Tambah (NTB)</div><div class="v" id="k-dva"></div></div>
+    <div class="kpi"><div class="l">Lapangan Kerja</div><div class="v" id="k-tk"></div></div>
+    <div class="kpi"><div class="l">Multiplier Tertimbang</div><div class="v" id="k-mult"></div></div>
+  </div>
+  <p class="note">Prefill dari data Rencana Paket TA 2026 &amp; usulan dinas (Creative Financing). Jalan &amp; Jembatan Rp 2,906 T = total paket konstruksi; ganti ke Rp 1.937.745.455.516 bila basisnya 26 KAK preservasi (usulan pinjaman daerah).</p>
+</div></section>
+
+<section id="jalan"><div class="wrap">
+  <h2 class="sec serif">2 · Jalan — BOK, Waktu Tempuh &amp; Emisi</h2>
+  <p class="intro">Manfaat tahunan dari 211,49 km penanganan: penghematan Biaya Operasional Kendaraan, nilai waktu, BBM, dan CO₂.</p>
+  <div class="grid2">
+    <div class="card"><h3>Parameter</h3><div class="src">BOK &amp; kecepatan: literatur transportasi · Reduksi BBM: Llopis-Castelló dkk. (2026) ±10%</div>
+      <div class="row"><span>Km ditangani</span><input type="number" id="j-km" value="211.491" step="0.1"></div>
+      <div class="row"><span>Porsi rekonstruksi/rusak berat (%)</span><input type="number" id="j-rb" value="78.3" step="0.1"></div>
+      <div class="row"><span>LHR (smp/hari)</span><input type="number" id="j-lhr" value="13358" step="100"></div>
+      <div class="row"><span>BOK baik / RR / RB (Rp/kend-km)</span><span style="display:flex;gap:6px"><input type="number" id="j-b1" value="3000" style="width:74px"><input type="number" id="j-b2" value="3500" style="width:74px"><input type="number" id="j-b3" value="4500" style="width:74px"></span></div>
+      <div class="row"><span>Kecepatan baik / RR / RB (km/jam)</span><span style="display:flex;gap:6px"><input type="number" id="j-v1" value="45" style="width:60px"><input type="number" id="j-v2" value="30" style="width:60px"><input type="number" id="j-v3" value="22" style="width:60px"></span></div>
+      <div class="row"><span>Upah (Rp/jam) · Okupansi</span><span style="display:flex;gap:6px"><input type="number" id="j-w" value="20857" style="width:90px"><input type="number" id="j-o" value="1.5" step="0.1" style="width:60px"></span></div>
+      <div class="row"><span>Km/liter · Reduksi (%) · kg CO₂/L</span><span style="display:flex;gap:6px"><input type="number" id="j-f" value="14" style="width:60px"><input type="number" id="j-e" value="10" style="width:56px"><input type="number" id="j-c" value="2.38" step="0.01" style="width:64px"></span></div>
+    </div>
+    <div class="card"><h3>Hasil / tahun</h3><div class="src">Skenario: seluruh km ditangani pulih ke kondisi mantap</div>
+      <div class="row"><span>Penghematan BOK</span><b id="j-bok"></b></div>
+      <div class="row"><span>Waktu hemat / hari</span><b id="j-dt"></b></div>
+      <div class="row"><span>Value of Time</span><b id="j-vot"></b></div>
+      <div class="row"><span>BBM dihemat</span><b id="j-bbm"></b></div>
+      <div class="row"><span>Reduksi CO₂</span><b id="j-co2"></b></div>
+      <div class="res"><span>Total BOK + VoT</span><b id="j-tot"></b></div>
+    </div>
+  </div>
+</div></section>
+
+<section id="nonkon"><div class="wrap">
+  <h2 class="sec serif">3 · Manfaat Langsung Non-Konstruksi</h2>
+  <p class="intro">Padanan "BOK" untuk kategori lain — tiap blok memakai pola yang sama: volume terlayani × selisih kondisi × nilai moneter. Parameter kunci bisa diedit; sumber tercantum.</p>
+  <div class="grid2">
+    <div class="card"><h3>Pendidikan</h3><div class="src">Return to education: Psacharopoulos &amp; Patrinos (2018) — global ±9–10%/tahun sekolah · Kapasitas: Permendikbud 22/2016</div>
+      <div class="row"><span>Ruang kelas baru (RKB+USB)</span><input type="number" id="p-r" value="278"></div>
+      <div class="row"><span>Siswa/ruang</span><input type="number" id="p-s" value="36"></div>
+      <div class="row"><span>Porsi terselamatkan dari putus sekolah (%)</span><input type="number" id="p-p" value="20"></div>
+      <div class="row"><span>Return/thn sekolah (%) · thn ekstra</span><span style="display:flex;gap:6px"><input type="number" id="p-ret" value="10" style="width:60px"><input type="number" id="p-t" value="3" style="width:52px"></span></div>
+      <div class="row"><span>Upah dasar tahunan (Rp)</span><input type="number" id="p-w" value="43299332"></div>
+      <div class="res"><span>Manfaat / tahun</span><b id="p-out"></b></div>
+    </div>
+    <div class="card"><h3>Kesehatan</h3><div class="src">CT-Scan 2 unit, X-Ray, lab, UTDRS — ganti asumsi dgn data rujukan RSUD/BPJS</div>
+      <div class="row"><span>Rujukan terhindarkan / tahun</span><input type="number" id="h-n" value="3000"></div>
+      <div class="row"><span>Biaya per rujukan (Rp)</span><input type="number" id="h-b" value="750000"></div>
+      <div class="row"><span>Jam perjalanan hemat / pasien</span><input type="number" id="h-j" value="6"></div>
+      <div class="res"><span>Manfaat / tahun</span><b id="h-out"></b></div>
+    </div>
+    <div class="card"><h3>Perhubungan — APJ</h3><div class="src">Korban laka: Polda Jabar 2024 (MD 2.778 · LB 627 · LR 8.313) · Biaya korban: Pd T-02-2005-B eskalasi 2023 · Efek lampu: Cochrane (Beyer &amp; Ker 2009) s.d. −55%, dipakai konservatif</div>
+      <div class="row"><span>Titik APJ terpasang</span><input type="number" id="a-t" value="7638"></div>
+      <div class="row"><span>Jarak antar tiang (m)</span><input type="number" id="a-j" value="40"></div>
+      <div class="row"><span>Porsi laka jln provinsi · malam · reduksi (%)</span><span style="display:flex;gap:6px"><input type="number" id="a-p" value="62" style="width:54px"><input type="number" id="a-m" value="35" style="width:54px"><input type="number" id="a-r" value="30" style="width:54px"></span></div>
+      <div class="row"><span>Korban terhindarkan (MD·LB·LR)</span><b id="a-korban"></b></div>
+      <div class="res"><span>Manfaat / tahun</span><b id="a-out"></b></div>
+    </div>
+    <div class="card"><h3>SDA — Irigasi</h3><div class="src">Produktivitas: BPS Jabar 2025 (7,09 t GKP/ha) · Harga: HPP GKP Bapanas Rp 6.500/kg · Luas: estimasi unit cost — GANTI dgn data DI riil</div>
+      <div class="row"><span>Luas layanan terdampak (ha)</span><input type="number" id="i-ha" value="2467"></div>
+      <div class="row"><span>Kenaikan IP (panen/thn)</span><input type="number" id="i-ip" value="0.5" step="0.1"></div>
+      <div class="row"><span>Produktivitas (t GKP/ha)</span><input type="number" id="i-pr" value="7.09" step="0.01"></div>
+      <div class="row"><span>Harga GKP (Rp/kg)</span><input type="number" id="i-hg" value="6500"></div>
+      <div class="res"><span>Manfaat / tahun</span><b id="i-out"></b></div>
+    </div>
+    <div class="card"><h3>Perumahan — SPAM</h3><div class="src">Reduksi diare: WHO ±25% dari air minum layak</div>
+      <div class="row"><span>Sambungan rumah (SR)</span><input type="number" id="s-sr" value="542"></div>
+      <div class="row"><span>Jam ambil air hemat/RT/hari</span><input type="number" id="s-j" value="0.5" step="0.1"></div>
+      <div class="row"><span>Jiwa/RT · diare/jiwa/thn · reduksi (%)</span><span style="display:flex;gap:6px"><input type="number" id="s-a" value="4" style="width:50px"><input type="number" id="s-d" value="0.3" step="0.1" style="width:56px"><input type="number" id="s-r" value="25" style="width:54px"></span></div>
+      <div class="row"><span>Biaya berobat/kejadian (Rp)</span><input type="number" id="s-b" value="300000"></div>
+      <div class="res"><span>Manfaat / tahun</span><b id="s-out"></b></div>
+    </div>
+    <div class="card" style="background:var(--ink);color:var(--paper)"><h3 style="color:var(--paper)">Rekap Manfaat Tahunan</h3><div class="src" style="color:var(--amber-soft)">Jalan (BOK+VoT) + lima kategori non-konstruksi</div>
+      <div class="row" style="border-color:#3a3630"><span>Jalan</span><b id="r-jalan"></b></div>
+      <div class="row" style="border-color:#3a3630"><span>Pendidikan</span><b id="r-pend"></b></div>
+      <div class="row" style="border-color:#3a3630"><span>Kesehatan</span><b id="r-kes"></b></div>
+      <div class="row" style="border-color:#3a3630"><span>APJ</span><b id="r-apj"></b></div>
+      <div class="row" style="border-color:#3a3630"><span>Irigasi</span><b id="r-iri"></b></div>
+      <div class="row" style="border-color:#3a3630"><span>SPAM</span><b id="r-spam"></b></div>
+      <div class="res" style="background:var(--amber)"><span style="color:var(--ink);font-weight:700">TOTAL / tahun</span><b id="r-total" style="color:var(--ink)"></b></div>
+    </div>
+  </div>
+</div></section>
+
+<footer><div class="wrap">Model I-O: Tabel Input-Output Provinsi Jawa Barat 52 Industri 2016 (BPS) · Laka: Polda Jabar RAT 2024 · Biaya korban: Pd T-02-2005-B (Bina Marga) · Padi: BPS Jabar 2025 · Return pendidikan: Psacharopoulos &amp; Patrinos (2018) · Penerangan: Cochrane Beyer &amp; Ker (2009) · Emisi perkerasan: Llopis-Castelló dkk. (2026) · #SemuaBisaDihitung</div></footer>
+
+<script>
+const S=[{"kode": "I-01", "nama": "Pertanian Tanaman Pangan", "om": 1.1729, "vm": 0.9553, "tkT": 12057.0}, {"kode": "I-02", "nama": "Pertanian Tanaman Hortikultura Semusim, Hortikultura Tahunan, dan Lainnya", "om": 1.1888, "vm": 0.9421, "tkT": 12709.0}, {"kode": "I-03", "nama": "Perkebunan Semusim dan Tahunan", "om": 1.2403, "vm": 0.92, "tkT": 10777.0}, {"kode": "I-04", "nama": "Peternakan", "om": 1.3384, "vm": 0.8586, "tkT": 14918.0}, {"kode": "I-05", "nama": "Jasa Pertanian dan Perburuan", "om": 1.2587, "vm": 0.9334, "tkT": 14767.0}, {"kode": "I-06", "nama": "Kehutanan dan Penebangan Kayu", "om": 1.2683, "vm": 0.8599, "tkT": 8867.0}, {"kode": "I-07", "nama": "Perikanan", "om": 1.1375, "vm": 0.9573, "tkT": 13207.0}, {"kode": "I-08", "nama": "Pertambangan Minyak, Gas dan Panas Bumi", "om": 1.2172, "vm": 0.8004, "tkT": 4688.0}, {"kode": "I-09", "nama": "Pertambangan Batubara dan Lignit", "om": 1.0, "vm": 0.0, "tkT": 0.0}, {"kode": "I-10", "nama": "Pertambangan Bijih Logam", "om": 1.1754, "vm": 0.7368, "tkT": 7606.0}, {"kode": "I-11", "nama": "Pertambangan dan Penggalian Lainnya", "om": 1.4782, "vm": 0.8515, "tkT": 7121.0}, {"kode": "I-12", "nama": "Industri Batubara dan Pengilangan Migas", "om": 1.3005, "vm": 0.7127, "tkT": 4480.0}, {"kode": "I-13", "nama": "Industri Makanan dan Minuman", "om": 1.6532, "vm": 0.804, "tkT": 8809.0}, {"kode": "I-14", "nama": "Industri Pengolahan Tembakau", "om": 1.1508, "vm": 0.8654, "tkT": 3804.0}, {"kode": "I-15", "nama": "Industri Tekstil dan Pakaian Jadi", "om": 1.8023, "vm": 0.7419, "tkT": 9495.0}, {"kode": "I-16", "nama": "Industri Kulit, Barang dari Kulit dan Alas Kaki", "om": 1.7247, "vm": 0.7633, "tkT": 11659.0}, {"kode": "I-17", "nama": "Industri Kayu, Barang dari Kayu dan Gabus dan Barang Anyaman dari Bambu, Rotan dan Sejenisnya", "om": 1.6311, "vm": 0.707, "tkT": 8011.0}, {"kode": "I-18", "nama": "Industri Kertas dan Barang dari Kertas, Percetakan dan Reproduksi Media Rekaman", "om": 1.7059, "vm": 0.6867, "tkT": 8153.0}, {"kode": "I-19", "nama": "Industri Kimia, Farmasi dan Obat Tradisional", "om": 1.6506, "vm": 0.7271, "tkT": 6447.0}, {"kode": "I-20", "nama": "Industri Karet, Barang dari Karet dan Plastik", "om": 1.5992, "vm": 0.6733, "tkT": 6664.0}, {"kode": "I-21", "nama": "Industri Barang Galian bukan Logam", "om": 1.6927, "vm": 0.7772, "tkT": 9134.0}, {"kode": "I-22", "nama": "Industri Logam Dasar", "om": 1.2447, "vm": 0.5677, "tkT": 3543.0}, {"kode": "I-23", "nama": "Industri Barang dari Logam, Komputer, Barang Elektronik, Optik dan Peralatan Listrik", "om": 1.6769, "vm": 0.7646, "tkT": 9100.0}, {"kode": "I-24", "nama": "Industri Mesin dan Perlengkapan YTDL", "om": 1.8463, "vm": 0.8039, "tkT": 8244.0}, {"kode": "I-25", "nama": "Industri Alat Angkutan", "om": 1.6601, "vm": 0.8402, "tkT": 10897.0}, {"kode": "I-26", "nama": "Industri Furnitur", "om": 1.7863, "vm": 0.7154, "tkT": 6381.0}, {"kode": "I-27", "nama": "Industri Pengolahan Lainnya, Jasa Reparasi dan Pemasangan Mesin dan Peralatan", "om": 1.8496, "vm": 0.826, "tkT": 10454.0}, {"kode": "I-28", "nama": "Ketenagalistrikan", "om": 2.7971, "vm": 0.6685, "tkT": 6962.0}, {"kode": "I-29", "nama": "Pengadaan Gas dan Produksi Es", "om": 1.3357, "vm": 0.8781, "tkT": 4050.0}, {"kode": "I-30", "nama": "Pengadaan Air, Pengelolaan Sampah, Limbah, dan Daur Ulang", "om": 1.5025, "vm": 0.8529, "tkT": 5728.0}, {"kode": "I-31", "nama": "Konstruksi", "om": 1.6591, "vm": 0.7719, "tkT": 6794.0}, {"kode": "I-32", "nama": "Perdagangan Mobil, Sepeda Motor dan Reparasinya", "om": 1.3185, "vm": 0.9028, "tkT": 12158.0}, {"kode": "I-33", "nama": "Perdagangan Besar dan Eceran, Bukan Mobil dan Sepeda Motor", "om": 1.3457, "vm": 0.8995, "tkT": 9344.0}, {"kode": "I-34", "nama": "Angkutan Rel", "om": 1.8438, "vm": 0.823, "tkT": 15877.0}, {"kode": "I-35", "nama": "Angkutan Darat", "om": 1.6075, "vm": 0.8361, "tkT": 6559.0}, {"kode": "I-36", "nama": "Angkutan Laut", "om": 1.536, "vm": 0.6415, "tkT": 4601.0}, {"kode": "I-37", "nama": "Angkutan Sungai Danau dan Penyeberangan", "om": 1.3809, "vm": 0.7872, "tkT": 6987.0}, {"kode": "I-38", "nama": "Angkutan Udara", "om": 1.6156, "vm": 0.7804, "tkT": 7058.0}, {"kode": "I-39", "nama": "Pergudangan dan Jasa Penunjang Angkutan, Pos dan Kurir", "om": 1.4801, "vm": 0.8578, "tkT": 9319.0}, {"kode": "I-40", "nama": "Penyediaan Akomodasi", "om": 1.4602, "vm": 0.8662, "tkT": 6954.0}, {"kode": "I-41", "nama": "Penyediaan Makan Minum", "om": 1.5532, "vm": 0.7988, "tkT": 9112.0}, {"kode": "I-42", "nama": "Jasa Informasi dan Komunikasi", "om": 1.405, "vm": 0.8783, "tkT": 8568.0}, {"kode": "I-43", "nama": "Jasa Perantara Keuangan Selain Bank Sentral", "om": 1.2101, "vm": 0.9402, "tkT": 10196.0}, {"kode": "I-44", "nama": "Asuransi dan Dana Pensiun", "om": 1.3047, "vm": 0.9166, "tkT": 12371.0}, {"kode": "I-45", "nama": "Jasa Keuangan Lainnya", "om": 1.341, "vm": 0.9118, "tkT": 10856.0}, {"kode": "I-46", "nama": "Jasa Penunjang Keuangan", "om": 1.2993, "vm": 0.8758, "tkT": 10753.0}, {"kode": "I-47", "nama": "Real Estate", "om": 1.1696, "vm": 0.9655, "tkT": 2036.0}, {"kode": "I-48", "nama": "Jasa Perusahaan", "om": 1.5118, "vm": 0.8696, "tkT": 12069.0}, {"kode": "I-49", "nama": "Administrasi Pemerintahan, Pertahanan dan Jaminan Sosial Wajib", "om": 1.4781, "vm": 0.8479, "tkT": 14668.0}, {"kode": "I-50", "nama": "Jasa Pendidikan", "om": 1.345, "vm": 0.8852, "tkT": 15192.0}, {"kode": "I-51", "nama": "Jasa Kesehatan dan Kegiatan Sosial", "om": 1.5286, "vm": 0.8247, "tkT": 10895.0}, {"kode": "I-52", "nama": "Jasa  Lainnya", "om": 1.3925, "vm": 0.881, "tkT": 6699.0}];
+const ALLOC=[
+ ["Jalan & Jembatan — fisik","I-31",2905975591468],
+ ["Pendidikan — USB/RKB/rehab","I-31",165691779936],
+ ["Kesehatan — gedung RS","I-31",138021331970],
+ ["Kesehatan — alat kesehatan","I-23",47449775292],
+ ["Kesehatan — konsultansi","I-48",3104300000],
+ ["Perhubungan — APJ/PJU","I-23",369522460405],
+ ["SDA — irigasi/situ/sungai","I-31",50652845870],
+ ["Perumahan — SPAM","I-31",2167200000]];
+const $=id=>document.getElementById(id);
+const num=id=>parseFloat($(id).value)||0;
+const T=v=>{const a=Math.abs(v);if(a>=1e12)return 'Rp '+(v/1e12).toLocaleString('id-ID',{maximumFractionDigits:2})+' T';if(a>=1e9)return 'Rp '+(v/1e9).toLocaleString('id-ID',{maximumFractionDigits:1})+' M';return 'Rp '+Math.round(v).toLocaleString('id-ID');};
+const N=(v,d=0)=>v.toLocaleString('id-ID',{maximumFractionDigits:d});
+
+// --- alokasi multi-sektor ---
+const tb=document.querySelector('#alloc-tbl tbody');
+ALLOC.forEach((a,i)=>{
+  const tr=document.createElement('tr');
+  tr.innerHTML=`<td>${a[0]}</td><td><select data-i="${i}">${S.map(s=>`<option value="${s.kode}" ${s.kode===a[1]?'selected':''}>${s.kode} — ${s.nama.length>34?s.nama.slice(0,34)+'…':s.nama}</option>`).join('')}</select></td><td class="r"><input type="number" data-i="${i}" value="${a[2]}" step="1000000000"></td><td class="r" id="dx-${i}"></td><td class="r" id="dva-${i}"></td><td class="r" id="tk-${i}"></td>`;
+  tb.appendChild(tr);
+});
+function calcAlloc(){
+  let dana=0,dx=0,dva=0,tk=0;
+  ALLOC.forEach((a,i)=>{
+    const kode=tb.querySelector(`select[data-i="${i}"]`).value;
+    const d=parseFloat(tb.querySelector(`input[data-i="${i}"]`).value)||0;
+    const s=S.find(x=>x.kode===kode);
+    const _dx=d*s.om,_dva=d*s.vm,_tk=d/1e12*s.tkT;
+    $('dx-'+i).textContent=T(_dx);$('dva-'+i).textContent=T(_dva);$('tk-'+i).textContent=N(_tk);
+    dana+=d;dx+=_dx;dva+=_dva;tk+=_tk;
+  });
+  $('k-dana').textContent=T(dana);$('k-dx').textContent=T(dx);$('k-dva').textContent=T(dva);
+  $('k-tk').textContent=N(tk)+' org';$('k-mult').textContent=dana?(dx/dana).toLocaleString('id-ID',{maximumFractionDigits:3}):'—';
+  return null;
+}
+// --- jalan ---
+function calcJalan(){
+  const km=num('j-km'),rb=km*Math.min(Math.max(num('j-rb'),0),100)/100,rr=km-rb;
+  const lhr=num('j-lhr'),b1=num('j-b1'),b2=num('j-b2'),b3=num('j-b3');
+  const v1=num('j-v1'),v2=num('j-v2'),v3=num('j-v3'),w=num('j-w'),o=num('j-o');
+  const fc=num('j-f')>0?1/num('j-f'):0,eta=num('j-e')/100,ef=num('j-c');
+  const bok=lhr*365*(rr*(b2-b1)+rb*(b3-b1));
+  const dt=(v1&&v2&&v3)?lhr*(rr*(1/v2-1/v1)+rb*(1/v3-1/v1)):0;
+  const vot=dt*365*o*w, bbm=lhr*km*365*fc*eta, co2=bbm*ef;
+  $('j-bok').textContent=T(bok);$('j-dt').textContent=N(dt)+' jam';$('j-vot').textContent=T(vot);
+  $('j-bbm').textContent=N(bbm)+' L';$('j-co2').textContent=N(co2)+' kg';$('j-tot').textContent=T(bok+vot);
+  return bok+vot;
+}
+// --- non-konstruksi ---
+const LAKA={md:2778,lb:627,lr:8313}, BIAYA={md:959544069,lb:46971027,lr:8425115}, ESK=Math.pow(1.10,3);
+function calcNon(){
+  const pend=num('p-r')*num('p-s')*num('p-p')/100*(num('p-ret')/100*num('p-t')*num('p-w'));
+  $('p-out').textContent=T(pend);
+  const kes=num('h-n')*num('h-b')+num('h-n')*num('h-j')*2*20857*1;
+  $('h-out').textContent=T(kes);
+  const cak=num('a-t')*num('a-j')/1000/2362.18;
+  const f=num('a-p')/100*num('a-m')/100*cak*num('a-r')/100;
+  const md=LAKA.md*f,lb=LAKA.lb*f,lr=LAKA.lr*f;
+  $('a-korban').textContent=N(md,1)+' · '+N(lb,1)+' · '+N(lr,1);
+  const apj=(md*BIAYA.md+lb*BIAYA.lb+lr*BIAYA.lr)*ESK;
+  $('a-out').textContent=T(apj);
+  const iri=num('i-ha')*num('i-ip')*num('i-pr')*num('i-hg')*1000;
+  $('i-out').textContent=T(iri);
+  const spam=num('s-sr')*num('s-j')*365*20857+num('s-sr')*num('s-a')*num('s-d')*num('s-r')/100*num('s-b');
+  $('s-out').textContent=T(spam);
+  return {pend,kes,apj,iri,spam};
+}
+function calcAll(){
+  calcAlloc();
+  const jalan=calcJalan(), n=calcNon();
+  $('r-jalan').textContent=T(jalan);$('r-pend').textContent=T(n.pend);$('r-kes').textContent=T(n.kes);
+  $('r-apj').textContent=T(n.apj);$('r-iri').textContent=T(n.iri);$('r-spam').textContent=T(n.spam);
+  $('r-total').textContent=T(jalan+n.pend+n.kes+n.apj+n.iri+n.spam);
+}
+document.querySelectorAll('input,select').forEach(el=>el.addEventListener('input',calcAll));
+calcAll();
+</script>
+</body>
+</html>
