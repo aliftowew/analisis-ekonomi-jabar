@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Alokasi Multi-Sektor — Analisis Ekonomi Jawa Barat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="app.css">
+</head>
+<body class="locked">
+<nav class="topnav"><div class="wrap">
+  <span class="brand"><img src="logo.svg" alt="Jabar">Alokasi Multi-Sektor · <b>TA 2026</b></span>
+  <span style="display:flex;gap:10px"><a class="back" href="index.html">← Menu</a><a class="back" href="#" onclick="jbrLogout();return false">Keluar</a></span>
+</div></nav>
+<header class="hero"><div class="wrap">
+  <div class="kicker"><img src="logo.svg" alt="Jabar">Input-Output · 6 Kategori Infrastruktur</div>
+  <h1>Satu tabel, seluruh dampak enam kategori.</h1>
+  <p class="lede">Petakan tiap belanja ke sektor I-O-nya, ubah dananya, dan lihat dampak gabungan: output, nilai tambah, lapangan kerja, multiplier tertimbang.</p>
+</div></header>
+<section><div class="wrap">
+  <table id="alloc-tbl"><thead><tr><th>Kategori</th><th style="min-width:230px">Sektor I-O</th><th class="r" style="min-width:150px">Dana (Rp)</th><th class="r">Δ Output</th><th class="r">Δ NTB</th><th class="r">Kerja (org)</th></tr></thead><tbody></tbody></table>
+  <div class="kpis">
+    <div class="kpi"><div class="l">Total Dana</div><div class="v" id="k-dana"></div></div>
+    <div class="kpi"><div class="l">Δ Output Ekonomi</div><div class="v" id="k-dx"></div></div>
+    <div class="kpi"><div class="l">Δ Nilai Tambah (NTB)</div><div class="v" id="k-dva"></div></div>
+    <div class="kpi"><div class="l">Lapangan Kerja</div><div class="v" id="k-tk"></div></div>
+    <div class="kpi"><div class="l">Multiplier Tertimbang</div><div class="v" id="k-mult"></div></div>
+  </div>
+  <p class="note">Prefill dari data Rencana Paket TA 2026 &amp; usulan dinas (Creative Financing). Jalan &amp; Jembatan Rp 2,906 T = total paket konstruksi; ganti ke Rp 1.937.745.455.516 bila basisnya 26 KAK preservasi (usulan pinjaman daerah).</p>
+</div></section>
+<footer><div class="wrap">Tabel I-O Provinsi Jawa Barat 52 Industri 2016 (BPS) · #SemuaBisaDihitung</div></footer>
+<script src="sectors.js"></script>
+<script src="gate.js"></script>
+<script>
+const $=id=>document.getElementById(id);
+const num=id=>parseFloat($(id).value)||0;
+const T=v=>{const a=Math.abs(v);if(a>=1e12)return 'Rp '+(v/1e12).toLocaleString('id-ID',{maximumFractionDigits:2})+' T';if(a>=1e9)return 'Rp '+(v/1e9).toLocaleString('id-ID',{maximumFractionDigits:1})+' M';return 'Rp '+Math.round(v).toLocaleString('id-ID');};
+const N=(v,d=0)=>v.toLocaleString('id-ID',{maximumFractionDigits:d});
+const IO=rows=>{let dana=0,dx=0,dva=0,tk=0;rows.forEach(r=>{const s=S.find(x=>x.kode===r[1]);dana+=r[2];dx+=r[2]*s.om;dva+=r[2]*s.vm;tk+=r[2]/1e12*s.tkT;});return {dana,dx,dva,tk};};
+const ALLOC=[["Jalan & Jembatan — fisik","I-31",2905975591468],["Pendidikan — USB/RKB/rehab","I-31",165691779936],["Kesehatan — gedung RS","I-31",138021331970],["Kesehatan — alat kesehatan","I-23",47449775292],["Kesehatan — konsultansi","I-48",3104300000],["Perhubungan — APJ/PJU","I-23",369522460405],["SDA — irigasi/situ/sungai","I-31",50652845870],["Perumahan — SPAM","I-31",2167200000]];
+const tb=document.querySelector('#alloc-tbl tbody');
+ALLOC.forEach((a,i)=>{const tr=document.createElement('tr');
+ tr.innerHTML=`<td>${a[0]}</td><td><select data-i="${i}">${S.map(s=>`<option value="${s.kode}" ${s.kode===a[1]?'selected':''}>${s.kode} — ${s.nama.length>34?s.nama.slice(0,34)+'…':s.nama}</option>`).join('')}</select></td><td class="r"><input type="number" data-i="${i}" value="${a[2]}" step="1000000000"></td><td class="r" id="dx-${i}"></td><td class="r" id="dva-${i}"></td><td class="r" id="tk-${i}"></td>`;
+ tb.appendChild(tr);});
+function calc(){let dana=0,dx=0,dva=0,tk=0;
+ ALLOC.forEach((a,i)=>{const kode=tb.querySelector(`select[data-i="${i}"]`).value;
+  const d=parseFloat(tb.querySelector(`input[data-i="${i}"]`).value)||0;
+  const s=S.find(x=>x.kode===kode);
+  const _dx=d*s.om,_dva=d*s.vm,_tk=d/1e12*s.tkT;
+  $('dx-'+i).textContent=T(_dx);$('dva-'+i).textContent=T(_dva);$('tk-'+i).textContent=N(_tk);
+  dana+=d;dx+=_dx;dva+=_dva;tk+=_tk;});
+ $('k-dana').textContent=T(dana);$('k-dx').textContent=T(dx);$('k-dva').textContent=T(dva);
+ $('k-tk').textContent=N(tk)+' org';$('k-mult').textContent=dana?(dx/dana).toLocaleString('id-ID',{maximumFractionDigits:3}):'—';}
+document.addEventListener('input',calc);calc();
+</script>
+</body>
+</html>

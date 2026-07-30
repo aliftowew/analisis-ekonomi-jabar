@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Analisis Perhubungan (APJ) — Analisis Ekonomi Jawa Barat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="app.css">
+</head>
+<body class="locked">
+<nav class="topnav"><div class="wrap">
+  <span class="brand"><img src="logo.svg" alt="Jabar">Analisis Perhubungan · <b>TA 2026</b></span>
+  <span style="display:flex;gap:10px"><a class="back" href="index.html">← Menu</a><a class="back" href="#" onclick="jbrLogout();return false">Keluar</a></span>
+</div></nav>
+<header class="hero"><div class="wrap">
+  <div class="kicker"><img src="logo.svg" alt="Jabar">Keselamatan Malam · Reduksi Laka</div>
+  <h1>Lampu jalan menyelamatkan nyawa — literalnya.</h1>
+  <p class="lede">±7.638 titik APJ menerangi ±305 km jalan. Dengan data laka Polda Jabar 2024 dan biaya korban standar Bina Marga, nilai keselamatannya bisa dihitung.</p>
+</div></header>
+<section><div class="wrap">
+  <h2 class="sec serif">Dampak Ekonomi (Model I-O 52 Industri)</h2>
+  <p class="intro">Dominan pengadaan lampu & tiang → I-23; bila dianggap dominan jasa pemasangan, lihat halaman Alokasi untuk menggantinya ke Konstruksi.</p>
+  <div class="kpis">
+    <div class="kpi"><div class="l">Pagu</div><div class="v" id="io-dana"></div></div>
+    <div class="kpi"><div class="l">Δ Output</div><div class="v" id="io-dx"></div></div>
+    <div class="kpi"><div class="l">Δ Nilai Tambah</div><div class="v" id="io-dva"></div></div>
+    <div class="kpi"><div class="l">Lapangan Kerja</div><div class="v" id="io-tk"></div></div>
+  </div>
+</div></section><section><div class="wrap"><div class="grid2"><div class="card"><h3>Perhubungan — APJ</h3><div class="src">Korban laka: Polda Jabar 2024 (MD 2.778 · LB 627 · LR 8.313) · Biaya korban: Pd T-02-2005-B eskalasi 2023 · Efek lampu: Cochrane (Beyer &amp; Ker 2009) s.d. −55%, dipakai konservatif</div>
+      <div class="row"><span>Titik APJ terpasang</span><input type="number" id="a-t" value="7638"></div>
+      <div class="row"><span>Jarak antar tiang (m)</span><input type="number" id="a-j" value="40"></div>
+      <div class="row"><span>Porsi laka jln provinsi · malam · reduksi (%)</span><span style="display:flex;gap:6px"><input type="number" id="a-p" value="62" style="width:54px"><input type="number" id="a-m" value="35" style="width:54px"><input type="number" id="a-r" value="30" style="width:54px"></span></div>
+      <div class="row"><span>Korban terhindarkan (MD·LB·LR)</span><b id="a-korban"></b></div>
+      <div class="res"><span>Manfaat / tahun</span><b id="a-out"></b></div>
+    </div>
+    </div></div></section>
+<footer><div class="wrap">Korban laka: Polda Jabar RAT 2024 · Biaya korban: Pd T-02-2005-B (Bina Marga) · Efek penerangan: Cochrane, Beyer & Ker (2009) · Tabel I-O Provinsi Jawa Barat 52 Industri 2016 (BPS) · #SemuaBisaDihitung</div></footer>
+<script src="sectors.js"></script>
+<script src="gate.js"></script>
+<script>
+const $=id=>document.getElementById(id);
+const num=id=>parseFloat($(id).value)||0;
+const T=v=>{const a=Math.abs(v);if(a>=1e12)return 'Rp '+(v/1e12).toLocaleString('id-ID',{maximumFractionDigits:2})+' T';if(a>=1e9)return 'Rp '+(v/1e9).toLocaleString('id-ID',{maximumFractionDigits:1})+' M';return 'Rp '+Math.round(v).toLocaleString('id-ID');};
+const N=(v,d=0)=>v.toLocaleString('id-ID',{maximumFractionDigits:d});
+const IO=rows=>{let dana=0,dx=0,dva=0,tk=0;rows.forEach(r=>{const s=S.find(x=>x.kode===r[1]);dana+=r[2];dx+=r[2]*s.om;dva+=r[2]*s.vm;tk+=r[2]/1e12*s.tkT;});return {dana,dx,dva,tk};};
+const R=[["APJ/PJU", "I-23", 369522460405]];const io=IO(R);
+$('io-dana').textContent=T(io.dana);$('io-dx').textContent=T(io.dx);$('io-dva').textContent=T(io.dva);$('io-tk').textContent=N(io.tk)+' org';
+const LAKA={md:2778,lb:627,lr:8313},BIAYA={md:959544069,lb:46971027,lr:8425115},ESK=Math.pow(1.10,3);
+function calc(){const cak=num('a-t')*num('a-j')/1000/2362.18;
+  const f=num('a-p')/100*num('a-m')/100*cak*num('a-r')/100;
+  const md=LAKA.md*f,lb=LAKA.lb*f,lr=LAKA.lr*f;
+  $('a-korban').textContent=N(md,1)+' · '+N(lb,1)+' · '+N(lr,1);
+  $('a-out').textContent=T((md*BIAYA.md+lb*BIAYA.lb+lr*BIAYA.lr)*ESK);}
+document.querySelectorAll('input').forEach(el=>el.addEventListener('input',calc));calc();
+</script>
+</body>
+</html>

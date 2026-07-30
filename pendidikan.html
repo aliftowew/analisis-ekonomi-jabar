@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Analisis Pendidikan — Analisis Ekonomi Jawa Barat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="app.css">
+</head>
+<body class="locked">
+<nav class="topnav"><div class="wrap">
+  <span class="brand"><img src="logo.svg" alt="Jabar">Analisis Pendidikan · <b>TA 2026</b></span>
+  <span style="display:flex;gap:10px"><a class="back" href="index.html">← Menu</a><a class="back" href="#" onclick="jbrLogout();return false">Keluar</a></span>
+</div></nav>
+<header class="hero"><div class="wrap">
+  <div class="kicker"><img src="logo.svg" alt="Jabar">Daya Tampung · Return to Education</div>
+  <h1>Ruang kelas baru, masa depan yang bisa dihitung.</h1>
+  <p class="lede">±238 ruang baru menampung ±10 ribu siswa. Nilai ekonominya dihitung dari return to education: tiap tahun sekolah menaikkan penghasilan ±10%.</p>
+</div></header>
+<section><div class="wrap">
+  <h2 class="sec serif">Dampak Ekonomi (Model I-O 52 Industri)</h2>
+  <p class="intro">Seluruh paket (USB, RKB, rehab, sarpras) adalah pekerjaan bangunan → Konstruksi (I-31).</p>
+  <div class="kpis">
+    <div class="kpi"><div class="l">Pagu</div><div class="v" id="io-dana"></div></div>
+    <div class="kpi"><div class="l">Δ Output</div><div class="v" id="io-dx"></div></div>
+    <div class="kpi"><div class="l">Δ Nilai Tambah</div><div class="v" id="io-dva"></div></div>
+    <div class="kpi"><div class="l">Lapangan Kerja</div><div class="v" id="io-tk"></div></div>
+  </div>
+</div></section><section><div class="wrap"><div class="grid2"><div class="card"><h3>Pendidikan</h3><div class="src">Return to education: Psacharopoulos &amp; Patrinos (2018) — global ±9–10%/tahun sekolah · Kapasitas: Permendikbud 22/2016</div>
+      <div class="row"><span>Ruang kelas baru (RKB+USB)</span><input type="number" id="p-r" value="278"></div>
+      <div class="row"><span>Siswa/ruang</span><input type="number" id="p-s" value="36"></div>
+      <div class="row"><span>Porsi terselamatkan dari putus sekolah (%)</span><input type="number" id="p-p" value="20"></div>
+      <div class="row"><span>Return/thn sekolah (%) · thn ekstra</span><span style="display:flex;gap:6px"><input type="number" id="p-ret" value="10" style="width:60px"><input type="number" id="p-t" value="3" style="width:52px"></span></div>
+      <div class="row"><span>Upah dasar tahunan (Rp)</span><input type="number" id="p-w" value="43299332"></div>
+      <div class="res"><span>Manfaat / tahun</span><b id="p-out"></b></div>
+    </div>
+    </div></div></section>
+<footer><div class="wrap">Return to education: Psacharopoulos & Patrinos (2018) · Kapasitas: Permendikbud 22/2016 · Tabel I-O Provinsi Jawa Barat 52 Industri 2016 (BPS) · #SemuaBisaDihitung</div></footer>
+<script src="sectors.js"></script>
+<script src="gate.js"></script>
+<script>
+const $=id=>document.getElementById(id);
+const num=id=>parseFloat($(id).value)||0;
+const T=v=>{const a=Math.abs(v);if(a>=1e12)return 'Rp '+(v/1e12).toLocaleString('id-ID',{maximumFractionDigits:2})+' T';if(a>=1e9)return 'Rp '+(v/1e9).toLocaleString('id-ID',{maximumFractionDigits:1})+' M';return 'Rp '+Math.round(v).toLocaleString('id-ID');};
+const N=(v,d=0)=>v.toLocaleString('id-ID',{maximumFractionDigits:d});
+const IO=rows=>{let dana=0,dx=0,dva=0,tk=0;rows.forEach(r=>{const s=S.find(x=>x.kode===r[1]);dana+=r[2];dx+=r[2]*s.om;dva+=r[2]*s.vm;tk+=r[2]/1e12*s.tkT;});return {dana,dx,dva,tk};};
+const R=[["Pendidikan", "I-31", 165691779936]];const io=IO(R);
+$('io-dana').textContent=T(io.dana);$('io-dx').textContent=T(io.dx);$('io-dva').textContent=T(io.dva);$('io-tk').textContent=N(io.tk)+' org';
+function calc(){const v=num('p-r')*num('p-s')*num('p-p')/100*(num('p-ret')/100*num('p-t')*num('p-w'));$('p-out').textContent=T(v);}
+document.querySelectorAll('input').forEach(el=>el.addEventListener('input',calc));calc();
+</script>
+</body>
+</html>

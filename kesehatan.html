@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Analisis Kesehatan — Analisis Ekonomi Jawa Barat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="app.css">
+</head>
+<body class="locked">
+<nav class="topnav"><div class="wrap">
+  <span class="brand"><img src="logo.svg" alt="Jabar">Analisis Kesehatan · <b>TA 2026</b></span>
+  <span style="display:flex;gap:10px"><a class="back" href="index.html">← Menu</a><a class="back" href="#" onclick="jbrLogout();return false">Keluar</a></span>
+</div></nav>
+<header class="hero"><div class="wrap">
+  <div class="kicker"><img src="logo.svg" alt="Jabar">Rujukan Terhindarkan · Nilai Waktu</div>
+  <h1>Alat kesehatan lokal memangkas rujukan ke ibu kota.</h1>
+  <p class="lede">CT-Scan, X-Ray, laboratorium, dan UTDRS di RSUD daerah berarti pasien tidak perlu jauh-jauh dirujuk — hemat biaya dan waktu keluarga.</p>
+</div></header>
+<section><div class="wrap">
+  <h2 class="sec serif">Dampak Ekonomi (Model I-O 52 Industri)</h2>
+  <p class="intro">Belanja kesehatan dipecah tiga: gedung → Konstruksi, alkes → Industri Logam/Elektronik (I-23), konsultansi → Jasa Perusahaan (I-48).</p>
+  <div class="kpis">
+    <div class="kpi"><div class="l">Pagu</div><div class="v" id="io-dana"></div></div>
+    <div class="kpi"><div class="l">Δ Output</div><div class="v" id="io-dx"></div></div>
+    <div class="kpi"><div class="l">Δ Nilai Tambah</div><div class="v" id="io-dva"></div></div>
+    <div class="kpi"><div class="l">Lapangan Kerja</div><div class="v" id="io-tk"></div></div>
+  </div>
+</div></section><section><div class="wrap"><div class="grid2"><div class="card"><h3>Kesehatan</h3><div class="src">CT-Scan 2 unit, X-Ray, lab, UTDRS — ganti asumsi dgn data rujukan RSUD/BPJS</div>
+      <div class="row"><span>Rujukan terhindarkan / tahun</span><input type="number" id="h-n" value="3000"></div>
+      <div class="row"><span>Biaya per rujukan (Rp)</span><input type="number" id="h-b" value="750000"></div>
+      <div class="row"><span>Jam perjalanan hemat / pasien</span><input type="number" id="h-j" value="6"></div>
+      <div class="res"><span>Manfaat / tahun</span><b id="h-out"></b></div>
+    </div>
+    </div></div></section>
+<footer><div class="wrap">Ganti asumsi rujukan dgn data RSUD/BPJS · Tabel I-O Provinsi Jawa Barat 52 Industri 2016 (BPS) · #SemuaBisaDihitung</div></footer>
+<script src="sectors.js"></script>
+<script src="gate.js"></script>
+<script>
+const $=id=>document.getElementById(id);
+const num=id=>parseFloat($(id).value)||0;
+const T=v=>{const a=Math.abs(v);if(a>=1e12)return 'Rp '+(v/1e12).toLocaleString('id-ID',{maximumFractionDigits:2})+' T';if(a>=1e9)return 'Rp '+(v/1e9).toLocaleString('id-ID',{maximumFractionDigits:1})+' M';return 'Rp '+Math.round(v).toLocaleString('id-ID');};
+const N=(v,d=0)=>v.toLocaleString('id-ID',{maximumFractionDigits:d});
+const IO=rows=>{let dana=0,dx=0,dva=0,tk=0;rows.forEach(r=>{const s=S.find(x=>x.kode===r[1]);dana+=r[2];dx+=r[2]*s.om;dva+=r[2]*s.vm;tk+=r[2]/1e12*s.tkT;});return {dana,dx,dva,tk};};
+const R=[["Gedung RS", "I-31", 138021331970], ["Alat kesehatan", "I-23", 47449775292], ["Konsultansi", "I-48", 3104300000]];const io=IO(R);
+$('io-dana').textContent=T(io.dana);$('io-dx').textContent=T(io.dx);$('io-dva').textContent=T(io.dva);$('io-tk').textContent=N(io.tk)+' org';
+function calc(){const v=num('h-n')*num('h-b')+num('h-n')*num('h-j')*2*20857;$('h-out').textContent=T(v);}
+document.querySelectorAll('input').forEach(el=>el.addEventListener('input',calc));calc();
+</script>
+</body>
+</html>

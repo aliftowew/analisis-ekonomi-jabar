@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Analisis Jalan — Analisis Ekonomi Jawa Barat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="app.css">
+</head>
+<body class="locked">
+<nav class="topnav"><div class="wrap">
+  <span class="brand"><img src="logo.svg" alt="Jabar">Analisis Jalan & Jembatan · <b>TA 2026</b></span>
+  <span style="display:flex;gap:10px"><a class="back" href="index.html">← Menu</a><a class="back" href="#" onclick="jbrLogout();return false">Keluar</a></span>
+</div></nav>
+<header class="hero"><div class="wrap">
+  <div class="kicker"><img src="logo.svg" alt="Jabar">BOK · Value of Time · Emisi</div>
+  <h1>Jalan mantap itu penghematan yang bisa dihitung.</h1>
+  <p class="lede">Manfaat tahunan 211,49 km penanganan: Biaya Operasional Kendaraan, nilai waktu, BBM, dan CO₂. Semua parameter bisa diubah.</p>
+</div></header>
+<section><div class="wrap">
+  <h2 class="sec serif">Dampak Ekonomi (Model I-O 52 Industri)</h2>
+  <p class="intro">Seluruh Rp 2,906 T paket TA 2026 adalah pekerjaan fisik → sektor Konstruksi (I-31), multiplier 1,659. Ganti ke Rp 1.937.745.455.516 di halaman Alokasi bila basisnya 26 KAK preservasi.</p>
+  <div class="kpis">
+    <div class="kpi"><div class="l">Pagu</div><div class="v" id="io-dana"></div></div>
+    <div class="kpi"><div class="l">Δ Output</div><div class="v" id="io-dx"></div></div>
+    <div class="kpi"><div class="l">Δ Nilai Tambah</div><div class="v" id="io-dva"></div></div>
+    <div class="kpi"><div class="l">Lapangan Kerja</div><div class="v" id="io-tk"></div></div>
+  </div>
+</div></section><section><div class="wrap"><div class="grid2"><div class="grid2">
+    <div class="card"><h3>Parameter</h3><div class="src">BOK &amp; kecepatan: literatur transportasi · Reduksi BBM: Llopis-Castelló dkk. (2026) ±10%</div>
+      <div class="row"><span>Km ditangani</span><input type="number" id="j-km" value="211.491" step="0.1"></div>
+      <div class="row"><span>Porsi rekonstruksi/rusak berat (%)</span><input type="number" id="j-rb" value="78.3" step="0.1"></div>
+      <div class="row"><span>LHR (smp/hari)</span><input type="number" id="j-lhr" value="13358" step="100"></div>
+      <div class="row"><span>BOK baik / RR / RB (Rp/kend-km)</span><span style="display:flex;gap:6px"><input type="number" id="j-b1" value="3000" style="width:74px"><input type="number" id="j-b2" value="3500" style="width:74px"><input type="number" id="j-b3" value="4500" style="width:74px"></span></div>
+      <div class="row"><span>Kecepatan baik / RR / RB (km/jam)</span><span style="display:flex;gap:6px"><input type="number" id="j-v1" value="45" style="width:60px"><input type="number" id="j-v2" value="30" style="width:60px"><input type="number" id="j-v3" value="22" style="width:60px"></span></div>
+      <div class="row"><span>Upah (Rp/jam) · Okupansi</span><span style="display:flex;gap:6px"><input type="number" id="j-w" value="20857" style="width:90px"><input type="number" id="j-o" value="1.5" step="0.1" style="width:60px"></span></div>
+      <div class="row"><span>Km/liter · Reduksi (%) · kg CO₂/L</span><span style="display:flex;gap:6px"><input type="number" id="j-f" value="14" style="width:60px"><input type="number" id="j-e" value="10" style="width:56px"><input type="number" id="j-c" value="2.38" step="0.01" style="width:64px"></span></div>
+    </div>
+    <div class="card"><h3>Hasil / tahun</h3><div class="src">Skenario: seluruh km ditangani pulih ke kondisi mantap</div>
+      <div class="row"><span>Penghematan BOK</span><b id="j-bok"></b></div>
+      <div class="row"><span>Waktu hemat / hari</span><b id="j-dt"></b></div>
+      <div class="row"><span>Value of Time</span><b id="j-vot"></b></div>
+      <div class="row"><span>BBM dihemat</span><b id="j-bbm"></b></div>
+      <div class="row"><span>Reduksi CO₂</span><b id="j-co2"></b></div>
+      <div class="res"><span>Total BOK + VoT</span><b id="j-tot"></b></div>
+    </div>
+  </div></div></div></section>
+<footer><div class="wrap">BOK & kecepatan: literatur transportasi · Reduksi BBM: Llopis-Castelló dkk. (2026) · Tabel I-O Provinsi Jawa Barat 52 Industri 2016 (BPS) · #SemuaBisaDihitung</div></footer>
+<script src="sectors.js"></script>
+<script src="gate.js"></script>
+<script>
+const $=id=>document.getElementById(id);
+const num=id=>parseFloat($(id).value)||0;
+const T=v=>{const a=Math.abs(v);if(a>=1e12)return 'Rp '+(v/1e12).toLocaleString('id-ID',{maximumFractionDigits:2})+' T';if(a>=1e9)return 'Rp '+(v/1e9).toLocaleString('id-ID',{maximumFractionDigits:1})+' M';return 'Rp '+Math.round(v).toLocaleString('id-ID');};
+const N=(v,d=0)=>v.toLocaleString('id-ID',{maximumFractionDigits:d});
+const IO=rows=>{let dana=0,dx=0,dva=0,tk=0;rows.forEach(r=>{const s=S.find(x=>x.kode===r[1]);dana+=r[2];dx+=r[2]*s.om;dva+=r[2]*s.vm;tk+=r[2]/1e12*s.tkT;});return {dana,dx,dva,tk};};
+const R=[["Jalan", "I-31", 2905975591468]];const io=IO(R);
+$('io-dana').textContent=T(io.dana);$('io-dx').textContent=T(io.dx);$('io-dva').textContent=T(io.dva);$('io-tk').textContent=N(io.tk)+' org';
+function calc(){
+  const km=num('j-km'),rb=km*Math.min(Math.max(num('j-rb'),0),100)/100,rr=km-rb;
+  const lhr=num('j-lhr'),b1=num('j-b1'),b2=num('j-b2'),b3=num('j-b3');
+  const v1=num('j-v1'),v2=num('j-v2'),v3=num('j-v3'),w=num('j-w'),o=num('j-o');
+  const fc=num('j-f')>0?1/num('j-f'):0,eta=num('j-e')/100,ef=num('j-c');
+  const bok=lhr*365*(rr*(b2-b1)+rb*(b3-b1));
+  const dt=(v1&&v2&&v3)?lhr*(rr*(1/v2-1/v1)+rb*(1/v3-1/v1)):0;
+  const vot=dt*365*o*w,bbm=lhr*km*365*fc*eta,co2=bbm*ef;
+  $('j-bok').textContent=T(bok);$('j-dt').textContent=N(dt)+' jam';$('j-vot').textContent=T(vot);
+  $('j-bbm').textContent=N(bbm)+' L';$('j-co2').textContent=N(co2)+' kg';$('j-tot').textContent=T(bok+vot);
+}
+document.querySelectorAll('input').forEach(el=>el.addEventListener('input',calc));calc();
+</script>
+</body>
+</html>
