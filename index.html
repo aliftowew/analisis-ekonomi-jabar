@@ -219,6 +219,7 @@ code{font-family:'IBM Plex Mono',monospace;font-size:12.5px;background:rgba(200,
 </style>
 <style>
 /* ===== LOGIN GATE ===== */
+#login-gate[hidden]{display:none!important}
 #login-gate{position:fixed;inset:0;z-index:9999;background:var(--paper,#FBF7EE);display:flex;align-items:center;justify-content:center;padding:20px}
 #login-gate .lg-card{width:100%;max-width:400px;background:#fff;border:1px solid #ddd4c2;border-radius:12px;padding:36px 32px;box-shadow:0 12px 40px rgba(0,0,0,.10);text-align:center}
 #login-gate img{height:74px;margin-bottom:14px}
@@ -306,8 +307,8 @@ body.locked>*:not(#login-gate){filter:blur(6px);pointer-events:none;user-select:
     return Promise.resolve(sha256js(text));
   }
 
-  function lock(){gate.hidden=false;document.body.classList.add('locked');}
-  function unlock(){gate.hidden=true;document.body.classList.remove('locked');}
+  function lock(){gate.hidden=false;gate.style.display='flex';document.body.classList.add('locked');}
+  function unlock(){gate.hidden=true;gate.style.display='none';document.body.classList.remove('locked');}
   function showErr(msg){errBox.textContent=msg;errBox.style.display='block';}
 
   var saved=null;
