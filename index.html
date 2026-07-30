@@ -252,19 +252,83 @@ body.locked>*:not(#login-gate){filter:blur(6px);pointer-events:none;user-select:
 </div>
 <script>
 (function(){
-  const HASH="62de477e45e38aa6d9996037432882a832d80f6c95a97b928a158417a9c571d6";
-  const gate=document.getElementById('login-gate');
-  async function sha256(t){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(t));return Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,'0')).join('');}
+  var HASH="19b7098964c45fc7c70b3b37f8fd4ed647099ac71a7ab8bf87731415bd8ca06d";
+  var gate=document.getElementById('login-gate');
+  var errBox=document.getElementById('lg-err');
+
+  // SHA-256 murni JS — fallback bila crypto.subtle tak tersedia (mis. dibuka via file://)
+  function sha256js(ascii){
+    function rr(v,a){return(v>>>a)|(v<<(32-a));}
+    var mathPow=Math.pow,maxWord=mathPow(2,32),result='',words=[],asciiBitLength=ascii.length*8;
+    var hash=sha256js.h=sha256js.h||[],k=sha256js.k=sha256js.k||[],primeCounter=k.length,isComposite={};
+    for(var candidate=2;primeCounter<64;candidate++){
+      if(!isComposite[candidate]){
+        for(var i=0;i<313;i+=candidate)isComposite[i]=candidate;
+        hash[primeCounter]=(mathPow(candidate,0.5)*maxWord)|0;
+        k[primeCounter++]=(mathPow(candidate,1/3)*maxWord)|0;
+      }
+    }
+    ascii+='\x80';
+    while(ascii.length%64-56)ascii+='\x00';
+    for(i=0;i<ascii.length;i++){
+      var j=ascii.charCodeAt(i);
+      if(j>>8)return'';
+      words[i>>2]|=j<<((3-i)%4)*8;
+    }
+    words[words.length]=(asciiBitLength/maxWord)|0;
+    words[words.length]=asciiBitLength;
+    for(j=0;j<words.length;){
+      var w=words.slice(j,j+=16),oldHash=hash;
+      hash=hash.slice(0,8);
+      for(i=0;i<64;i++){
+        var w15=w[i-15],w2=w[i-2];
+        var a=hash[0],e=hash[4];
+        var temp1=hash[7]+(rr(e,6)^rr(e,11)^rr(e,25))+((e&hash[5])^((~e)&hash[6]))+k[i]+(w[i]=(i<16)?w[i]:(w[i-16]+(rr(w15,7)^rr(w15,18)^(w15>>>3))+w[i-7]+(rr(w2,17)^rr(w2,19)^(w2>>>10)))|0);
+        var temp2=(rr(a,2)^rr(a,13)^rr(a,22))+((a&hash[1])^(a&hash[2])^(hash[1]&hash[2]));
+        hash=[(temp1+temp2)|0].concat(hash);
+        hash[4]=(hash[4]+temp1)|0;
+      }
+      for(i=0;i<8;i++)hash[i]=(hash[i]+oldHash[i])|0;
+    }
+    for(i=0;i<8;i++)for(j=3;j+1;j--){
+      var b=(hash[i]>>(j*8))&255;
+      result+=((b>>4).toString(16))+((b&15).toString(16));
+    }
+    return result;
+  }
+
+  function digest(text){
+    if(window.crypto&&crypto.subtle&&crypto.subtle.digest){
+      return crypto.subtle.digest('SHA-256',new TextEncoder().encode(text))
+        .then(function(buf){return Array.prototype.map.call(new Uint8Array(buf),function(x){return x.toString(16).padStart(2,'0');}).join('');})
+        .catch(function(){return Promise.resolve(sha256js(text));});
+    }
+    return Promise.resolve(sha256js(text));
+  }
+
   function lock(){gate.hidden=false;document.body.classList.add('locked');}
   function unlock(){gate.hidden=true;document.body.classList.remove('locked');}
-  if(sessionStorage.getItem('jbr_auth')===HASH){unlock();}else{lock();}
-  document.getElementById('lg-form').addEventListener('submit',async e=>{
+  function showErr(msg){errBox.textContent=msg;errBox.style.display='block';}
+
+  var saved=null;
+  try{saved=sessionStorage.getItem('jbr_auth');}catch(e){}
+  if(saved===HASH){unlock();}else{lock();}
+
+  document.getElementById('lg-form').addEventListener('submit',function(e){
     e.preventDefault();
-    const u=document.getElementById('lg-user').value.trim();
-    const p=document.getElementById('lg-pass').value;
-    const d=await sha256(u+':'+p);
-    if(d===HASH){sessionStorage.setItem('jbr_auth',d);unlock();}
-    else{document.getElementById('lg-err').style.display='block';document.getElementById('lg-pass').value='';}
+    var u=document.getElementById('lg-user').value.trim();
+    var pw=document.getElementById('lg-pass').value;
+    digest(u+':'+pw).then(function(d){
+      if(d===HASH){
+        try{sessionStorage.setItem('jbr_auth',d);}catch(err){}
+        unlock();
+      }else{
+        showErr('Username atau password salah.');
+        document.getElementById('lg-pass').value='';
+      }
+    }).catch(function(){
+      showErr('Terjadi kendala teknis saat memverifikasi. Muat ulang halaman dan coba lagi.');
+    });
   });
 })();
 </script>
