@@ -27,12 +27,13 @@
     <div class="kpi"><div class="l">Δ Nilai Tambah</div><div class="v" id="io-dva"></div></div>
     <div class="kpi"><div class="l">Lapangan Kerja</div><div class="v" id="io-tk"></div></div>
   </div>
-</div></section><section><div class="wrap"><div class="grid2"><div class="card"><h3>SDA — Irigasi</h3><div class="src">Produktivitas: BPS Jabar 2025 (7,09 t GKP/ha) · Harga: HPP GKP Bapanas Rp 6.500/kg · Luas: estimasi unit cost — GANTI dgn data DI riil</div>
+</div></section><section><div class="wrap"><div class="grid2"><div class="card"><h3>SDA — Irigasi</h3><div class="src">Produktivitas: BPS Jabar 2025 (7,09 t GKP/ha) · Harga: HPP GKP Bapanas Rp 6.500/kg · Luas: estimasi unit cost — GANTI dgn data DI riil. Biaya produksi tambahan (benih, pupuk, pestisida, TK, panen, pengeringan, angkut) adalah <b>asumsi</b> — GANTI dgn data usahatani; manfaat kini <b>bersih (net)</b>, bukan pendapatan kotor.</div>
       <div class="row"><span>Luas layanan terdampak (ha)</span><input type="number" id="i-ha" value="2467"></div>
       <div class="row"><span>Kenaikan IP (panen/thn)</span><input type="number" id="i-ip" value="0.5" step="0.1"></div>
       <div class="row"><span>Produktivitas (t GKP/ha)</span><input type="number" id="i-pr" value="7.09" step="0.01"></div>
       <div class="row"><span>Harga GKP (Rp/kg)</span><input type="number" id="i-hg" value="6500"></div>
-      <div class="res"><span>Manfaat / tahun</span><b id="i-out"></b></div>
+      <div class="row"><span>Biaya produksi tambahan (Rp/kg)</span><input type="number" id="i-bp" value="3500"></div>
+      <div class="res"><span>Manfaat bersih / tahun</span><b id="i-out"></b></div>
     </div>
     </div></div></section>
 <footer><div class="wrap">Produktivitas: BPS Jabar 2025 · Harga: HPP GKP Bapanas · Tabel I-O Provinsi Jawa Barat 52 Industri 2016 (BPS) · #SemuaBisaDihitung</div></footer>
@@ -46,7 +47,7 @@ const N=(v,d=0)=>v.toLocaleString('id-ID',{maximumFractionDigits:d});
 const IO=rows=>{let dana=0,dx=0,dva=0,tk=0;rows.forEach(r=>{const s=S.find(x=>x.kode===r[1]);dana+=r[2];dx+=r[2]*s.om;dva+=r[2]*s.vm;tk+=r[2]/1e12*s.tkT;});return {dana,dx,dva,tk};};
 const R=[["Irigasi/Situ/Sungai", "I-31", 50652845870]];const io=IO(R);
 $('io-dana').textContent=T(io.dana);$('io-dx').textContent=T(io.dx);$('io-dva').textContent=T(io.dva);$('io-tk').textContent=N(io.tk)+' org';
-function calc(){$('i-out').textContent=T(num('i-ha')*num('i-ip')*num('i-pr')*num('i-hg')*1000);}
+function calc(){const margin=Math.max(num('i-hg')-num('i-bp'),0);$('i-out').textContent=T(num('i-ha')*num('i-ip')*num('i-pr')*1000*margin);}
 document.querySelectorAll('input').forEach(el=>el.addEventListener('input',calc));calc();
 </script>
 </body>
