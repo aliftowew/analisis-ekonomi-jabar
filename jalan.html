@@ -7,6 +7,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="app.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
 </head>
 <body class="locked">
 <nav class="topnav"><div class="wrap">
@@ -45,7 +48,8 @@
       <div class="row"><span>Reduksi CO₂</span><b id="j-co2"></b></div>
       <div class="res"><span>Total BOK + VoT</span><b id="j-tot"></b></div>
       <details class="rumus" open><summary>Rumus &amp; perhitungan</summary><div class="rr">
-        <div class="rf">BOK = LHR × 365 × [RR×(BOK_RR−BOK_baik) + RB×(BOK_RB−BOK_baik)]<br>Waktu/hari = LHR × [RR×(1/V_RR−1/V_baik) + RB×(1/V_RB−1/V_baik)] · VoT = Waktu × 365 × Okupansi × Upah<br>BBM = LHR × km × 365 ÷ (km/L) × Reduksi · CO₂ = BBM × faktor emisi</div>
+        <div class="rf">$$\begin{aligned}\text{BOK}&=\text{LHR}\times365\times[\,RR(BOK_{RR}-BOK_b)+RB(BOK_{RB}-BOK_b)\,]\\ \text{VoT}&=\Delta t\times365\times\text{Okupansi}\times\text{Upah}\\ \text{BBM}&=\text{LHR}\times\text{km}\times365\div(\text{km/L})\times\text{Reduksi}\end{aligned}$$</div>
+        <div class="rlabel">Dengan input saat ini</div>
         <div class="sub" id="j-rumus"></div>
         <div class="rn">Total = BOK + VoT saja. Nilai rupiah BBM TIDAK dijumlahkan ke total karena komponen BBM sudah termasuk di dalam BOK (hindari dobel hitung); CO₂ dilaporkan sebagai kuantitas fisik. RR = rusak ringan, RB = rusak berat (km).</div>
       </div></details>
@@ -59,6 +63,8 @@ const $=id=>document.getElementById(id);
 const num=id=>parseFloat($(id).value)||0;
 const T=v=>{const a=Math.abs(v);if(a>=1e12)return 'Rp '+(v/1e12).toLocaleString('id-ID',{maximumFractionDigits:2})+' T';if(a>=1e9)return 'Rp '+(v/1e9).toLocaleString('id-ID',{maximumFractionDigits:1})+' M';return 'Rp '+Math.round(v).toLocaleString('id-ID');};
 const N=(v,d=0)=>v.toLocaleString('id-ID',{maximumFractionDigits:d});
+const KX=(id,tex)=>{const el=$(id);if(!el)return;if(window.katex){try{katex.render(tex,el,{throwOnError:false,displayMode:true});}catch(e){el.textContent=tex;}}};
+const tx=s=>'\\text{'+String(s).replace(/%/g,'\\%')+'}';
 const IO=rows=>{let dana=0,dx=0,dva=0,tk=0;rows.forEach(r=>{const s=S.find(x=>x.kode===r[1]);dana+=r[2];dx+=r[2]*s.om;dva+=r[2]*s.vm;tk+=r[2]/1e12*s.tkT;});return {dana,dx,dva,tk};};
 const R=[["Jalan", "I-31", 2905975591468]];const io=IO(R);
 $('io-dana').textContent=T(io.dana);$('io-dx').textContent=T(io.dx);$('io-dva').textContent=T(io.dva);$('io-tk').textContent=N(io.tk)+' org';
@@ -72,14 +78,10 @@ function calc(){
   const vot=dt*365*o*w,bbm=lhr*km*365*fc*eta,co2=bbm*ef;
   $('j-bok').textContent=T(bok);$('j-dt').textContent=N(dt)+' jam';$('j-vot').textContent=T(vot);
   $('j-bbm').textContent=N(bbm)+' L';$('j-co2').textContent=N(co2)+' kg';$('j-tot').textContent=T(bok+vot);
-  $('j-rumus').innerHTML=
-    `BOK = ${N(lhr)} × 365 × [${N(rr,1)}×(${N(b2)}−${N(b1)}) + ${N(rb,1)}×(${N(b3)}−${N(b1)})] = <b>${T(bok)}</b><br>`+
-    `Waktu/hari = ${N(lhr)} × [${N(rr,1)}×(1/${N(v2)}−1/${N(v1)}) + ${N(rb,1)}×(1/${N(v3)}−1/${N(v1)})] = ${N(dt)} jam<br>`+
-    `VoT = ${N(dt)} × 365 × ${N(o,1)} × ${T(w)} = <b>${T(vot)}</b><br>`+
-    `BBM = ${N(lhr)} × ${N(km,3)} km × 365 ÷ ${N(num('j-f'))} × ${N(num('j-e'))}% = ${N(bbm)} L → CO₂ ${N(co2)} kg<br>`+
-    `Total (BOK + VoT) = <b>${T(bok+vot)}</b> / tahun`;
+  KX('j-rumus',`\\begin{aligned}\\text{BOK}&=${tx(N(lhr))}\\times365\\times[\\,${tx(N(rr,1))}(${tx(N(b2))}-${tx(N(b1))})+${tx(N(rb,1))}(${tx(N(b3))}-${tx(N(b1))})\\,]=\\boxed{${tx(T(bok))}}\\\\ \\text{VoT}&=${tx(N(dt)+' jam')}\\times365\\times${tx(N(o,1))}\\times${tx(T(w))}=\\boxed{${tx(T(vot))}}\\\\ \\text{BBM}&=${tx(N(bbm)+' L')}\\;\\Rightarrow\\;${tx(N(co2/1000,0)+' t CO2')}\\\\ \\text{Total}&=\\text{BOK}+\\text{VoT}=\\boxed{${tx(T(bok+vot))}}\\end{aligned}`);
 }
 document.querySelectorAll('input').forEach(el=>el.addEventListener('input',calc));calc();
+if(window.renderMathInElement)renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true}]});
 </script>
 </body>
 </html>

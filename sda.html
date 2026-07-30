@@ -7,6 +7,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="app.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
 </head>
 <body class="locked">
 <nav class="topnav"><div class="wrap">
@@ -35,7 +38,8 @@
       <div class="row"><span>Biaya produksi tambahan (Rp/kg)</span><input type="number" id="i-bp" value="3500"></div>
       <div class="res"><span>Manfaat bersih / tahun</span><b id="i-out"></b></div>
       <details class="rumus" open><summary>Rumus &amp; perhitungan</summary><div class="rr">
-        <div class="rf">Manfaat bersih = Luas × ΔIP × Produktivitas × 1.000 kg/t × (Harga − Biaya)</div>
+        <div class="rf">$$\text{Manfaat bersih}=\text{Luas}\times\Delta\text{IP}\times\text{Produktivitas}\times1000\times(\text{Harga}-\text{Biaya})$$</div>
+        <div class="rlabel">Dengan input saat ini</div>
         <div class="sub" id="i-rumus"></div>
         <div class="rn">Tambahan produksi (dari kenaikan Indeks Pertanaman) dikali marjin bersih per kg — harga gabah dikurangi biaya produksi tambahan.</div>
       </div></details>
@@ -49,6 +53,8 @@ const $=id=>document.getElementById(id);
 const num=id=>parseFloat($(id).value)||0;
 const T=v=>{const a=Math.abs(v);if(a>=1e12)return 'Rp '+(v/1e12).toLocaleString('id-ID',{maximumFractionDigits:2})+' T';if(a>=1e9)return 'Rp '+(v/1e9).toLocaleString('id-ID',{maximumFractionDigits:1})+' M';return 'Rp '+Math.round(v).toLocaleString('id-ID');};
 const N=(v,d=0)=>v.toLocaleString('id-ID',{maximumFractionDigits:d});
+const KX=(id,tex)=>{const el=$(id);if(!el)return;if(window.katex){try{katex.render(tex,el,{throwOnError:false,displayMode:true});}catch(e){el.textContent=tex;}}};
+const tx=s=>'\\text{'+String(s).replace(/%/g,'\\%')+'}';
 const IO=rows=>{let dana=0,dx=0,dva=0,tk=0;rows.forEach(r=>{const s=S.find(x=>x.kode===r[1]);dana+=r[2];dx+=r[2]*s.om;dva+=r[2]*s.vm;tk+=r[2]/1e12*s.tkT;});return {dana,dx,dva,tk};};
 const R=[["Irigasi/Situ/Sungai", "I-31", 50652845870]];const io=IO(R);
 $('io-dana').textContent=T(io.dana);$('io-dx').textContent=T(io.dx);$('io-dva').textContent=T(io.dva);$('io-tk').textContent=N(io.tk)+' org';
@@ -56,9 +62,10 @@ function calc(){
   const ha=num('i-ha'),ip=num('i-ip'),pr=num('i-pr'),hg=num('i-hg'),bp=num('i-bp');
   const margin=Math.max(hg-bp,0),val=ha*ip*pr*1000*margin;
   $('i-out').textContent=T(val);
-  $('i-rumus').innerHTML=`= ${N(ha)} ha × ${N(ip,2)} × ${N(pr,2)} t/ha × 1.000 × (${N(hg)} − ${N(bp)})<br>= <b>${T(val)}</b> / tahun`;
+  KX('i-rumus',`${tx(N(ha)+' ha')}\\times${tx(N(ip,2))}\\times${tx(N(pr,2)+' t/ha')}\\times\\text{1.000}\\times(${tx(N(hg))}-${tx(N(bp))})=\\boxed{${tx(T(val))}}`);
 }
 document.querySelectorAll('input').forEach(el=>el.addEventListener('input',calc));calc();
+if(window.renderMathInElement)renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true}]});
 </script>
 </body>
 </html>

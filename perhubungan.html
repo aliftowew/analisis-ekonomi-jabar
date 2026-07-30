@@ -7,6 +7,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="app.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
 </head>
 <body class="locked">
 <nav class="topnav"><div class="wrap">
@@ -34,7 +37,8 @@
       <div class="row"><span>Korban terhindarkan (MD·LB·LR)</span><b id="a-korban"></b></div>
       <div class="res"><span>Manfaat / tahun</span><b id="a-out"></b></div>
       <details class="rumus" open><summary>Rumus &amp; perhitungan</summary><div class="rr">
-        <div class="rf">Cakupan = (Titik × Jarak ÷ 1.000) ÷ 2.362,18 km<br>Faktor = %prov × %malam × Cakupan × %reduksi<br>Korbanₖ = Lakaₖ × Faktor · Manfaat = Σₖ(Korbanₖ × Biaya korbanₖ) × eskalasi</div>
+        <div class="rf">$$\begin{aligned}\text{Cakupan}&=\dfrac{\text{Titik}\times\text{Jarak}\div1000}{\text{2.362,18 km}}\\ \text{Faktor}&=\%_{\text{prov}}\times\%_{\text{malam}}\times\text{Cakupan}\times\%_{\text{reduksi}}\\ \text{Manfaat}&=\sum_k(\text{Korban}_k\times\text{Biaya}_k)\times\text{eskalasi}\end{aligned}$$</div>
+        <div class="rlabel">Dengan input saat ini</div>
         <div class="sub" id="a-rumus"></div>
         <div class="rn">2.362,18 km = total panjang jalan provinsi Jabar; eskalasi 1,10³ = penyesuaian biaya korban ±3 tahun. Pendekatan top-down: total laka Jabar disaring ke ruas yang benar-benar diterangi.</div>
       </div></details>
@@ -48,6 +52,8 @@ const $=id=>document.getElementById(id);
 const num=id=>parseFloat($(id).value)||0;
 const T=v=>{const a=Math.abs(v);if(a>=1e12)return 'Rp '+(v/1e12).toLocaleString('id-ID',{maximumFractionDigits:2})+' T';if(a>=1e9)return 'Rp '+(v/1e9).toLocaleString('id-ID',{maximumFractionDigits:1})+' M';return 'Rp '+Math.round(v).toLocaleString('id-ID');};
 const N=(v,d=0)=>v.toLocaleString('id-ID',{maximumFractionDigits:d});
+const KX=(id,tex)=>{const el=$(id);if(!el)return;if(window.katex){try{katex.render(tex,el,{throwOnError:false,displayMode:true});}catch(e){el.textContent=tex;}}};
+const tx=s=>'\\text{'+String(s).replace(/%/g,'\\%')+'}';
 const IO=rows=>{let dana=0,dx=0,dva=0,tk=0;rows.forEach(r=>{const s=S.find(x=>x.kode===r[1]);dana+=r[2];dx+=r[2]*s.om;dva+=r[2]*s.vm;tk+=r[2]/1e12*s.tkT;});return {dana,dx,dva,tk};};
 const R=[["APJ/PJU", "I-23", 369522460405]];const io=IO(R);
 $('io-dana').textContent=T(io.dana);$('io-dx').textContent=T(io.dx);$('io-dva').textContent=T(io.dva);$('io-tk').textContent=N(io.tk)+' org';
@@ -60,9 +66,10 @@ function calc(){
   const val=(md*BIAYA.md+lb*BIAYA.lb+lr*BIAYA.lr)*ESK;
   $('a-korban').textContent=N(md,1)+' · '+N(lb,1)+' · '+N(lr,1);
   $('a-out').textContent=T(val);
-  $('a-rumus').innerHTML=`Panjang diterangi = ${N(t)} × ${N(jr)} m ÷ 1.000 = ${N(kmTerang,1)} km<br>Cakupan = ${N(kmTerang,1)} ÷ 2.362,18 = ${N(cak*100,2)}%<br>Faktor = ${N(pp)}% × ${N(pm)}% × ${N(cak*100,2)}% × ${N(pr)}% = ${N(f*100,3)}%<br>Korban terhindar: MD ${N(md,1)} · LB ${N(lb,1)} · LR ${N(lr,1)}<br>Manfaat = Σ(korban × biaya) × ${N(ESK,2)} = <b>${T(val)}</b> / tahun`;
+  KX('a-rumus',`\\begin{aligned}\\text{Panjang}&=${tx(N(t))}\\times${tx(N(jr)+' m')}\\div1000=${tx(N(kmTerang,1)+' km')}\\\\ \\text{Cakupan}&=${tx(N(kmTerang,1))}\\div${tx('2.362,18')}=${tx(N(cak*100,2)+'%')}\\\\ \\text{Faktor}&=${tx(N(pp)+'%')}\\times${tx(N(pm)+'%')}\\times${tx(N(cak*100,2)+'%')}\\times${tx(N(pr)+'%')}=${tx(N(f*100,3)+'%')}\\\\ \\text{Korban}&=\\text{MD }${tx(N(md,1))}\\cdot\\text{LB }${tx(N(lb,1))}\\cdot\\text{LR }${tx(N(lr,1))}\\\\ \\text{Manfaat}&=\\boxed{${tx(T(val))}}\\end{aligned}`);
 }
 document.querySelectorAll('input').forEach(el=>el.addEventListener('input',calc));calc();
+if(window.renderMathInElement)renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true}]});
 </script>
 </body>
 </html>

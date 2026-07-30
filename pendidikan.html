@@ -7,6 +7,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="app.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
 </head>
 <body class="locked">
 <nav class="topnav"><div class="wrap">
@@ -35,7 +38,8 @@
       <div class="row"><span>Upah dasar tahunan (Rp)</span><input type="number" id="p-w" value="43299332"></div>
       <div class="res"><span>Manfaat / tahun</span><b id="p-out"></b></div>
       <details class="rumus" open><summary>Rumus &amp; perhitungan</summary><div class="rr">
-        <div class="rf">Manfaat = Ruang × Siswa/ruang × %terselamatkan × (Return%/thn × Thn ekstra × Upah dasar)</div>
+        <div class="rf">$$\text{Manfaat}=\text{Ruang}\times\text{Siswa}\times\%_{\text{selamat}}\times(\text{Return}\times\text{Tahun}\times\text{Upah})$$</div>
+        <div class="rlabel">Dengan input saat ini</div>
         <div class="sub" id="p-rumus"></div>
         <div class="rn">Return to education: tiap tahun sekolah menaikkan penghasilan sebesar Return%.</div>
       </div></details>
@@ -50,6 +54,8 @@ const $=id=>document.getElementById(id);
 const num=id=>parseFloat($(id).value)||0;
 const T=v=>{const a=Math.abs(v);if(a>=1e12)return 'Rp '+(v/1e12).toLocaleString('id-ID',{maximumFractionDigits:2})+' T';if(a>=1e9)return 'Rp '+(v/1e9).toLocaleString('id-ID',{maximumFractionDigits:1})+' M';return 'Rp '+Math.round(v).toLocaleString('id-ID');};
 const N=(v,d=0)=>v.toLocaleString('id-ID',{maximumFractionDigits:d});
+const KX=(id,tex)=>{const el=$(id);if(!el)return;if(window.katex){try{katex.render(tex,el,{throwOnError:false,displayMode:true});}catch(e){el.textContent=tex;}}};
+const tx=s=>'\\text{'+String(s).replace(/%/g,'\\%')+'}';
 const IO=rows=>{let dana=0,dx=0,dva=0,tk=0;rows.forEach(r=>{const s=S.find(x=>x.kode===r[1]);dana+=r[2];dx+=r[2]*s.om;dva+=r[2]*s.vm;tk+=r[2]/1e12*s.tkT;});return {dana,dx,dva,tk};};
 const R=[["Pendidikan", "I-31", 165691779936]];const io=IO(R);
 $('io-dana').textContent=T(io.dana);$('io-dx').textContent=T(io.dx);$('io-dva').textContent=T(io.dva);$('io-tk').textContent=N(io.tk)+' org';
@@ -57,9 +63,10 @@ function calc(){
   const r=num('p-r'),s=num('p-s'),p=num('p-p'),ret=num('p-ret'),t=num('p-t'),w=num('p-w');
   const siswa=r*s*p/100,uplift=ret/100*t*w,v=siswa*uplift;
   $('p-out').textContent=T(v);
-  $('p-rumus').innerHTML=`Siswa terselamatkan = ${N(r)} × ${N(s)} × ${N(p)}% = ${N(siswa,1)} siswa<br>Kenaikan penghasilan = ${N(ret)}% × ${N(t)} thn × ${T(w)} = ${T(uplift)}/siswa<br>Total = <b>${T(v)}</b> / tahun`;
+  KX('p-rumus',`\\begin{aligned}\\text{Siswa}&=${tx(N(r))}\\times${tx(N(s))}\\times${tx(N(p)+'%')}=${tx(N(siswa,1)+' siswa')}\\\\ \\text{Uplift}&=${tx(N(ret)+'%')}\\times${tx(N(t)+' thn')}\\times${tx(T(w))}=${tx(T(uplift))}\\\\ \\text{Total}&=\\boxed{${tx(T(v))}}\\end{aligned}`);
 }
 document.querySelectorAll('input').forEach(el=>el.addEventListener('input',calc));calc();
+if(window.renderMathInElement)renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true}]});
 </script>
 </body>
 </html>

@@ -161,10 +161,11 @@ code{font-family:'IBM Plex Mono',monospace;font-size:12.5px;background:rgba(200,
 .rumus>summary::-webkit-details-marker{display:none}
 .rumus>summary::after{content:'▾';color:var(--muted);font-size:11px}
 .rumus[open]>summary::after{content:'▴'}
-.rumus .rr{padding:0 12px 12px}
-.rumus .rf{font-family:'IBM Plex Mono',monospace;font-size:12px;line-height:1.7;color:var(--ink-2)}
-.rumus .sub{margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);font-family:'IBM Plex Mono',monospace;font-size:12px;line-height:1.8;color:var(--ink);word-break:break-word}
-.rumus .sub b{color:var(--rust);font-weight:600}
+.rumus .rr{padding:4px 12px 12px}
+.rumus .rf{padding:6px 10px;background:#FBF7EE;border:1px solid var(--line);border-radius:6px;overflow-x:auto;overflow-y:hidden}
+.rumus .rlabel{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:12px 0 3px}
+.rumus .sub{overflow-x:auto;overflow-y:hidden;color:var(--ink)}
+.rumus .katex-display{margin:.3em 0;text-align:left}
 .calc-search{width:100%;padding:10px 14px;border:1px solid var(--rule);background:var(--bg);font-size:13.5px;border-radius:3px;margin-bottom:10px}
 .calc-search:focus{outline:none;border-color:var(--amber)}
 .calc-list{max-height:240px;overflow-y:auto;border:1px solid var(--line);border-radius:3px;margin-bottom:16px}
@@ -698,7 +699,8 @@ body.locked>*:not(#login-gate){filter:blur(6px);pointer-events:none;user-select:
         <div class="result-note" id="r-note">Belum ada investasi. Klik preset di atas atau geser angka.</div>
         <div class="result-baseline mono">Baseline: TPT 1,79 jt · PDRB Rp 3.196 T · Kemiskinan 6,83% (BPS Jabar Q1 2026)</div>
         <details class="rumus" open><summary>Rumus &amp; perhitungan</summary><div class="rr">
-          <div class="rf">Lapangan kerja = Σ(Investasiᵢ × TK/Rp1Tᵢ) · %TPT = LK ÷ Pengangguran<br>ΔPDRB = Σ(Investasiᵢ × VMᵢ) ÷ PDRB tahunan × 100 · Δmiskin = LK × faktor ÷ Jml miskin × %miskin</div>
+          <div class="rf">$$\begin{aligned}\text{Lapangan kerja}&=\sum_i(\text{Investasi}_i\times\text{TK/Rp1T}_i)\\ \%\text{TPT}&=\text{LK}\div\text{Pengangguran}\times100\\ \Delta\text{PDRB}&=\sum_i(\text{Investasi}_i\times\text{VM}_i)\div\text{PDRB}\times100\\ \Delta\text{miskin}&=\text{LK}\times\text{faktor}\div\text{Jml miskin}\times\%\text{miskin}\end{aligned}$$</div>
+          <div class="rlabel">Dengan input saat ini</div>
           <div class="sub" id="calc-rumus">Pilih paket / industri untuk melihat substitusi angka.</div>
         </div></details>
       </div>
@@ -791,6 +793,7 @@ const QNAME = {KEY:'Key Sector', SBACK:'S.Backward', SFORW:'S.Forward', INDEP:'I
 
 const fmtID = (n,d=0) => n.toLocaleString('id-ID',{minimumFractionDigits:d,maximumFractionDigits:d});
 const fmt2 = n => n.toLocaleString('id-ID',{minimumFractionDigits:2,maximumFractionDigits:2});
+const tx = s => '\\text{'+String(s).replace(/%/g,'\\%')+'}';
 
 // recompute TK/T based on current wage
 function tkT(s){ return s.im * 1e6 / PARAMS.wage; }
@@ -959,11 +962,17 @@ function recompute(){
   if(totInv===0)note.textContent='Belum ada investasi. Klik preset di atas atau geser angka.';
   else note.innerHTML=`Investasi <b style="color:var(--amber-soft)">Rp ${fmtID(totInv,totInv%1?1:0)} T</b> di ${Object.keys(SEL).length} industri membuka <b style="color:var(--amber-soft)">${fmtID(totLK)} lapangan kerja</b> — setara ${fmt2(pctTPT)}% pengangguran Jabar. Kemiskinan turun ke ${fmt2(PARAMS.miskinPct-dMisk)}%.`;
   const rf=document.getElementById('calc-rumus');
-  if(rf)rf.innerHTML=totInv===0?'Pilih paket / industri untuk melihat substitusi angka.':
-    `LK = Σ(Investasiᵢ × TK/Rp1Tᵢ) = <b>${fmtID(totLK)}</b> orang<br>`+
-    `%TPT = ${fmtID(totLK)} ÷ ${fmtID(PARAMS.tptJml)} × 100 = <b>${fmt2(pctTPT)}%</b><br>`+
-    `ΔPDRB = (Rp ${fmt2(totInv)} T × ${fmt2(avgVM)} VM) ÷ Rp ${fmtID(PARAMS.pdrbAnnual)} T × 100 = <b>+${fmt2(dPDRB)}%</b><br>`+
-    `Δmiskin = (${fmtID(totLK)} × ${PARAMS.poorFactor}) ÷ ${fmtID(PARAMS.miskinJml)} × ${PARAMS.miskinPct}% = <b>−${fmtID(dMisk,3)} pp</b>`;
+  if(rf){
+    if(totInv===0){rf.textContent='Pilih paket / industri untuk melihat substitusi angka.';}
+    else{
+      const tex=`\\begin{aligned}`+
+        `\\text{LK}&=${tx(fmtID(totLK)+' orang')}\\\\ `+
+        `\\%\\text{TPT}&=${tx(fmtID(totLK))}\\div${tx(fmtID(PARAMS.tptJml))}\\times100=${tx(fmt2(pctTPT)+'%')}\\\\ `+
+        `\\Delta\\text{PDRB}&=${tx('Rp '+fmt2(totInv)+' T')}\\times${tx(fmt2(avgVM)+' VM')}\\div${tx('Rp '+fmtID(PARAMS.pdrbAnnual)+' T')}=${tx('+'+fmt2(dPDRB)+'%')}\\\\ `+
+        `\\Delta\\text{miskin}&=\\boxed{${tx('-'+fmtID(dMisk,3)+' pp')}}\\end{aligned}`;
+      if(window.katex){try{katex.render(tex,rf,{throwOnError:false,displayMode:true});}catch(e){rf.textContent=tex;}}else{rf.textContent='…';}
+    }
+  }
 }
 document.getElementById('calc-search').addEventListener('input',e=>{calcQ=e.target.value;renderCalcList();});
 

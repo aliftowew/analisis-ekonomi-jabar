@@ -7,6 +7,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="app.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
 </head>
 <body class="locked">
 <nav class="topnav"><div class="wrap">
@@ -35,7 +38,8 @@
       <div class="row"><span>Nilai waktu (Rp/jam)</span><input type="number" id="s-vw" value="20857"></div>
       <div class="res"><span>Manfaat / tahun</span><b id="s-out"></b></div>
       <details class="rumus" open><summary>Rumus &amp; perhitungan</summary><div class="rr">
-        <div class="rf">Manfaat = (SR × Jam hemat × 365 × Nilai waktu) + (SR × Jiwa/RT × Diare/jiwa × Reduksi × Biaya berobat)</div>
+        <div class="rf">$$\text{Manfaat}=\underbrace{(SR\times\text{Jam}\times365\times\text{Nilai waktu})}_{\text{waktu}}+\underbrace{(SR\times\text{Jiwa}\times\text{Diare}\times\text{Reduksi}\times\text{Biaya})}_{\text{kesehatan}}$$</div>
+        <div class="rlabel">Dengan input saat ini</div>
         <div class="sub" id="s-rumus"></div>
         <div class="rn">Komponen 1 = nilai waktu ambil air yang dihemat; komponen 2 = penghematan biaya berobat diare.</div>
       </div></details>
@@ -49,6 +53,8 @@ const $=id=>document.getElementById(id);
 const num=id=>parseFloat($(id).value)||0;
 const T=v=>{const a=Math.abs(v);if(a>=1e12)return 'Rp '+(v/1e12).toLocaleString('id-ID',{maximumFractionDigits:2})+' T';if(a>=1e9)return 'Rp '+(v/1e9).toLocaleString('id-ID',{maximumFractionDigits:1})+' M';return 'Rp '+Math.round(v).toLocaleString('id-ID');};
 const N=(v,d=0)=>v.toLocaleString('id-ID',{maximumFractionDigits:d});
+const KX=(id,tex)=>{const el=$(id);if(!el)return;if(window.katex){try{katex.render(tex,el,{throwOnError:false,displayMode:true});}catch(e){el.textContent=tex;}}};
+const tx=s=>'\\text{'+String(s).replace(/%/g,'\\%')+'}';
 const IO=rows=>{let dana=0,dx=0,dva=0,tk=0;rows.forEach(r=>{const s=S.find(x=>x.kode===r[1]);dana+=r[2];dx+=r[2]*s.om;dva+=r[2]*s.vm;tk+=r[2]/1e12*s.tkT;});return {dana,dx,dva,tk};};
 const R=[["SPAM", "I-31", 2167200000]];const io=IO(R);
 $('io-dana').textContent=T(io.dana);$('io-dx').textContent=T(io.dx);$('io-dva').textContent=T(io.dva);$('io-tk').textContent=N(io.tk)+' org';
@@ -56,9 +62,10 @@ function calc(){
   const sr=num('s-sr'),j=num('s-j'),vw=num('s-vw'),a=num('s-a'),d=num('s-d'),rr=num('s-r'),b=num('s-b');
   const waktu=sr*j*365*vw,sehat=sr*a*d*rr/100*b,v=waktu+sehat;
   $('s-out').textContent=T(v);
-  $('s-rumus').innerHTML=`Nilai waktu = ${N(sr)} SR × ${N(j,1)} jam × 365 × ${T(vw)} = ${T(waktu)}<br>Nilai kesehatan = ${N(sr)} × ${N(a)} jiwa × ${N(d,1)} × ${N(rr)}% × ${T(b)} = ${T(sehat)}<br>Total = <b>${T(v)}</b> / tahun`;
+  KX('s-rumus',`\\begin{aligned}\\text{Waktu}&=${tx(N(sr)+' SR')}\\times${tx(N(j,1)+' jam')}\\times365\\times${tx(T(vw))}=${tx(T(waktu))}\\\\ \\text{Sehat}&=${tx(N(sr))}\\times${tx(N(a)+' jiwa')}\\times${tx(N(d,1))}\\times${tx(N(rr)+'%')}\\times${tx(T(b))}=${tx(T(sehat))}\\\\ \\text{Total}&=\\boxed{${tx(T(v))}}\\end{aligned}`);
 }
 document.querySelectorAll('input').forEach(el=>el.addEventListener('input',calc));calc();
+if(window.renderMathInElement)renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true}]});
 </script>
 </body>
 </html>
