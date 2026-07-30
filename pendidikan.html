@@ -34,6 +34,11 @@
       <div class="row"><span>Return/thn sekolah (%) · thn ekstra</span><span style="display:flex;gap:6px"><input type="number" id="p-ret" value="10" style="width:60px"><input type="number" id="p-t" value="3" style="width:52px"></span></div>
       <div class="row"><span>Upah dasar tahunan (Rp)</span><input type="number" id="p-w" value="43299332"></div>
       <div class="res"><span>Manfaat / tahun</span><b id="p-out"></b></div>
+      <details class="rumus" open><summary>Rumus &amp; perhitungan</summary><div class="rr">
+        <div class="rf">Manfaat = Ruang × Siswa/ruang × %terselamatkan × (Return%/thn × Thn ekstra × Upah dasar)</div>
+        <div class="sub" id="p-rumus"></div>
+        <div class="rn">Return to education: tiap tahun sekolah menaikkan penghasilan sebesar Return%.</div>
+      </div></details>
       <div class="src" style="margin-top:12px">⚠ Manfaat ini <b>baru terwujud setelah siswa lulus &amp; bekerja</b>, bukan tiap tahun sejak sekarang. Angka menunjukkan nilai kotor tahunan saat manfaat sudah berjalan — untuk kelayakan proyek, diskontokan ke nilai sekarang (NPV). Asumsi lain: tidak semua kursi baru terisi, dan tidak semua yang tertampung adalah siswa yang tadinya akan putus sekolah.</div>
     </div>
     </div></div></section>
@@ -48,7 +53,12 @@ const N=(v,d=0)=>v.toLocaleString('id-ID',{maximumFractionDigits:d});
 const IO=rows=>{let dana=0,dx=0,dva=0,tk=0;rows.forEach(r=>{const s=S.find(x=>x.kode===r[1]);dana+=r[2];dx+=r[2]*s.om;dva+=r[2]*s.vm;tk+=r[2]/1e12*s.tkT;});return {dana,dx,dva,tk};};
 const R=[["Pendidikan", "I-31", 165691779936]];const io=IO(R);
 $('io-dana').textContent=T(io.dana);$('io-dx').textContent=T(io.dx);$('io-dva').textContent=T(io.dva);$('io-tk').textContent=N(io.tk)+' org';
-function calc(){const v=num('p-r')*num('p-s')*num('p-p')/100*(num('p-ret')/100*num('p-t')*num('p-w'));$('p-out').textContent=T(v);}
+function calc(){
+  const r=num('p-r'),s=num('p-s'),p=num('p-p'),ret=num('p-ret'),t=num('p-t'),w=num('p-w');
+  const siswa=r*s*p/100,uplift=ret/100*t*w,v=siswa*uplift;
+  $('p-out').textContent=T(v);
+  $('p-rumus').innerHTML=`Siswa terselamatkan = ${N(r)} × ${N(s)} × ${N(p)}% = ${N(siswa,1)} siswa<br>Kenaikan penghasilan = ${N(ret)}% × ${N(t)} thn × ${T(w)} = ${T(uplift)}/siswa<br>Total = <b>${T(v)}</b> / tahun`;
+}
 document.querySelectorAll('input').forEach(el=>el.addEventListener('input',calc));calc();
 </script>
 </body>

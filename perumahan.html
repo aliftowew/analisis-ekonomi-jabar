@@ -32,7 +32,13 @@
       <div class="row"><span>Jam ambil air hemat/RT/hari</span><input type="number" id="s-j" value="0.5" step="0.1"></div>
       <div class="row"><span>Jiwa/RT · diare/jiwa/thn · reduksi (%)</span><span style="display:flex;gap:6px"><input type="number" id="s-a" value="4" style="width:50px"><input type="number" id="s-d" value="0.3" step="0.1" style="width:56px"><input type="number" id="s-r" value="25" style="width:54px"></span></div>
       <div class="row"><span>Biaya berobat/kejadian (Rp)</span><input type="number" id="s-b" value="300000"></div>
+      <div class="row"><span>Nilai waktu (Rp/jam)</span><input type="number" id="s-vw" value="20857"></div>
       <div class="res"><span>Manfaat / tahun</span><b id="s-out"></b></div>
+      <details class="rumus" open><summary>Rumus &amp; perhitungan</summary><div class="rr">
+        <div class="rf">Manfaat = (SR × Jam hemat × 365 × Nilai waktu) + (SR × Jiwa/RT × Diare/jiwa × Reduksi × Biaya berobat)</div>
+        <div class="sub" id="s-rumus"></div>
+        <div class="rn">Komponen 1 = nilai waktu ambil air yang dihemat; komponen 2 = penghematan biaya berobat diare.</div>
+      </div></details>
     </div>
     </div></div></section>
 <footer><div class="wrap">Reduksi diare: WHO · Tabel I-O Provinsi Jawa Barat 52 Industri 2016 (BPS) · #SemuaBisaDihitung</div></footer>
@@ -46,7 +52,12 @@ const N=(v,d=0)=>v.toLocaleString('id-ID',{maximumFractionDigits:d});
 const IO=rows=>{let dana=0,dx=0,dva=0,tk=0;rows.forEach(r=>{const s=S.find(x=>x.kode===r[1]);dana+=r[2];dx+=r[2]*s.om;dva+=r[2]*s.vm;tk+=r[2]/1e12*s.tkT;});return {dana,dx,dva,tk};};
 const R=[["SPAM", "I-31", 2167200000]];const io=IO(R);
 $('io-dana').textContent=T(io.dana);$('io-dx').textContent=T(io.dx);$('io-dva').textContent=T(io.dva);$('io-tk').textContent=N(io.tk)+' org';
-function calc(){$('s-out').textContent=T(num('s-sr')*num('s-j')*365*20857+num('s-sr')*num('s-a')*num('s-d')*num('s-r')/100*num('s-b'));}
+function calc(){
+  const sr=num('s-sr'),j=num('s-j'),vw=num('s-vw'),a=num('s-a'),d=num('s-d'),rr=num('s-r'),b=num('s-b');
+  const waktu=sr*j*365*vw,sehat=sr*a*d*rr/100*b,v=waktu+sehat;
+  $('s-out').textContent=T(v);
+  $('s-rumus').innerHTML=`Nilai waktu = ${N(sr)} SR × ${N(j,1)} jam × 365 × ${T(vw)} = ${T(waktu)}<br>Nilai kesehatan = ${N(sr)} × ${N(a)} jiwa × ${N(d,1)} × ${N(rr)}% × ${T(b)} = ${T(sehat)}<br>Total = <b>${T(v)}</b> / tahun`;
+}
 document.querySelectorAll('input').forEach(el=>el.addEventListener('input',calc));calc();
 </script>
 </body>

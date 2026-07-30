@@ -34,6 +34,11 @@
       <div class="row"><span>Orang per rujukan (pasien + pendamping)</span><input type="number" id="h-p" value="2" step="0.1"></div>
       <div class="row"><span>Nilai waktu (Rp/jam)</span><input type="number" id="h-vw" value="20857"></div>
       <div class="res"><span>Manfaat / tahun</span><b id="h-out"></b></div>
+      <details class="rumus" open><summary>Rumus &amp; perhitungan</summary><div class="rr">
+        <div class="rf">Manfaat = (Rujukan × Biaya per rujukan) + (Rujukan × Jam hemat × Orang per rujukan × Nilai waktu)</div>
+        <div class="sub" id="h-rumus"></div>
+        <div class="rn">Komponen kedua = nilai waktu perjalanan pasien + pendamping. Pastikan "Biaya per rujukan" tidak memuat nilai waktu agar tidak dobel hitung.</div>
+      </div></details>
     </div>
     </div></div></section>
 <footer><div class="wrap">Ganti asumsi rujukan dgn data RSUD/BPJS · Tabel I-O Provinsi Jawa Barat 52 Industri 2016 (BPS) · #SemuaBisaDihitung</div></footer>
@@ -47,7 +52,12 @@ const N=(v,d=0)=>v.toLocaleString('id-ID',{maximumFractionDigits:d});
 const IO=rows=>{let dana=0,dx=0,dva=0,tk=0;rows.forEach(r=>{const s=S.find(x=>x.kode===r[1]);dana+=r[2];dx+=r[2]*s.om;dva+=r[2]*s.vm;tk+=r[2]/1e12*s.tkT;});return {dana,dx,dva,tk};};
 const R=[["Gedung RS", "I-31", 138021331970], ["Alat kesehatan", "I-23", 47449775292], ["Konsultansi", "I-48", 3104300000]];const io=IO(R);
 $('io-dana').textContent=T(io.dana);$('io-dx').textContent=T(io.dx);$('io-dva').textContent=T(io.dva);$('io-tk').textContent=N(io.tk)+' org';
-function calc(){const v=num('h-n')*num('h-b')+num('h-n')*num('h-j')*num('h-p')*num('h-vw');$('h-out').textContent=T(v);}
+function calc(){
+  const n=num('h-n'),b=num('h-b'),j=num('h-j'),p=num('h-p'),vw=num('h-vw');
+  const biaya=n*b,waktu=n*j*p*vw,v=biaya+waktu;
+  $('h-out').textContent=T(v);
+  $('h-rumus').innerHTML=`Biaya rujukan = ${N(n)} × ${T(b)} = ${T(biaya)}<br>Nilai waktu = ${N(n)} × ${N(j)} jam × ${N(p,1)} org × ${T(vw)} = ${T(waktu)}<br>Total = <b>${T(v)}</b> / tahun`;
+}
 document.querySelectorAll('input').forEach(el=>el.addEventListener('input',calc));calc();
 </script>
 </body>

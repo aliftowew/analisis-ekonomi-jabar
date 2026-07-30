@@ -34,6 +34,11 @@
       <div class="row"><span>Harga GKP (Rp/kg)</span><input type="number" id="i-hg" value="6500"></div>
       <div class="row"><span>Biaya produksi tambahan (Rp/kg)</span><input type="number" id="i-bp" value="3500"></div>
       <div class="res"><span>Manfaat bersih / tahun</span><b id="i-out"></b></div>
+      <details class="rumus" open><summary>Rumus &amp; perhitungan</summary><div class="rr">
+        <div class="rf">Manfaat bersih = Luas × ΔIP × Produktivitas × 1.000 kg/t × (Harga − Biaya)</div>
+        <div class="sub" id="i-rumus"></div>
+        <div class="rn">Tambahan produksi (dari kenaikan Indeks Pertanaman) dikali marjin bersih per kg — harga gabah dikurangi biaya produksi tambahan.</div>
+      </div></details>
     </div>
     </div></div></section>
 <footer><div class="wrap">Produktivitas: BPS Jabar 2025 · Harga: HPP GKP Bapanas · Tabel I-O Provinsi Jawa Barat 52 Industri 2016 (BPS) · #SemuaBisaDihitung</div></footer>
@@ -47,7 +52,12 @@ const N=(v,d=0)=>v.toLocaleString('id-ID',{maximumFractionDigits:d});
 const IO=rows=>{let dana=0,dx=0,dva=0,tk=0;rows.forEach(r=>{const s=S.find(x=>x.kode===r[1]);dana+=r[2];dx+=r[2]*s.om;dva+=r[2]*s.vm;tk+=r[2]/1e12*s.tkT;});return {dana,dx,dva,tk};};
 const R=[["Irigasi/Situ/Sungai", "I-31", 50652845870]];const io=IO(R);
 $('io-dana').textContent=T(io.dana);$('io-dx').textContent=T(io.dx);$('io-dva').textContent=T(io.dva);$('io-tk').textContent=N(io.tk)+' org';
-function calc(){const margin=Math.max(num('i-hg')-num('i-bp'),0);$('i-out').textContent=T(num('i-ha')*num('i-ip')*num('i-pr')*1000*margin);}
+function calc(){
+  const ha=num('i-ha'),ip=num('i-ip'),pr=num('i-pr'),hg=num('i-hg'),bp=num('i-bp');
+  const margin=Math.max(hg-bp,0),val=ha*ip*pr*1000*margin;
+  $('i-out').textContent=T(val);
+  $('i-rumus').innerHTML=`= ${N(ha)} ha × ${N(ip,2)} × ${N(pr,2)} t/ha × 1.000 × (${N(hg)} − ${N(bp)})<br>= <b>${T(val)}</b> / tahun`;
+}
 document.querySelectorAll('input').forEach(el=>el.addEventListener('input',calc));calc();
 </script>
 </body>

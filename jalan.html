@@ -44,6 +44,11 @@
       <div class="row"><span>BBM dihemat</span><b id="j-bbm"></b></div>
       <div class="row"><span>Reduksi CO₂</span><b id="j-co2"></b></div>
       <div class="res"><span>Total BOK + VoT</span><b id="j-tot"></b></div>
+      <details class="rumus" open><summary>Rumus &amp; perhitungan</summary><div class="rr">
+        <div class="rf">BOK = LHR × 365 × [RR×(BOK_RR−BOK_baik) + RB×(BOK_RB−BOK_baik)]<br>Waktu/hari = LHR × [RR×(1/V_RR−1/V_baik) + RB×(1/V_RB−1/V_baik)] · VoT = Waktu × 365 × Okupansi × Upah<br>BBM = LHR × km × 365 ÷ (km/L) × Reduksi · CO₂ = BBM × faktor emisi</div>
+        <div class="sub" id="j-rumus"></div>
+        <div class="rn">Total = BOK + VoT saja. Nilai rupiah BBM TIDAK dijumlahkan ke total karena komponen BBM sudah termasuk di dalam BOK (hindari dobel hitung); CO₂ dilaporkan sebagai kuantitas fisik. RR = rusak ringan, RB = rusak berat (km).</div>
+      </div></details>
     </div>
   </div></div></div></section>
 <footer><div class="wrap">BOK & kecepatan: literatur transportasi · Reduksi BBM: Llopis-Castelló dkk. (2026) · Tabel I-O Provinsi Jawa Barat 52 Industri 2016 (BPS) · #SemuaBisaDihitung</div></footer>
@@ -67,6 +72,12 @@ function calc(){
   const vot=dt*365*o*w,bbm=lhr*km*365*fc*eta,co2=bbm*ef;
   $('j-bok').textContent=T(bok);$('j-dt').textContent=N(dt)+' jam';$('j-vot').textContent=T(vot);
   $('j-bbm').textContent=N(bbm)+' L';$('j-co2').textContent=N(co2)+' kg';$('j-tot').textContent=T(bok+vot);
+  $('j-rumus').innerHTML=
+    `BOK = ${N(lhr)} × 365 × [${N(rr,1)}×(${N(b2)}−${N(b1)}) + ${N(rb,1)}×(${N(b3)}−${N(b1)})] = <b>${T(bok)}</b><br>`+
+    `Waktu/hari = ${N(lhr)} × [${N(rr,1)}×(1/${N(v2)}−1/${N(v1)}) + ${N(rb,1)}×(1/${N(v3)}−1/${N(v1)})] = ${N(dt)} jam<br>`+
+    `VoT = ${N(dt)} × 365 × ${N(o,1)} × ${T(w)} = <b>${T(vot)}</b><br>`+
+    `BBM = ${N(lhr)} × ${N(km,3)} km × 365 ÷ ${N(num('j-f'))} × ${N(num('j-e'))}% = ${N(bbm)} L → CO₂ ${N(co2)} kg<br>`+
+    `Total (BOK + VoT) = <b>${T(bok+vot)}</b> / tahun`;
 }
 document.querySelectorAll('input').forEach(el=>el.addEventListener('input',calc));calc();
 </script>

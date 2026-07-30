@@ -156,6 +156,15 @@ code{font-family:'IBM Plex Mono',monospace;font-size:12.5px;background:rgba(200,
 .preset-btn{font-family:'IBM Plex Mono',monospace;font-size:11px;padding:9px 13px;border:1px solid var(--rule);background:var(--paper);cursor:pointer;border-radius:3px;color:var(--ink);font-weight:500}
 .preset-btn:hover{border-color:var(--amber);background:#FBF1D5}
 .preset-btn.reset{color:var(--rust);border-color:rgba(168,69,58,0.3)}
+.rumus{margin-top:16px;border:1px solid var(--rule);border-radius:8px;background:#F5EFE0;overflow:hidden}
+.rumus>summary{cursor:pointer;list-style:none;padding:9px 12px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--amber);font-weight:600;display:flex;align-items:center;justify-content:space-between}
+.rumus>summary::-webkit-details-marker{display:none}
+.rumus>summary::after{content:'▾';color:var(--muted);font-size:11px}
+.rumus[open]>summary::after{content:'▴'}
+.rumus .rr{padding:0 12px 12px}
+.rumus .rf{font-family:'IBM Plex Mono',monospace;font-size:12px;line-height:1.7;color:var(--ink-2)}
+.rumus .sub{margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);font-family:'IBM Plex Mono',monospace;font-size:12px;line-height:1.8;color:var(--ink);word-break:break-word}
+.rumus .sub b{color:var(--rust);font-weight:600}
 .calc-search{width:100%;padding:10px 14px;border:1px solid var(--rule);background:var(--bg);font-size:13.5px;border-radius:3px;margin-bottom:10px}
 .calc-search:focus{outline:none;border-color:var(--amber)}
 .calc-list{max-height:240px;overflow-y:auto;border:1px solid var(--line);border-radius:3px;margin-bottom:16px}
@@ -649,6 +658,16 @@ body.locked>*:not(#login-gate){filter:blur(6px);pointer-events:none;user-select:
           <button class="preset-btn" data-p="D">Skenario D</button>
           <button class="preset-btn reset" data-p="reset">Kosongkan</button>
         </div>
+        <div class="preset-row" style="margin-top:-6px">
+          <span class="mono" style="font-size:10px;letter-spacing:.1em;color:var(--muted);align-self:center;margin-right:2px">PAKET RIIL TA 2026 →</span>
+          <button class="preset-btn" data-p="jalan">Jalan · 2,91 T</button>
+          <button class="preset-btn" data-p="kesehatan">Kesehatan · 189 M</button>
+          <button class="preset-btn" data-p="pendidikan">Pendidikan · 166 M</button>
+          <button class="preset-btn" data-p="pju">PJU · 370 M</button>
+          <button class="preset-btn" data-p="irigasi">Irigasi · 51 M</button>
+          <button class="preset-btn" data-p="spam">SPAM · 2 M</button>
+          <button class="preset-btn" data-p="semua">Semua · 3,68 T</button>
+        </div>
         <input type="text" id="calc-search" class="calc-search" placeholder="Cari industri untuk ditambahkan…">
         <div class="calc-quad-row">
           <span class="calc-quad-label">Filter kuadran Rasmussen:</span>
@@ -678,6 +697,10 @@ body.locked>*:not(#login-gate){filter:blur(6px);pointer-events:none;user-select:
         </div>
         <div class="result-note" id="r-note">Belum ada investasi. Klik preset di atas atau geser angka.</div>
         <div class="result-baseline mono">Baseline: TPT 1,79 jt · PDRB Rp 3.196 T · Kemiskinan 6,83% (BPS Jabar Q1 2026)</div>
+        <details class="rumus" open><summary>Rumus &amp; perhitungan</summary><div class="rr">
+          <div class="rf">Lapangan kerja = Σ(Investasiᵢ × TK/Rp1Tᵢ) · %TPT = LK ÷ Pengangguran<br>ΔPDRB = Σ(Investasiᵢ × VMᵢ) ÷ PDRB tahunan × 100 · Δmiskin = LK × faktor ÷ Jml miskin × %miskin</div>
+          <div class="sub" id="calc-rumus">Pilih paket / industri untuk melihat substitusi angka.</div>
+        </div></details>
       </div>
     </div>
     <p style="font-size:12.5px;color:var(--muted);margin-top:16px;max-width:70ch;line-height:1.5"><b>Metodologi:</b> ΔPDRB = (Total Investasi × <b>Value-Added (Nilai Tambah) Mult</b> rata-rata) / PDRB Jabar tahunan × 100 — dipakai <em>value-added</em> multiplier karena PDRB adalah konsep nilai tambah; memakai <em>output</em> multiplier akan menghitung transaksi antara (intermediate) berulang sehingga ΔPDRB overstate. Δkemiskinan: tiap 2 pekerja baru = 1 orang keluar miskin (faktor 0,5). Estimasi <em>upper bound</em> — kenyataannya ada friction & sebagian pekerja bukan dari RT miskin.</p>
@@ -875,6 +898,14 @@ const PRESETS={
   B:[['I-01',6],['I-02',4],['I-04',6],['I-07',4],['I-13',10]],
   C:[['I-15',12],['I-16',8],['I-20',8],['I-23',10],['I-25',12],['I-01',6],['I-02',4],['I-04',6],['I-07',4],['I-13',10]],
   D:[['I-15',22],['I-16',14],['I-19',12],['I-20',14],['I-23',22],['I-25',24],['I-01',10],['I-02',6],['I-04',10],['I-07',6],['I-13',18],['I-28',12],['I-31',20],['I-35',10]],
+  // Paket riil TA 2026 (Rp triliun) — pemetaan I-O sama dengan halaman sektor.
+  jalan:[['I-31',2.905976]],
+  kesehatan:[['I-31',0.138021],['I-23',0.047450],['I-48',0.003104]],
+  pendidikan:[['I-31',0.165692]],
+  pju:[['I-23',0.369522]],
+  irigasi:[['I-31',0.050653]],
+  spam:[['I-31',0.002167]],
+  semua:[['I-31',3.262509],['I-23',0.416972],['I-48',0.003104]],
   reset:[]
 };
 function applyPreset(p){SEL={};PRESETS[p].forEach(([k,v])=>{if(SMAP[k])SEL[k]={inv:v};});renderCalcList();renderSel();recompute();}
@@ -927,6 +958,12 @@ function recompute(){
   const note=document.getElementById('r-note');
   if(totInv===0)note.textContent='Belum ada investasi. Klik preset di atas atau geser angka.';
   else note.innerHTML=`Investasi <b style="color:var(--amber-soft)">Rp ${fmtID(totInv,totInv%1?1:0)} T</b> di ${Object.keys(SEL).length} industri membuka <b style="color:var(--amber-soft)">${fmtID(totLK)} lapangan kerja</b> — setara ${fmt2(pctTPT)}% pengangguran Jabar. Kemiskinan turun ke ${fmt2(PARAMS.miskinPct-dMisk)}%.`;
+  const rf=document.getElementById('calc-rumus');
+  if(rf)rf.innerHTML=totInv===0?'Pilih paket / industri untuk melihat substitusi angka.':
+    `LK = Σ(Investasiᵢ × TK/Rp1Tᵢ) = <b>${fmtID(totLK)}</b> orang<br>`+
+    `%TPT = ${fmtID(totLK)} ÷ ${fmtID(PARAMS.tptJml)} × 100 = <b>${fmt2(pctTPT)}%</b><br>`+
+    `ΔPDRB = (Rp ${fmt2(totInv)} T × ${fmt2(avgVM)} VM) ÷ Rp ${fmtID(PARAMS.pdrbAnnual)} T × 100 = <b>+${fmt2(dPDRB)}%</b><br>`+
+    `Δmiskin = (${fmtID(totLK)} × ${PARAMS.poorFactor}) ÷ ${fmtID(PARAMS.miskinJml)} × ${PARAMS.miskinPct}% = <b>−${fmtID(dMisk,3)} pp</b>`;
 }
 document.getElementById('calc-search').addEventListener('input',e=>{calcQ=e.target.value;renderCalcList();});
 
