@@ -43,17 +43,17 @@ input:focus,select:focus{outline:2px solid var(--amber)}
 .res b{font-family:'IBM Plex Mono',monospace;font-size:16px}
 .note{font-size:12px;color:var(--muted);margin-top:10px;border-left:3px solid var(--amber);padding-left:10px}
 /* ===== RUMUS (tampilan rumus + substitusi angka live) ===== */
-.rumus{margin-top:12px;border:1px solid var(--rule);border-radius:8px;background:#F5EFE0;overflow:hidden}
+.rumus{margin-top:12px;border:1px solid var(--rule);border-radius:8px;background:#F5EFE0;overflow:hidden;color:var(--ink)}
 .rumus>summary{cursor:pointer;list-style:none;padding:9px 12px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--amber);font-weight:600;display:flex;align-items:center;justify-content:space-between}
 .rumus>summary::-webkit-details-marker{display:none}
 .rumus>summary::after{content:'▾';color:var(--muted);font-size:11px}
 .rumus[open]>summary::after{content:'▴'}
 .rumus .rr{padding:4px 12px 12px}
-.rumus .rf{padding:6px 10px;background:#FBF7EE;border:1px solid var(--line);border-radius:6px;overflow-x:auto;overflow-y:hidden}
+.rumus .rf{padding:6px 10px;background:#FBF7EE;border:1px solid var(--line);border-radius:6px;overflow-x:auto;overflow-y:hidden;color:var(--ink)}
 .rumus .rlabel{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:12px 0 3px}
 .rumus .sub{overflow-x:auto;overflow-y:hidden;color:var(--ink)}
 .rumus .rn{margin-top:12px;font-size:11px;color:var(--muted);line-height:1.5}
-.rumus .katex{font-size:1.05em}
+.rumus .katex{font-size:1.05em;color:var(--ink)}
 .rumus .katex-display{margin:.3em 0;text-align:left}
 footer{padding:30px 0 50px;font-size:12px;color:var(--muted)}
 /* ===== LOGIN GATE ===== */
