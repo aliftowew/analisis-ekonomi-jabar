@@ -6,6 +6,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
 <style>
 :root{--bg:#FBF7EE;--paper:#FAF4E6;--ink:#1A1815;--ink-2:#3D3833;--muted:#7A7068;--line:#D9CFB8;--rule:#C8BC9F;--amber:#C8923A;--amber-soft:#E8B96A;--amber-bg:#F5E5C2;--rust:#A8453A;--moss:#5E7A3A;--teal:#3A6E7A;--navy:#1A3A6E;--hi:#FFEB9C}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -51,6 +54,18 @@ input:focus,select:focus{outline:2px solid var(--amber)}
 .res{background:var(--amber-bg);border-radius:8px;padding:10px 12px;margin-top:12px;display:flex;justify-content:space-between;align-items:center}
 .res b{font-family:'IBM Plex Mono',monospace;font-size:16px}
 .note{font-size:12px;color:var(--muted);margin-top:10px;border-left:3px solid var(--amber);padding-left:10px}
+.rumus{margin-top:12px;border:1px solid var(--rule);border-radius:8px;background:#F5EFE0;overflow:hidden;color:var(--ink)}
+.rumus>summary{cursor:pointer;list-style:none;padding:9px 12px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--amber);font-weight:600;display:flex;align-items:center;justify-content:space-between}
+.rumus>summary::-webkit-details-marker{display:none}
+.rumus>summary::after{content:'▾';color:var(--muted);font-size:11px}
+.rumus[open]>summary::after{content:'▴'}
+.rumus .rr{padding:4px 12px 12px}
+.rumus .rf{padding:6px 10px;background:#FBF7EE;border:1px solid var(--line);border-radius:6px;overflow-x:auto;overflow-y:hidden;color:var(--ink)}
+.rumus .rlabel{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:12px 0 3px}
+.rumus .sub{overflow-x:auto;overflow-y:hidden;color:var(--ink)}
+.rumus .rn{margin-top:12px;font-size:11px;color:var(--muted);line-height:1.5}
+.rumus .katex{font-size:1.02em;color:var(--ink)}
+.rumus .katex-display{margin:.3em 0;text-align:left}
 footer{padding:30px 0 50px;font-size:12px;color:var(--muted)}
 /* ===== LOGIN GATE ===== */
 #login-gate[hidden]{display:none!important}
@@ -189,6 +204,12 @@ body.locked>*:not(#login-gate){filter:blur(6px);pointer-events:none;user-select:
     <div class="kpi"><div class="l">Lapangan Kerja</div><div class="v" id="k-tk"></div></div>
     <div class="kpi"><div class="l">Multiplier Tertimbang</div><div class="v" id="k-mult"></div></div>
   </div>
+  <details class="rumus" open><summary>Rumus &amp; perhitungan</summary><div class="rr">
+    <div class="rf">$$\begin{aligned}\Delta\text{Output}&=\textstyle\sum(\text{Dana}\times om)\\ \Delta\text{NTB}&=\textstyle\sum(\text{Dana}\times vm)\\ \text{Kerja}&=\textstyle\sum(\text{Dana}\div10^{12}\times\text{TK/Rp1T})\end{aligned}$$</div>
+    <div class="rlabel">Dengan input saat ini</div>
+    <div class="sub" id="k-rumus"></div>
+    <div class="rn">om = output multiplier; vm = value-added (nilai tambah) multiplier; TK = tenaga kerja per Rp 1 triliun.</div>
+  </div></details>
   <p class="note">Prefill dari data Rencana Paket TA 2026 &amp; usulan dinas (Creative Financing). Jalan &amp; Jembatan Rp 2,906 T = total paket konstruksi; ganti ke Rp 1.937.745.455.516 bila basisnya 26 KAK preservasi (usulan pinjaman daerah).</p>
 </div></section>
 
@@ -212,6 +233,12 @@ body.locked>*:not(#login-gate){filter:blur(6px);pointer-events:none;user-select:
       <div class="row"><span>BBM dihemat</span><b id="j-bbm"></b></div>
       <div class="row"><span>Reduksi CO₂</span><b id="j-co2"></b></div>
       <div class="res"><span>Total BOK + VoT</span><b id="j-tot"></b></div>
+      <details class="rumus" open><summary>Rumus &amp; perhitungan</summary><div class="rr">
+        <div class="rf">$$\begin{aligned}\text{BOK}&=\text{LHR}\times365\times[\,RR(BOK_{RR}-BOK_b)+RB(BOK_{RB}-BOK_b)\,]\\ \text{VoT}&=\Delta t\times365\times\text{Okupansi}\times\text{Upah}\\ \text{BBM}&=\text{LHR}\times\text{km}\times365\div(\text{km/L})\times\text{Reduksi}\end{aligned}$$</div>
+        <div class="rlabel">Dengan input saat ini</div>
+        <div class="sub" id="j-rumus"></div>
+        <div class="rn">Total = BOK + VoT saja; nilai BBM tidak dijumlahkan (sudah termasuk BOK). CO₂ dilaporkan sebagai kuantitas fisik.</div>
+      </div></details>
     </div>
   </div>
 </div></section>
@@ -227,12 +254,24 @@ body.locked>*:not(#login-gate){filter:blur(6px);pointer-events:none;user-select:
       <div class="row"><span>Return/thn sekolah (%) · thn ekstra</span><span style="display:flex;gap:6px"><input type="number" id="p-ret" value="10" style="width:60px"><input type="number" id="p-t" value="3" style="width:52px"></span></div>
       <div class="row"><span>Upah dasar tahunan (Rp)</span><input type="number" id="p-w" value="36000000"></div>
       <div class="res"><span>Manfaat / tahun</span><b id="p-out"></b></div>
+      <details class="rumus" open><summary>Rumus &amp; perhitungan</summary><div class="rr">
+        <div class="rf">$$\text{Manfaat}=\text{Ruang}\times\text{Siswa}\times\%_{\text{selamat}}\times(\text{Return}\times\text{Tahun}\times\text{Upah})$$</div>
+        <div class="rlabel">Dengan input saat ini</div>
+        <div class="sub" id="p-rumus"></div>
+        <div class="rn">Manfaat terwujud saat kohor lulus &amp; bekerja (idealnya diskonto NPV).</div>
+      </div></details>
     </div>
     <div class="card"><h3>Kesehatan</h3><div class="src">CT-Scan 2 unit, X-Ray, lab, UTDRS — ganti asumsi dgn data rujukan RSUD/BPJS</div>
       <div class="row"><span>Rujukan terhindarkan / tahun</span><input type="number" id="h-n" value="3000"></div>
       <div class="row"><span>Biaya per rujukan (Rp)</span><input type="number" id="h-b" value="750000"></div>
       <div class="row"><span>Jam perjalanan hemat / pasien</span><input type="number" id="h-j" value="6"></div>
       <div class="res"><span>Manfaat / tahun</span><b id="h-out"></b></div>
+      <details class="rumus" open><summary>Rumus &amp; perhitungan</summary><div class="rr">
+        <div class="rf">$$\text{Manfaat}=(N_{\text{ruj}}\times\text{Biaya})+(N_{\text{ruj}}\times\text{Jam}\times 2\times\text{Nilai waktu})$$</div>
+        <div class="rlabel">Dengan input saat ini</div>
+        <div class="sub" id="h-rumus"></div>
+        <div class="rn">Faktor 2 = pasien + pendamping; nilai waktu Rp 17.341/jam (dari WAGE).</div>
+      </div></details>
     </div>
     <div class="card"><h3>Perhubungan — APJ</h3><div class="src">Korban laka: Polda Jabar 2024 (MD 2.778 · LB 627 · LR 8.313) · Biaya korban: Pd T-02-2005-B eskalasi 2023 · Efek lampu: Cochrane (Beyer &amp; Ker 2009) s.d. −55%, dipakai konservatif</div>
       <div class="row"><span>Titik APJ terpasang</span><input type="number" id="a-t" value="7638"></div>
@@ -240,6 +279,12 @@ body.locked>*:not(#login-gate){filter:blur(6px);pointer-events:none;user-select:
       <div class="row"><span>Porsi laka jln provinsi · malam · reduksi (%)</span><span style="display:flex;gap:6px"><input type="number" id="a-p" value="62" style="width:54px"><input type="number" id="a-m" value="35" style="width:54px"><input type="number" id="a-r" value="30" style="width:54px"></span></div>
       <div class="row"><span>Korban terhindarkan (MD·LB·LR)</span><b id="a-korban"></b></div>
       <div class="res"><span>Manfaat / tahun</span><b id="a-out"></b></div>
+      <details class="rumus" open><summary>Rumus &amp; perhitungan</summary><div class="rr">
+        <div class="rf">$$\begin{aligned}\text{Cakupan}&=\dfrac{\text{Titik}\times\text{Jarak}\div1000}{\text{2.362,18 km}}\\ \text{Faktor}&=\%_{\text{prov}}\times\%_{\text{malam}}\times\text{Cakupan}\times\%_{\text{reduksi}}\\ \text{Manfaat}&=\textstyle\sum_k(\text{Korban}_k\times\text{Biaya}_k)\times\text{eskalasi}\end{aligned}$$</div>
+        <div class="rlabel">Dengan input saat ini</div>
+        <div class="sub" id="a-rumus"></div>
+        <div class="rn">Eskalasi 1,10³ (biaya korban basis 2023 → 2026). Top-down dari total laka Jabar.</div>
+      </div></details>
     </div>
     <div class="card"><h3>SDA — Irigasi</h3><div class="src">Produktivitas: BPS Jabar 2025 (7,09 t GKP/ha) · Harga: HPP GKP Bapanas Rp 6.500/kg · Luas: estimasi unit cost — GANTI dgn data DI riil</div>
       <div class="row"><span>Luas layanan terdampak (ha)</span><input type="number" id="i-ha" value="2467"></div>
@@ -247,6 +292,12 @@ body.locked>*:not(#login-gate){filter:blur(6px);pointer-events:none;user-select:
       <div class="row"><span>Produktivitas (t GKP/ha)</span><input type="number" id="i-pr" value="7.09" step="0.01"></div>
       <div class="row"><span>Harga GKP (Rp/kg)</span><input type="number" id="i-hg" value="6500"></div>
       <div class="res"><span>Manfaat / tahun</span><b id="i-out"></b></div>
+      <details class="rumus" open><summary>Rumus &amp; perhitungan</summary><div class="rr">
+        <div class="rf">$$\text{Manfaat}=\text{Luas}\times\Delta\text{IP}\times\text{Produktivitas}\times1000\times\text{Harga}$$</div>
+        <div class="rlabel">Dengan input saat ini</div>
+        <div class="sub" id="i-rumus"></div>
+        <div class="rn">Manfaat kotor (sesuai workbook, Rp 56,85 M).</div>
+      </div></details>
     </div>
     <div class="card"><h3>Perumahan — SPAM</h3><div class="src">Reduksi diare: WHO ±25% dari air minum layak</div>
       <div class="row"><span>Sambungan rumah (SR)</span><input type="number" id="s-sr" value="542"></div>
@@ -254,6 +305,12 @@ body.locked>*:not(#login-gate){filter:blur(6px);pointer-events:none;user-select:
       <div class="row"><span>Jiwa/RT · diare/jiwa/thn · reduksi (%)</span><span style="display:flex;gap:6px"><input type="number" id="s-a" value="4" style="width:50px"><input type="number" id="s-d" value="0.3" step="0.1" style="width:56px"><input type="number" id="s-r" value="25" style="width:54px"></span></div>
       <div class="row"><span>Biaya berobat/kejadian (Rp)</span><input type="number" id="s-b" value="300000"></div>
       <div class="res"><span>Manfaat / tahun</span><b id="s-out"></b></div>
+      <details class="rumus" open><summary>Rumus &amp; perhitungan</summary><div class="rr">
+        <div class="rf">$$\text{Manfaat}=(SR\times\text{Jam}\times365\times\text{Nilai waktu})+(SR\times\text{Jiwa}\times\text{Diare}\times\text{Reduksi}\times\text{Biaya})$$</div>
+        <div class="rlabel">Dengan input saat ini</div>
+        <div class="sub" id="s-rumus"></div>
+        <div class="rn">Nilai waktu Rp 17.341/jam (dari WAGE).</div>
+      </div></details>
     </div>
     <div class="card" style="background:var(--ink);color:var(--paper)"><h3 style="color:var(--paper)">Rekap Manfaat Tahunan</h3><div class="src" style="color:var(--amber-soft)">Jalan (BOK+VoT) + lima kategori non-konstruksi</div>
       <div class="row" style="border-color:#3a3630"><span>Jalan</span><b id="r-jalan"></b></div>
@@ -284,6 +341,8 @@ const $=id=>document.getElementById(id);
 const num=id=>parseFloat($(id).value)||0;
 const T=v=>{const a=Math.abs(v);if(a>=1e12)return 'Rp '+(v/1e12).toLocaleString('id-ID',{maximumFractionDigits:2})+' T';if(a>=1e9)return 'Rp '+(v/1e9).toLocaleString('id-ID',{maximumFractionDigits:1})+' M';return 'Rp '+Math.round(v).toLocaleString('id-ID');};
 const N=(v,d=0)=>v.toLocaleString('id-ID',{maximumFractionDigits:d});
+const KX=(id,tex)=>{const el=$(id);if(!el)return;if(window.katex){try{katex.render(tex,el,{throwOnError:false,displayMode:true});}catch(e){el.textContent=tex;}}};
+const tx=s=>'\\text{'+String(s).replace(/%/g,'\\%')+'}';
 
 // --- alokasi multi-sektor ---
 const tb=document.querySelector('#alloc-tbl tbody');
@@ -304,6 +363,7 @@ function calcAlloc(){
   });
   $('k-dana').textContent=T(dana);$('k-dx').textContent=T(dx);$('k-dva').textContent=T(dva);
   $('k-tk').textContent=N(tk)+' org';$('k-mult').textContent=dana?(dx/dana).toLocaleString('id-ID',{maximumFractionDigits:3}):'—';
+  KX('k-rumus',`\\begin{aligned}\\Delta\\text{Output}&=${tx(T(dx))}\\\\ \\Delta\\text{NTB}&=${tx(T(dva))}\\\\ \\text{Kerja}&=${tx(N(tk)+' org')}\\\\ \\text{Mult}&=${tx(dana?(dx/dana).toLocaleString('id-ID',{maximumFractionDigits:3}):'—')}\\end{aligned}`);
   return null;
 }
 // --- jalan ---
@@ -317,25 +377,40 @@ function calcJalan(){
   const vot=dt*365*o*w, bbm=lhr*km*365*fc*eta, co2=bbm*ef;
   $('j-bok').textContent=T(bok);$('j-dt').textContent=N(dt)+' jam';$('j-vot').textContent=T(vot);
   $('j-bbm').textContent=N(bbm)+' L';$('j-co2').textContent=N(co2)+' kg';$('j-tot').textContent=T(bok+vot);
+  KX('j-rumus',`\\begin{aligned}\\text{BOK}&=${tx(N(lhr))}\\times365\\times[\\,${tx(N(rr,1))}(${tx(N(b2))}-${tx(N(b1))})+${tx(N(rb,1))}(${tx(N(b3))}-${tx(N(b1))})\\,]=\\boxed{${tx(T(bok))}}\\\\ \\text{VoT}&=${tx(N(dt)+' jam')}\\times365\\times${tx(N(o,1))}\\times${tx(T(w))}=\\boxed{${tx(T(vot))}}\\\\ \\text{BBM}&=${tx(N(bbm)+' L')}\\;\\Rightarrow\\;${tx(N(co2/1000,0)+' t CO2')}\\\\ \\text{Total}&=\\text{BOK}+\\text{VoT}=\\boxed{${tx(T(bok+vot))}}\\end{aligned}`);
   return bok+vot;
 }
 // --- non-konstruksi ---
 const LAKA={md:2778,lb:627,lr:8313}, BIAYA={md:959544069,lb:46971027,lr:8425115}, ESK=Math.pow(1.10,3);
 function calcNon(){
-  const pend=num('p-r')*num('p-s')*num('p-p')/100*(num('p-ret')/100*num('p-t')*num('p-w'));
+  // Pendidikan
+  const p_siswa=num('p-r')*num('p-s')*num('p-p')/100, p_up=num('p-ret')/100*num('p-t')*num('p-w');
+  const pend=p_siswa*p_up;
   $('p-out').textContent=T(pend);
-  const kes=num('h-n')*num('h-b')+num('h-n')*num('h-j')*2*17341;
+  KX('p-rumus',`\\begin{aligned}\\text{Siswa}&=${tx(N(num('p-r')))}\\times${tx(N(num('p-s')))}\\times${tx(N(num('p-p'))+'%')}=${tx(N(p_siswa,1)+' siswa')}\\\\ \\text{Uplift}&=${tx(N(num('p-ret'))+'%')}\\times${tx(N(num('p-t'))+' thn')}\\times${tx(T(num('p-w')))}=${tx(T(p_up))}\\\\ \\text{Total}&=\\boxed{${tx(T(pend))}}\\end{aligned}`);
+  // Kesehatan
+  const h_n=num('h-n'),h_b=num('h-b'),h_j=num('h-j');
+  const h_biaya=h_n*h_b, h_waktu=h_n*h_j*2*17341, kes=h_biaya+h_waktu;
   $('h-out').textContent=T(kes);
-  const cak=num('a-t')*num('a-j')/1000/2362.18;
-  const f=num('a-p')/100*num('a-m')/100*cak*num('a-r')/100;
+  KX('h-rumus',`\\begin{aligned}\\text{Biaya}&=${tx(N(h_n))}\\times${tx(T(h_b))}=${tx(T(h_biaya))}\\\\ \\text{Waktu}&=${tx(N(h_n))}\\times${tx(N(h_j)+' jam')}\\times${tx('2 org')}\\times${tx('Rp 17.341')}=${tx(T(h_waktu))}\\\\ \\text{Total}&=\\boxed{${tx(T(kes))}}\\end{aligned}`);
+  // Perhubungan APJ
+  const a_t=num('a-t'),a_j=num('a-j'),a_p=num('a-p'),a_m=num('a-m'),a_r=num('a-r');
+  const kmT=a_t*a_j/1000, cak=kmT/2362.18;
+  const f=a_p/100*a_m/100*cak*a_r/100;
   const md=LAKA.md*f,lb=LAKA.lb*f,lr=LAKA.lr*f;
   $('a-korban').textContent=N(md,1)+' · '+N(lb,1)+' · '+N(lr,1);
   const apj=(md*BIAYA.md+lb*BIAYA.lb+lr*BIAYA.lr)*ESK;
   $('a-out').textContent=T(apj);
+  KX('a-rumus',`\\begin{aligned}\\text{Cakupan}&=${tx(N(kmT,1)+' km')}\\div${tx('2.362,18')}=${tx(N(cak*100,2)+'%')}\\\\ \\text{Faktor}&=${tx(N(a_p)+'%')}\\times${tx(N(a_m)+'%')}\\times${tx(N(cak*100,2)+'%')}\\times${tx(N(a_r)+'%')}=${tx(N(f*100,3)+'%')}\\\\ \\text{Korban}&=\\text{MD }${tx(N(md,1))}\\cdot\\text{LB }${tx(N(lb,1))}\\cdot\\text{LR }${tx(N(lr,1))}\\\\ \\text{Manfaat}&=\\boxed{${tx(T(apj))}}\\end{aligned}`);
+  // SDA irigasi (kotor)
   const iri=num('i-ha')*num('i-ip')*num('i-pr')*num('i-hg')*1000;
   $('i-out').textContent=T(iri);
-  const spam=num('s-sr')*num('s-j')*365*17341+num('s-sr')*num('s-a')*num('s-d')*num('s-r')/100*num('s-b');
+  KX('i-rumus',`${tx(N(num('i-ha'))+' ha')}\\times${tx(N(num('i-ip'),2))}\\times${tx(N(num('i-pr'),2)+' t/ha')}\\times\\text{1.000}\\times${tx(T(num('i-hg')))}=\\boxed{${tx(T(iri))}}`);
+  // Perumahan SPAM
+  const s_sr=num('s-sr'),s_j=num('s-j'),s_a=num('s-a'),s_d=num('s-d'),s_r=num('s-r'),s_b=num('s-b');
+  const s_waktu=s_sr*s_j*365*17341, s_sehat=s_sr*s_a*s_d*s_r/100*s_b, spam=s_waktu+s_sehat;
   $('s-out').textContent=T(spam);
+  KX('s-rumus',`\\begin{aligned}\\text{Waktu}&=${tx(N(s_sr)+' SR')}\\times${tx(N(s_j,1)+' jam')}\\times365\\times${tx('Rp 17.341')}=${tx(T(s_waktu))}\\\\ \\text{Sehat}&=${tx(N(s_sr))}\\times${tx(N(s_a)+' jiwa')}\\times${tx(N(s_d,1))}\\times${tx(N(s_r)+'%')}\\times${tx(T(s_b))}=${tx(T(s_sehat))}\\\\ \\text{Total}&=\\boxed{${tx(T(spam))}}\\end{aligned}`);
   return {pend,kes,apj,iri,spam};
 }
 function calcAll(){
@@ -347,6 +422,7 @@ function calcAll(){
 }
 document.querySelectorAll('input,select').forEach(el=>el.addEventListener('input',calcAll));
 calcAll();
+if(window.renderMathInElement)renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true}]});
 </script>
 </body>
 </html>
