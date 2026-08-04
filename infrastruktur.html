@@ -240,6 +240,29 @@ body.locked>*:not(#login-gate){filter:blur(6px);pointer-events:none;user-select:
       </div></details>
     </div>
   </div>
+  <h2 class="sec serif" style="margin-top:36px">Kemantapan Jalan Provinsi (Skenario Penanganan)</h2>
+  <p class="intro">Berapa kemantapan naik jika program 2026 menangani jalan nonmantap. Data kemantapan: Kemantapan Jalan Provinsi per Kab/Kota 2025 (DBMPR Jabar).</p>
+  <div class="grid2">
+    <div class="card"><h3>Parameter</h3><div class="src">Kemantapan Jalan Provinsi per Kab/Kota 2025 (DBMPR Jabar). Target penanganan jalan provinsi 2026 = 169,098 km.</div>
+      <div class="row"><span>Total jalan provinsi (km)</span><input type="number" id="km-tot" value="2362.183" step="0.1"></div>
+      <div class="row"><span>Jalan mantap awal (km)</span><input type="number" id="km-man" value="2165.719" step="0.1"></div>
+      <div class="row"><span>Panjang efektif membaik (km)</span><input type="number" id="km-eff" value="169.098" step="0.1"></div>
+    </div>
+    <div class="card"><h3>Hasil</h3><div class="src">Skenario 80% / 100% dari target penanganan provinsi</div>
+      <div class="row"><span>Kemantapan awal</span><b id="km-a0"></b></div>
+      <div class="row"><span>Nonmantap awal</span><b id="km-nm"></b></div>
+      <div class="res"><span>Kemantapan baru</span><b id="km-new"></b></div>
+      <div class="row"><span>Sisa nonmantap</span><b id="km-sisa"></b></div>
+      <div class="row" style="margin-top:8px"><span>Konservatif (80% target)</span><b id="km-s80"></b></div>
+      <div class="row"><span>Maksimum (100% target)</span><b id="km-s100"></b></div>
+    </div>
+  </div>
+  <details class="rumus" open><summary>Rumus &amp; perhitungan</summary><div class="rr">
+    <div class="rf">$$\text{Kemantapan baru}=\dfrac{\text{Mantap awal}+\text{Panjang efektif membaik}}{\text{Total jalan}}\times100\%$$</div>
+    <div class="rlabel">Dengan input saat ini</div>
+    <div class="sub" id="km-rumus"></div>
+    <div class="rn">Panjang efektif dibatasi ≤ nonmantap awal. Konsentrasi nonmantap: Sukabumi 52,5 · Cianjur 36,4 · Garut 28,8 · Indramayu 14,0 · Karawang 12,3 km (≈60% di tiga teratas).</div>
+  </div></details>
   <h2 class="sec serif" style="margin-top:36px">Produktivitas Jangka Panjang (Elastisitas Modal Publik)</h2>
   <p class="intro"><b>Sudut pandang makro terpisah — bukan penambah untuk BOK + VoT di atas.</b> Jalan yang membaik menambah "modal infrastruktur" produktif; sebagian manfaatnya sama dengan penghematan biaya perjalanan, jadi jangan dijumlahkan agar tidak dobel hitung.</p>
   <div class="grid2">
@@ -298,7 +321,7 @@ body.locked>*:not(#login-gate){filter:blur(6px);pointer-events:none;user-select:
       </div></details>
     </div>
     <div class="card" data-cat="perhubungan"><h3>Perhubungan — APJ</h3><div class="src">Korban laka: Polda Jabar 2024 (MD 2.778 · LB 627 · LR 8.313) · Biaya korban: Pd T-02-2005-B eskalasi 2023 · Efek lampu: <a href="https://www.cochranelibrary.com/cdsr/doi/10.1002/14651858.CD004728.pub2/full" target="_blank" rel="noopener">Cochrane (Beyer &amp; Ker 2009)</a> s.d. −55%, dipakai konservatif</div>
-      <div class="row"><span>Titik APJ terpasang</span><input type="number" id="a-t" value="7638"></div>
+      <div class="row"><span>Titik APJ terpasang</span><input type="number" id="a-t" value="7778"></div>
       <div class="row"><span>Jarak antar tiang (m)</span><input type="number" id="a-j" value="40"></div>
       <div class="row"><span>Porsi laka jln provinsi · malam · reduksi (%)</span><span style="display:flex;gap:6px"><input type="number" id="a-p" value="62" style="width:54px"><input type="number" id="a-m" value="35" style="width:54px"><input type="number" id="a-r" value="30" style="width:54px"></span></div>
       <div class="row"><span>Korban terhindarkan (MD·LB·LR)</span><b id="a-korban"></b></div>
@@ -416,8 +439,17 @@ function calcMakro(){
   $('m-s25').textContent=T(scen(0.25));$('m-s50').textContent=T(scen(0.5));$('m-s100').textContent=T(scen(1));
   KX('m-rumus',`\\begin{aligned}\\dfrac{\\Delta K}{K}&=${tx(N(L,3)+' km')}\\div${tx(N(Lt,3)+' km')}=${tx(N(dk*100,3)+'%')}\\\\ \\dfrac{\\Delta Y}{Y}&=${tx(N(eps,2))}\\times${tx(N(q*100,0)+'%')}\\times${tx(N(dk*100,3)+'%')}=${tx(N(dy*100,3)+'%')}\\\\ \\Delta Y&=${tx(N(dy*100,3)+'%')}\\times${tx('Rp '+N(pdrb/1e12,2)+' T')}=\\boxed{${tx(T(dY))}}\\end{aligned}`);
 }
+// --- kemantapan jalan ---
+function calcKemantapan(){
+  const tot=num('km-tot'),man=num('km-man'),eff=num('km-eff');
+  const nm=tot-man, a0=man/tot*100, cl=x=>Math.max(0,Math.min(x,nm)), kem=x=>(man+cl(x))/tot*100;
+  $('km-a0').textContent=N(a0,3)+'%';$('km-nm').textContent=N(nm,3)+' km';
+  $('km-new').textContent=N(kem(eff),3)+'%';$('km-sisa').textContent=N(nm-cl(eff),3)+' km';
+  $('km-s80').textContent=N(kem(0.8*eff),3)+'%';$('km-s100').textContent=N(kem(eff),3)+'%';
+  KX('km-rumus',`\\begin{aligned}\\text{Nonmantap}&=${tx(N(tot,3)+' km')}-${tx(N(man,3)+' km')}=${tx(N(nm,3)+' km')}\\\\ \\text{Kemantapan baru}&=\\dfrac{${tx(N(man,3))}+${tx(N(eff,3))}}{${tx(N(tot,3))}}=\\boxed{${tx(N(kem(eff),3)+'%')}}\\end{aligned}`);
+}
 function calcAll(){
-  const jalan=calcJalan(), n=calcNon(); calcMakro();
+  const jalan=calcJalan(), n=calcNon(); calcMakro(); calcKemantapan();
   $('r-jalan').textContent=T(jalan);$('r-pend').textContent=T(n.pend);$('r-kes').textContent=T(n.kes);
   $('r-apj').textContent=T(n.apj);$('r-iri').textContent=T(n.iri);$('r-spam').textContent=T(n.spam);
   $('r-total').textContent=T(jalan+n.pend+n.kes+n.apj+n.iri+n.spam);
