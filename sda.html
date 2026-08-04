@@ -30,18 +30,18 @@
     <div class="kpi"><div class="l">Δ Nilai Tambah</div><div class="v" id="io-dva"></div></div>
     <div class="kpi"><div class="l">Lapangan Kerja</div><div class="v" id="io-tk"></div></div>
   </div>
-</div></section><section><div class="wrap"><div class="grid2"><div class="card"><h3>SDA — Irigasi</h3><div class="src">Produktivitas: BPS Jabar 2025 (7,09 t GKP/ha) · Harga: HPP GKP Bapanas Rp 6.500/kg · Luas: estimasi unit cost — GANTI dgn data DI riil. Biaya produksi tambahan (benih, pupuk, pestisida, TK, panen, pengeringan, angkut) adalah <b>asumsi</b> — GANTI dgn data usahatani; manfaat kini <b>bersih (net)</b>, bukan pendapatan kotor.</div>
+</div></section><section><div class="wrap"><div class="grid2"><div class="card"><h3>SDA — Irigasi</h3><div class="src">Produktivitas: BPS Jabar 2025 (7,09 t GKP/ha) · Harga: HPP GKP Bapanas Rp 6.500/kg · Luas: estimasi unit cost — GANTI dgn data DI riil. <b>Default biaya = 0 → manfaat KOTOR Rp 56,85 M (sesuai workbook).</b> Isi biaya produksi tambahan (benih, pupuk, TK, panen, dll.) untuk mendapatkan manfaat BERSIH.</div>
       <div class="row"><span>Luas layanan terdampak (ha)</span><input type="number" id="i-ha" value="2467"></div>
       <div class="row"><span>Kenaikan IP (panen/thn)</span><input type="number" id="i-ip" value="0.5" step="0.1"></div>
       <div class="row"><span>Produktivitas (t GKP/ha)</span><input type="number" id="i-pr" value="7.09" step="0.01"></div>
       <div class="row"><span>Harga GKP (Rp/kg)</span><input type="number" id="i-hg" value="6500"></div>
-      <div class="row"><span>Biaya produksi tambahan (Rp/kg)</span><input type="number" id="i-bp" value="3500"></div>
-      <div class="res"><span>Manfaat bersih / tahun</span><b id="i-out"></b></div>
+      <div class="row"><span>Biaya produksi tambahan (Rp/kg)</span><input type="number" id="i-bp" value="0"></div>
+      <div class="res"><span>Manfaat / tahun</span><b id="i-out"></b></div>
       <details class="rumus" open><summary>Rumus &amp; perhitungan</summary><div class="rr">
-        <div class="rf">$$\text{Manfaat bersih}=\text{Luas}\times\Delta\text{IP}\times\text{Produktivitas}\times1000\times(\text{Harga}-\text{Biaya})$$</div>
+        <div class="rf">$$\text{Manfaat}=\text{Luas}\times\Delta\text{IP}\times\text{Produktivitas}\times1000\times(\text{Harga}-\text{Biaya})$$</div>
         <div class="rlabel">Dengan input saat ini</div>
         <div class="sub" id="i-rumus"></div>
-        <div class="rn">Tambahan produksi (dari kenaikan Indeks Pertanaman) dikali marjin bersih per kg — harga gabah dikurangi biaya produksi tambahan.</div>
+        <div class="rn">Default biaya = 0 → manfaat kotor (sesuai workbook, Rp 56,85 M). Isi biaya produksi tambahan untuk manfaat bersih.</div>
       </div></details>
     </div>
     </div></div></section>

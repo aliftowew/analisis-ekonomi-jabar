@@ -202,7 +202,7 @@ body.locked>*:not(#login-gate){filter:blur(6px);pointer-events:none;user-select:
       <div class="row"><span>LHR (smp/hari)</span><input type="number" id="j-lhr" value="13358" step="100"></div>
       <div class="row"><span>BOK baik / RR / RB (Rp/kend-km)</span><span style="display:flex;gap:6px"><input type="number" id="j-b1" value="3000" style="width:74px"><input type="number" id="j-b2" value="3500" style="width:74px"><input type="number" id="j-b3" value="4500" style="width:74px"></span></div>
       <div class="row"><span>Kecepatan baik / RR / RB (km/jam)</span><span style="display:flex;gap:6px"><input type="number" id="j-v1" value="45" style="width:60px"><input type="number" id="j-v2" value="30" style="width:60px"><input type="number" id="j-v3" value="22" style="width:60px"></span></div>
-      <div class="row"><span>Upah (Rp/jam) · Okupansi</span><span style="display:flex;gap:6px"><input type="number" id="j-w" value="20857" style="width:90px"><input type="number" id="j-o" value="1.5" step="0.1" style="width:60px"></span></div>
+      <div class="row"><span>Upah (Rp/jam) · Okupansi</span><span style="display:flex;gap:6px"><input type="number" id="j-w" value="17341" style="width:90px"><input type="number" id="j-o" value="1.5" step="0.1" style="width:60px"></span></div>
       <div class="row"><span>Km/liter · Reduksi (%) · kg CO₂/L</span><span style="display:flex;gap:6px"><input type="number" id="j-f" value="14" style="width:60px"><input type="number" id="j-e" value="10" style="width:56px"><input type="number" id="j-c" value="2.38" step="0.01" style="width:64px"></span></div>
     </div>
     <div class="card"><h3>Hasil / tahun</h3><div class="src">Skenario: seluruh km ditangani pulih ke kondisi mantap</div>
@@ -225,7 +225,7 @@ body.locked>*:not(#login-gate){filter:blur(6px);pointer-events:none;user-select:
       <div class="row"><span>Siswa/ruang</span><input type="number" id="p-s" value="36"></div>
       <div class="row"><span>Porsi terselamatkan dari putus sekolah (%)</span><input type="number" id="p-p" value="20"></div>
       <div class="row"><span>Return/thn sekolah (%) · thn ekstra</span><span style="display:flex;gap:6px"><input type="number" id="p-ret" value="10" style="width:60px"><input type="number" id="p-t" value="3" style="width:52px"></span></div>
-      <div class="row"><span>Upah dasar tahunan (Rp)</span><input type="number" id="p-w" value="43299332"></div>
+      <div class="row"><span>Upah dasar tahunan (Rp)</span><input type="number" id="p-w" value="36000000"></div>
       <div class="res"><span>Manfaat / tahun</span><b id="p-out"></b></div>
     </div>
     <div class="card"><h3>Kesehatan</h3><div class="src">CT-Scan 2 unit, X-Ray, lab, UTDRS — ganti asumsi dgn data rujukan RSUD/BPJS</div>
@@ -324,7 +324,7 @@ const LAKA={md:2778,lb:627,lr:8313}, BIAYA={md:959544069,lb:46971027,lr:8425115}
 function calcNon(){
   const pend=num('p-r')*num('p-s')*num('p-p')/100*(num('p-ret')/100*num('p-t')*num('p-w'));
   $('p-out').textContent=T(pend);
-  const kes=num('h-n')*num('h-b')+num('h-n')*num('h-j')*2*20857*1;
+  const kes=num('h-n')*num('h-b')+num('h-n')*num('h-j')*2*17341;
   $('h-out').textContent=T(kes);
   const cak=num('a-t')*num('a-j')/1000/2362.18;
   const f=num('a-p')/100*num('a-m')/100*cak*num('a-r')/100;
@@ -334,7 +334,7 @@ function calcNon(){
   $('a-out').textContent=T(apj);
   const iri=num('i-ha')*num('i-ip')*num('i-pr')*num('i-hg')*1000;
   $('i-out').textContent=T(iri);
-  const spam=num('s-sr')*num('s-j')*365*20857+num('s-sr')*num('s-a')*num('s-d')*num('s-r')/100*num('s-b');
+  const spam=num('s-sr')*num('s-j')*365*17341+num('s-sr')*num('s-a')*num('s-d')*num('s-r')/100*num('s-b');
   $('s-out').textContent=T(spam);
   return {pend,kes,apj,iri,spam};
 }
