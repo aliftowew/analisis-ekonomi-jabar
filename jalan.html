@@ -55,6 +55,33 @@
       </div></details>
     </div>
   </div></div></div></section>
+<section><div class="wrap">
+  <h2 class="sec serif">Dampak Produktivitas Jangka Panjang (Elastisitas Modal Publik)</h2>
+  <p class="intro"><b>Sudut pandang makro yang terpisah — bukan penambah untuk BOK + VoT di atas.</b> Jalan yang membaik menambah "modal infrastruktur" produktif; sebagian manfaatnya sama dengan penghematan biaya perjalanan, jadi jangan dijumlahkan agar tidak dobel hitung.</p>
+  <div class="grid2">
+    <div class="card"><h3>Parameter</h3><div class="src">Elastisitas output–modal publik ε: literatur (tipe Aschauer). Panjang jaringan: jalan provinsi Jabar.</div>
+      <div class="row"><span>Panjang jalan diperbaiki (km)</span><input type="number" id="m-l" value="196.464" step="0.1"></div>
+      <div class="row"><span>Total jaringan jalan provinsi (km)</span><input type="number" id="m-lt" value="2362.183" step="0.1"></div>
+      <div class="row"><span>Elastisitas ε</span><input type="number" id="m-e" value="0.13" step="0.01"></div>
+      <div class="row"><span>Faktor kualitas efektif q (%)</span><input type="number" id="m-q" value="50" step="5"></div>
+      <div class="row"><span>PDRB Jabar tahunan (Rp T)</span><input type="number" id="m-pdrb" value="3196.44" step="1"></div>
+    </div>
+    <div class="card"><h3>Hasil</h3><div class="src">ΔK/K = proporsi jaringan yang membaik · ΔY = tambahan output makro</div>
+      <div class="row"><span>ΔK/K (proporsi jaringan)</span><b id="m-dk"></b></div>
+      <div class="row"><span>ΔY/Y (dengan q)</span><b id="m-dy"></b></div>
+      <div class="res"><span>ΔY / tahun (skenario q)</span><b id="m-out"></b></div>
+      <div class="row" style="margin-top:8px"><span>Skenario q = 25%</span><b id="m-s25"></b></div>
+      <div class="row"><span>Skenario q = 50% (tengah)</span><b id="m-s50"></b></div>
+      <div class="row"><span>Skenario q = 100% (batas atas)</span><b id="m-s100"></b></div>
+    </div>
+  </div>
+  <details class="rumus" open><summary>Rumus &amp; perhitungan</summary><div class="rr">
+    <div class="rf">$$\dfrac{\Delta Y}{Y}=\varepsilon\times q\times\dfrac{L_{\text{diperbaiki}}}{L_{\text{total}}}\qquad \Delta Y=\dfrac{\Delta Y}{Y}\times\text{PDRB}$$</div>
+    <div class="rlabel">Dengan input saat ini</div>
+    <div class="sub" id="m-rumus"></div>
+    <div class="rn"><b>Batas atas &amp; jangan dijumlahkan dengan BOK + VoT.</b> Rehabilitasi memulihkan kualitas aset lama, bukan menambah modal baru penuh — karena itu ada faktor q (q = 100% = batas atas). Efek makro ini sebagian tumpang tindih dengan penghematan BOK &amp; nilai waktu, jadi disajikan sebagai sudut pandang terpisah.</div>
+  </div></details>
+</div></section>
 <footer><div class="wrap">BOK & kecepatan: literatur transportasi · Reduksi BBM: Llopis-Castelló dkk. (2026) · Tabel I-O Provinsi Jawa Barat 52 Industri 2016 (BPS) · #SemuaBisaDihitung</div></footer>
 <script src="sectors.js"></script>
 <script src="gate.js"></script>
@@ -80,7 +107,17 @@ function calc(){
   $('j-bbm').textContent=N(bbm)+' L';$('j-co2').textContent=N(co2)+' kg';$('j-tot').textContent=T(bok+vot);
   KX('j-rumus',`\\begin{aligned}\\text{BOK}&=${tx(N(lhr))}\\times365\\times[\\,${tx(N(rr,1))}(${tx(N(b2))}-${tx(N(b1))})+${tx(N(rb,1))}(${tx(N(b3))}-${tx(N(b1))})\\,]=\\boxed{${tx(T(bok))}}\\\\ \\text{VoT}&=${tx(N(dt)+' jam')}\\times365\\times${tx(N(o,1))}\\times${tx(T(w))}=\\boxed{${tx(T(vot))}}\\\\ \\text{BBM}&=${tx(N(bbm)+' L')}\\;\\Rightarrow\\;${tx(N(co2/1000,0)+' t CO2')}\\\\ \\text{Total}&=\\text{BOK}+\\text{VoT}=\\boxed{${tx(T(bok+vot))}}\\end{aligned}`);
 }
-document.querySelectorAll('input').forEach(el=>el.addEventListener('input',calc));calc();
+function calcMakro(){
+  const L=num('m-l'),Lt=num('m-lt'),eps=num('m-e'),q=num('m-q')/100,pdrb=num('m-pdrb')*1e12;
+  const dk=Lt>0?L/Lt:0, dy=eps*q*dk, dY=dy*pdrb, scen=r=>eps*r*dk*pdrb;
+  $('m-dk').textContent=N(dk*100,3)+'%';
+  $('m-dy').textContent=N(dy*100,3)+'%';
+  $('m-out').textContent=T(dY);
+  $('m-s25').textContent=T(scen(0.25));$('m-s50').textContent=T(scen(0.5));$('m-s100').textContent=T(scen(1));
+  KX('m-rumus',`\\begin{aligned}\\dfrac{\\Delta K}{K}&=${tx(N(L,3)+' km')}\\div${tx(N(Lt,3)+' km')}=${tx(N(dk*100,3)+'%')}\\\\ \\dfrac{\\Delta Y}{Y}&=${tx(N(eps,2))}\\times${tx(N(q*100,0)+'%')}\\times${tx(N(dk*100,3)+'%')}=${tx(N(dy*100,3)+'%')}\\\\ \\Delta Y&=${tx(N(dy*100,3)+'%')}\\times${tx('Rp '+N(pdrb/1e12,2)+' T')}=\\boxed{${tx(T(dY))}}\\end{aligned}`);
+}
+const runAll=()=>{calc();calcMakro();};
+document.querySelectorAll('input').forEach(el=>el.addEventListener('input',runAll));runAll();
 if(window.renderMathInElement)renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true}]});
 </script>
 </body>
