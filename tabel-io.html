@@ -605,47 +605,6 @@ body.locked>*:not(#login-gate){filter:blur(6px);pointer-events:none;user-select:
   </div>
 </section>
 
-<section id="skenario">
-  <div class="wrap">
-    <div class="section-tag">§ 05 — Skenario Investasi</div>
-    <h2 class="section-title">Empat strategi alokasi, satu pertanyaan: <em>mana yang efektif?</em></h2>
-    <p class="section-intro spaced">Setiap skenario adalah portofolio alokasi investasi di beberapa industri. Dampak agregat dihitung langsung dari TK/Rp 1T Jabar — tanpa share, karena sudah Jabar.</p>
-
-    <div class="scen-cards">
-      <div class="scen-card" data-scen="A">
-        <div class="scen-letter serif">A</div>
-        <h4>Push Manufaktur Ekspor</h4>
-        <div class="scen-amount mono">Rp 50 T</div>
-        <p>Tekstil, Alas Kaki, Karet, Elektronik, Alat Angkutan</p>
-      </div>
-      <div class="scen-card" data-scen="B">
-        <div class="scen-letter serif">B</div>
-        <h4>Hilirisasi Agro</h4>
-        <div class="scen-amount mono">Rp 30 T</div>
-        <p>Tani Pangan, Hortikultura, Ternak, Perikanan, Makanan-Minuman</p>
-      </div>
-      <div class="scen-card" data-scen="C">
-        <div class="scen-letter serif">C</div>
-        <h4>Kombinasi A + B</h4>
-        <div class="scen-amount mono">Rp 80 T</div>
-        <p>Manufaktur ekspor + hilirisasi agro sekaligus</p>
-      </div>
-      <div class="scen-card" data-scen="D">
-        <div class="scen-letter serif">D</div>
-        <h4>Big Push 5 Tahun</h4>
-        <div class="scen-amount mono">Rp 200 T</div>
-        <p>Manufaktur + agro + infrastruktur (listrik, konstruksi, angkutan)</p>
-      </div>
-    </div>
-
-    <div class="chart-box" style="margin-top:36px"><canvas id="chart-scen"></canvas></div>
-
-    <div style="background:var(--paper);border:1px solid var(--rule);padding:22px 26px;margin-top:28px;font-size:14px;line-height:1.6;color:var(--ink-2)">
-      <b>Insight:</b> Dengan data Jabar langsung, skenario hilirisasi agro (B) jadi <em>jauh lebih kuat</em> dari estimasi versi lama — karena pertanian & makanan-minuman Jabar ternyata sangat padat karya (TK/T tinggi). Manufaktur ekspor (A) tetap efisien tapi tidak lagi mendominasi mutlak. Trade-off antara skala (D) dan efisiensi per rupiah bisa dieksplor di kalkulator bawah.
-    </div>
-  </div>
-</section>
-
 <section id="kalkulator">
   <div class="wrap">
     <div class="section-tag">§ 06 — Kebijakan Interaktif</div>
@@ -920,7 +879,6 @@ document.querySelectorAll('.quad-btn').forEach(b=>b.addEventListener('click',()=
   document.querySelectorAll('.quad-btn').forEach(x=>x.classList.remove('active'));
   b.classList.add('active'); calcQuad=b.dataset.q; renderCalcList();
 }));
-document.querySelectorAll('.scen-card').forEach(c=>c.addEventListener('click',()=>{applyPreset(c.dataset.scen);document.getElementById('kalkulator').scrollIntoView({behavior:'smooth'});}));
 
 function addSel(k){if(SEL[k])return;SEL[k]={inv:5};renderCalcList();renderSel();recompute();}
 function rmSel(k){delete SEL[k];renderCalcList();renderSel();recompute();}
@@ -1001,35 +959,14 @@ function togglePanel(){document.getElementById('panel-overlay').classList.toggle
 document.addEventListener('keydown',e=>{if(e.key==='Escape')document.getElementById('panel-overlay').classList.remove('open');});
 
 // ============ SCENARIO CHART ============
-function makeScenChart(){
-  const scenData={};
-  ['A','B','C','D'].forEach(p=>{
-    let lk=0,inv=0;PRESETS[p].forEach(([k,v])=>{const s=SMAP[k];if(s){lk+=v*tkT(s);inv+=v;}});
-    scenData[p]={lk,inv,tpt:lk/PARAMS.tptJml*100};
-  });
-  if(charts.scen)charts.scen.destroy();
-  charts.scen=new Chart(document.getElementById('chart-scen'),{
-    type:'bar',
-    data:{labels:['A · Push Manufaktur','B · Hilirisasi Agro','C · Kombinasi','D · Big Push'],
-      datasets:[
-        {label:'Lapangan Kerja (ribu orang)',data:['A','B','C','D'].map(p=>Math.round(scenData[p].lk/1000)),backgroundColor:'#C8923A',yAxisID:'y',borderWidth:0},
-        {label:'% TPT Terserap',data:['A','B','C','D'].map(p=>scenData[p].tpt),backgroundColor:'#3A6E7A',yAxisID:'y1',borderWidth:0}
-      ]},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{family:FONT_MONO,size:11},usePointStyle:true}}},
-      scales:{
-        y:{position:'left',title:{display:true,text:'Lapangan Kerja (ribu)',font:{family:FONT_MONO,size:10}},ticks:{font:{family:FONT_MONO,size:10},callback:v=>fmtID(v)},grid:{color:'rgba(26,24,21,0.06)'}},
-        y1:{position:'right',title:{display:true,text:'% TPT',font:{family:FONT_MONO,size:10}},ticks:{font:{family:FONT_MONO,size:10}},grid:{display:false}},
-        x:{ticks:{font:{family:FONT_MONO,size:10}},grid:{display:false}}}}
-  });
-}
 
 // ============ INIT ============
 window.addEventListener('load',()=>{
   renderTable(); renderCalcList(); renderSel(); recompute(); buildPanel();
-  if(typeof Chart!=='undefined'){makeCharts();makeScenChart();}
+  if(typeof Chart!=='undefined'){makeCharts();}
 });
 // fallback if load already fired
-if(document.readyState==='complete'){renderTable();renderCalcList();renderSel();recompute();buildPanel();if(typeof Chart!=='undefined'){makeCharts();makeScenChart();}}
+if(document.readyState==='complete'){renderTable();renderCalcList();renderSel();recompute();buildPanel();if(typeof Chart!=='undefined'){makeCharts();}}
 </script>
 </body>
 </html>
