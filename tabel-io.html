@@ -91,6 +91,9 @@ footer h4{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.
 footer p,footer li{font-size:13px;line-height:1.6;color:rgba(250,244,230,0.75);list-style:none}
 footer .ttl{font-family:'Fraunces',serif;font-size:22px;color:var(--paper);margin-bottom:10px}
 footer .foot-base{border-top:1px solid rgba(250,244,230,0.2);padding-top:24px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.05em;color:rgba(250,244,230,0.5);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+footer a{color:var(--amber-soft);text-decoration:underline}
+.srclink{color:var(--amber);font-weight:600;text-decoration:none;border-bottom:1px dotted var(--amber)}
+.srclink:hover{background:var(--amber-bg)}
 
 .katex{font-size:1.04em}
 .katex-display{margin:0}
@@ -371,7 +374,6 @@ body.locked>*:not(#login-gate){filter:blur(6px);pointer-events:none;user-select:
       <li><a href="#tutorial"><span class="sn">02</span>Tutorial: I-01 Tani Pangan</a></li>
       <li><a href="#tabel"><span class="sn">03</span>Tabel 52 industri</a></li>
       <li><a href="#visual"><span class="sn">04</span>Visualisasi</a></li>
-      <li><a href="#skenario"><span class="sn">05</span>Empat skenario</a></li>
       <li><a href="#kalkulator"><span class="sn">06</span>Kalkulator</a></li>
       <li><a href="#konstanta"><span class="sn">07</span>Konstanta & sumber</a></li>
     </ol>
@@ -676,7 +678,7 @@ body.locked>*:not(#login-gate){filter:blur(6px);pointer-events:none;user-select:
     <h2 class="section-title">Asumsi & baseline yang dipakai <em>bisa kamu ubah</em>.</h2>
     <p class="section-intro spaced">Semua angka di-trace ke konstanta makro BPS Jabar plus dua asumsi metodologis. Buka panel untuk modifikasi & uji sensitivitas — perubahan langsung memengaruhi tabel, grafik, dan kalkulator.</p>
     <button class="panel-toggle" onclick="togglePanel()">⚙ Buka Panel Asumsi & Baseline</button>
-    <p style="font-size:14px;line-height:1.6;color:var(--ink-2);max-width:64ch;margin-top:28px">Sumber data multiplier: <b>Tabel Input-Output Provinsi Jawa Barat 52 Industri 2016</b> (BPS Jabar, transaksi domestik atas dasar harga produsen). Berbeda dari versi sebelumnya yang pakai Tabel IO Indonesia 185 produk + asumsi share Jabar — versi ini langsung data Jabar, jadi <b>tidak ada lagi ketidakpastian dari estimasi share</b>. Trade-off: resolusi 52 industri lebih kasar dari 185 produk. <b>Catatan:</b> struktur ekonomi tabel ini berbasis <b>2016</b> dan diasumsikan belum banyak berubah untuk TA 2026; seluruh input operasional di halaman sektor (LHR, jumlah rujukan, luas DI, sambungan rumah, dsb.) berstatus <b>asumsi/skenario</b> — hanya nilai pagu yang bersumber dari dokumen anggaran.</p>
+    <p style="font-size:14px;line-height:1.6;color:var(--ink-2);max-width:64ch;margin-top:28px">Sumber data multiplier: <b><a class="srclink" href="https://jabar.bps.go.id/" target="_blank" rel="noopener">Tabel Input-Output Provinsi Jawa Barat 52 Industri 2016</a></b> (BPS Jabar, transaksi domestik atas dasar harga produsen). Berbeda dari versi sebelumnya yang pakai Tabel IO Indonesia 185 produk + asumsi share Jabar — versi ini langsung data Jabar, jadi <b>tidak ada lagi ketidakpastian dari estimasi share</b>. Trade-off: resolusi 52 industri lebih kasar dari 185 produk. <b>Catatan:</b> struktur ekonomi tabel ini berbasis <b>2016</b> dan diasumsikan belum banyak berubah untuk TA 2026; seluruh input operasional di halaman sektor (LHR, jumlah rujukan, luas DI, sambungan rumah, dsb.) berstatus <b>asumsi/skenario</b> — hanya nilai pagu yang bersumber dari dokumen anggaran.</p>
   </div>
 </section>
 
@@ -690,10 +692,10 @@ body.locked>*:not(#login-gate){filter:blur(6px);pointer-events:none;user-select:
       <div>
         <h4>Sumber Data</h4>
         <ul>
-          <li>BPS Jabar — Tabel IO Provinsi Jabar 52 Industri, 2016</li>
-          <li>BPS Jabar — TPT Feb 2026, Kemiskinan Sep 2025</li>
-          <li>BPS Jabar — PDRB Q1 2026 (ADHB & ADHK)</li>
-          <li>BPS Jabar — Garis Kemiskinan, Maret 2025</li>
+          <li><a href="https://jabar.bps.go.id/" target="_blank" rel="noopener">BPS Jabar — Tabel IO Provinsi Jabar 52 Industri, 2016</a></li>
+          <li><a href="https://jabar.bps.go.id/" target="_blank" rel="noopener">BPS Jabar — TPT Feb 2026, Kemiskinan Sep 2025</a></li>
+          <li><a href="https://jabar.bps.go.id/" target="_blank" rel="noopener">BPS Jabar — PDRB Q1 2026 (ADHB & ADHK)</a></li>
+          <li><a href="https://jabar.bps.go.id/" target="_blank" rel="noopener">BPS Jabar — Garis Kemiskinan, Maret 2025</a></li>
         </ul>
       </div>
       <div>
