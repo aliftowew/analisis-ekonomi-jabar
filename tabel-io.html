@@ -559,6 +559,7 @@ body.locked>*:not(#login-gate){filter:blur(6px);pointer-events:none;user-select:
           <th data-s="nama">Industri</th>
           <th data-s="quad">Kuadran</th>
           <th data-s="om" class="r">Output Mult</th>
+          <th data-s="vm" class="r">Nilai Tambah</th>
           <th data-s="fl" class="r">Forward Link</th>
           <th data-s="im" class="r">Income Mult</th>
           <th data-s="tkM" class="r">TK/Rp 1M</th>
@@ -820,6 +821,7 @@ function renderTable(){
     <td>${s.nama}</td>
     <td><span class="qd-pill" style="background:${QCOLOR[s.quad]}">${QNAME[s.quad]}</span></td>
     <td class="r">${fmt2(s.om)}</td>
+    <td class="r">${fmt2(s.vm)}</td>
     <td class="r">${fmt2(s.fl)}</td>
     <td class="r">${fmt2(s.im)}</td>
     <td class="r">${fmt2(tkM(s))}</td>
