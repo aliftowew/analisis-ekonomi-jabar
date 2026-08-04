@@ -36,13 +36,13 @@
       <div class="row"><span>Porsi laka jln provinsi · malam · reduksi (%)</span><span style="display:flex;gap:6px"><input type="number" id="a-p" value="62" style="width:54px"><input type="number" id="a-m" value="35" style="width:54px"><input type="number" id="a-r" value="30" style="width:54px"></span></div>
       <div class="row"><span>Korban terhindarkan (MD·LB·LR)</span><b id="a-korban"></b></div>
       <div class="res"><span>Manfaat / tahun</span><b id="a-out"></b></div>
-      <details class="rumus" open><summary>Rumus &amp; perhitungan</summary><div class="rr">
+    </div>
+    <details class="rumus" open style="margin-top:0"><summary>Rumus &amp; perhitungan</summary><div class="rr">
         <div class="rf">$$\begin{aligned}\text{Cakupan}&=\dfrac{\text{Titik}\times\text{Jarak}\div1000}{\text{2.362,18 km}}\\ \text{Faktor}&=\%_{\text{prov}}\times\%_{\text{malam}}\times\text{Cakupan}\times\%_{\text{reduksi}}\\ \text{Manfaat}&=\sum_k(\text{Korban}_k\times\text{Biaya}_k)\times\text{eskalasi}\end{aligned}$$</div>
         <div class="rlabel">Dengan input saat ini</div>
         <div class="sub" id="a-rumus"></div>
         <div class="rn">2.362,18 km = total panjang jalan provinsi Jabar; eskalasi 1,10³ = penyesuaian biaya korban ±3 tahun. Pendekatan top-down: total laka Jabar disaring ke ruas yang benar-benar diterangi.</div>
       </div></details>
-    </div>
     </div></div></section>
 <footer><div class="wrap">Korban laka: Polda Jabar RAT 2024 · Biaya korban: Pd T-02-2005-B (Bina Marga) · Efek penerangan: Cochrane, Beyer & Ker (2009) · Tabel I-O Provinsi Jawa Barat 52 Industri 2016 (BPS) · #SemuaBisaDihitung</div></footer>
 <script src="sectors.js"></script>
