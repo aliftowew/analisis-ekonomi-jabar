@@ -308,6 +308,25 @@ body.locked>*:not(#login-gate){filter:blur(6px);pointer-events:none;user-select:
         <div class="rn">Manfaat terwujud saat kohor lulus &amp; bekerja (idealnya diskonto NPV).</div>
       </div></details>
     </div>
+    <div class="card" data-cat="pendidikan"><h3>Kapasitas &amp; Akses Pendidikan (rantai)</h3><div class="src">Kompilasi: RKB 204 ruang reguler + 17 USB reguler; keterisian 85%, additionality 20%, premium 3 thn 29,5% (return 9%/thn).</div>
+      <div class="row"><span>RKB reguler (ruang)</span><input type="number" id="pd-rkb" value="204"></div>
+      <div class="row"><span>Jumlah USB reguler</span><input type="number" id="pd-usb" value="17"></div>
+      <div class="row"><span>Rombel kelas X / USB</span><input type="number" id="pd-rombel" value="6"></div>
+      <div class="row"><span>Siswa/rombel · Tingkat</span><span style="display:flex;gap:6px"><input type="number" id="pd-siswa" value="36" style="width:60px"><input type="number" id="pd-tingkat" value="3" style="width:52px"></span></div>
+      <div class="row"><span>Keterisian · Additionality (%)</span><span style="display:flex;gap:6px"><input type="number" id="pd-fill" value="85" style="width:60px"><input type="number" id="pd-add" value="20" style="width:60px"></span></div>
+      <div class="row"><span>Lulus · Bekerja (%)</span><span style="display:flex;gap:6px"><input type="number" id="pd-grad" value="85" style="width:60px"><input type="number" id="pd-work" value="85" style="width:60px"></span></div>
+      <div class="row"><span>Upah dasar (Rp) · Premium (%)</span><span style="display:flex;gap:6px"><input type="number" id="pd-upah" value="43380000" style="width:100px"><input type="number" id="pd-prem" value="29.5" step="0.1" style="width:56px"></span></div>
+      <div class="row"><span>Daya tampung/thn (RKB · USB)</span><b><span id="pd-rkbY"></span> · <span id="pd-usbY"></span></b></div>
+      <div class="row"><span>Total · terisi 85%</span><b><span id="pd-total"></span> · <span id="pd-terisi"></span></b></div>
+      <div class="row"><span>Akses baru · pekerja/angkatan</span><b><span id="pd-akses"></span> · <span id="pd-pekerja"></span></b></div>
+      <div class="res"><span>Tambahan penghasilan / angkatan</span><b id="pd-income"></b></div>
+      <details class="rumus" open><summary>Rumus &amp; perhitungan</summary><div class="rr">
+        <div class="rf">$$\text{Daya tampung}=\tfrac{\text{RKB}\times\text{siswa}}{\text{tingkat}}+\text{USB}\times\text{rombel}\times\text{siswa}$$</div>
+        <div class="rlabel">Dengan input saat ini</div>
+        <div class="sub" id="pd-rumus"></div>
+        <div class="rn">Manfaat muncul setelah kohor lulus &amp; bekerja (perlu diskonto NPV). Additionality = porsi kursi baru yang benar-benar akses baru, bukan sekadar mengurangi kepadatan.</div>
+      </div></details>
+    </div>
     <div class="card" data-cat="kesehatan"><h3>Kesehatan</h3><div class="src">CT-Scan 2 unit, X-Ray, lab, UTDRS — ganti asumsi dgn data rujukan RSUD/BPJS</div>
       <div class="row"><span>Rujukan terhindarkan / tahun</span><input type="number" id="h-n" value="3000"></div>
       <div class="row"><span>Biaya per rujukan (Rp)</span><input type="number" id="h-b" value="750000"></div>
@@ -383,6 +402,19 @@ body.locked>*:not(#login-gate){filter:blur(6px);pointer-events:none;user-select:
         <div class="rn">Eskalasi 1,10³ (biaya korban basis 2023 → 2026). Top-down dari total laka Jabar.</div>
       </div></details>
     </div>
+    <div class="card" data-cat="perhubungan"><h3>PJU — Kelayakan (BCR &amp; Payback)</h3><div class="src">Manfaat keselamatan diambil dari kartu APJ; biaya = pagu (rencana penuh). Belum termasuk listrik &amp; O&amp;M; manfaat non-keselamatan juga belum dimonetisasi.</div>
+      <div class="row"><span>Pagu (Rp juta)</span><input type="number" id="pj-pagu" value="369522"></div>
+      <div class="row"><span>Umur (thn) · Diskonto (%)</span><span style="display:flex;gap:6px"><input type="number" id="pj-umur" value="15" style="width:60px"><input type="number" id="pj-disk" value="5" step="0.5" style="width:56px"></span></div>
+      <div class="row"><span>Manfaat keselamatan / thn</span><b id="pj-manfaat"></b></div>
+      <div class="row"><span>Payback sederhana</span><b id="pj-pb"></b></div>
+      <div class="res"><span>BCR (keselamatan saja)</span><b id="pj-bcr"></b></div>
+      <details class="rumus" open><summary>Rumus &amp; perhitungan</summary><div class="rr">
+        <div class="rf">$$\text{BCR}=\dfrac{\text{Manfaat}\times\frac{1-(1+r)^{-n}}{r}}{\text{Pagu}}\qquad \text{Payback}=\dfrac{\text{Pagu}}{\text{Manfaat}}$$</div>
+        <div class="rlabel">Dengan input saat ini</div>
+        <div class="sub" id="pj-rumus"></div>
+        <div class="rn">BCR &lt; 1 berarti manfaat keselamatan saja belum menutup biaya; nilai kenyamanan, keamanan, aktivitas malam, &amp; kerusakan harta benda belum dihitung.</div>
+      </div></details>
+    </div>
     <div class="card" data-cat="sda"><h3>SDA — Irigasi</h3><div class="src">Produktivitas: <a href="https://jabar.bps.go.id/" target="_blank" rel="noopener">BPS Jabar 2025</a> (7,09 t GKP/ha) · Harga: <a href="https://badanpangan.go.id/" target="_blank" rel="noopener">HPP GKP Bapanas</a> Rp 6.500/kg · Luas: estimasi unit cost — GANTI dgn data DI riil</div>
       <div class="row"><span>Luas layanan terdampak (ha)</span><input type="number" id="i-ha" value="2467"></div>
       <div class="row"><span>Kenaikan IP (panen/thn)</span><input type="number" id="i-ip" value="0.5" step="0.1"></div>
@@ -396,6 +428,23 @@ body.locked>*:not(#login-gate){filter:blur(6px);pointer-events:none;user-select:
         <div class="rn">Manfaat kotor (sesuai workbook, Rp 56,85 M).</div>
       </div></details>
     </div>
+    <div class="card" data-cat="sda"><h3>Irigasi — Manfaat Bersih &amp; Rantai Pasok</h3><div class="src">Kompilasi: ΔIP 0,25 musim/thn (dasar), margin bersih petani 35%, rantai pasok via I-O tani pangan (VM 0,9553; TK 12.057/Rp1T).</div>
+      <div class="row"><span>Luas efektif (ha)</span><input type="number" id="ir-ha" value="2467"></div>
+      <div class="row"><span>Kenaikan IP (musim/thn)</span><input type="number" id="ir-ip" value="0.25" step="0.05"></div>
+      <div class="row"><span>Produktivitas (t GKP/ha)</span><input type="number" id="ir-pr" value="7.09" step="0.01"></div>
+      <div class="row"><span>Harga GKP (Rp/kg) · Margin (%)</span><span style="display:flex;gap:6px"><input type="number" id="ir-hg" value="6500" style="width:80px"><input type="number" id="ir-mar" value="35" style="width:56px"></span></div>
+      <div class="row"><span>VM tani pangan · Pagu (Rp juta)</span><span style="display:flex;gap:6px"><input type="number" id="ir-vm" value="0.9553" step="0.0001" style="width:74px"><input type="number" id="ir-pagu" value="37010" style="width:80px"></span></div>
+      <div class="row"><span>Produksi tambahan · Nilai kotor</span><b><span id="ir-prod"></span> · <span id="ir-kotor"></span></b></div>
+      <div class="row"><span>NT rantai pasok · TK</span><b><span id="ir-va"></span> · <span id="ir-tk"></span></b></div>
+      <div class="row"><span>Payback (rencana penuh)</span><b id="ir-pb"></b></div>
+      <div class="res"><span>Manfaat bersih petani / thn</span><b id="ir-net"></b></div>
+      <details class="rumus" open><summary>Rumus &amp; perhitungan</summary><div class="rr">
+        <div class="rf">$$\text{Bersih}=\text{Luas}\times\Delta IP\times\text{Yield}\times1000\times\text{Harga}\times\text{Margin}$$</div>
+        <div class="rlabel">Dengan input saat ini</div>
+        <div class="sub" id="ir-rumus"></div>
+        <div class="rn">Manfaat bersih petani TIDAK dijumlahkan lagi ke NT rantai pasok — keuntungan petani sudah bagian dari nilai tambah (hindari dobel hitung).</div>
+      </div></details>
+    </div>
     <div class="card" data-cat="perumahan"><h3>Perumahan — SPAM</h3><div class="src">Reduksi diare: <a href="https://www.who.int/news-room/fact-sheets/detail/diarrhoeal-disease" target="_blank" rel="noopener">WHO</a> ±25% dari air minum layak</div>
       <div class="row"><span>Sambungan rumah (SR)</span><input type="number" id="s-sr" value="542"></div>
       <div class="row"><span>Jam ambil air hemat/RT/hari</span><input type="number" id="s-j" value="0.5" step="0.1"></div>
@@ -407,6 +456,21 @@ body.locked>*:not(#login-gate){filter:blur(6px);pointer-events:none;user-select:
         <div class="rlabel">Dengan input saat ini</div>
         <div class="sub" id="s-rumus"></div>
         <div class="rn">Nilai waktu Rp 17.341/jam (dari WAGE).</div>
+      </div></details>
+    </div>
+    <div class="card" data-cat="perumahan"><h3>SPAM — Volume &amp; Kelayakan</h3><div class="src">Volume air (60 L/orang/hari) &amp; kelayakan. Manfaat dari kartu SPAM; O&amp;M 3% kontrak. Catatan: kompilasi memakai porsi rumah aktif yang menghemat (30/60/100%) sehingga manfaat &amp; BCR-nya bisa berbeda.</div>
+      <div class="row"><span>Sambungan rumah · Jiwa/SR</span><span style="display:flex;gap:6px"><input type="number" id="sp-sr" value="542" style="width:70px"><input type="number" id="sp-jiwa" value="4" style="width:50px"></span></div>
+      <div class="row"><span>SR aktif (%) · L/orang/hari</span><span style="display:flex;gap:6px"><input type="number" id="sp-aktif" value="85" style="width:56px"><input type="number" id="sp-lhari" value="60" style="width:56px"></span></div>
+      <div class="row"><span>Kontrak (Rp juta) · O&amp;M (%)</span><span style="display:flex;gap:6px"><input type="number" id="sp-pagu" value="1779" style="width:80px"><input type="number" id="sp-om" value="3" style="width:50px"></span></div>
+      <div class="row"><span>Umur (thn) · Diskonto (%)</span><span style="display:flex;gap:6px"><input type="number" id="sp-umur" value="20" style="width:60px"><input type="number" id="sp-disk" value="5" step="0.5" style="width:56px"></span></div>
+      <div class="row"><span>Penduduk aktif · Volume/thn</span><b><span id="sp-pop"></span> · <span id="sp-vol"></span></b></div>
+      <div class="row"><span>Payback sederhana</span><b id="sp-pb"></b></div>
+      <div class="res"><span>BCR (net O&amp;M)</span><b id="sp-bcr"></b></div>
+      <details class="rumus" open><summary>Rumus &amp; perhitungan</summary><div class="rr">
+        <div class="rf">$$\text{Volume}=\text{Penduduk aktif}\times\text{L/hari}\times365\qquad \text{BCR}=\dfrac{(\text{Manfaat}-\text{O\&M})\times\frac{1-(1+r)^{-n}}{r}}{\text{Kontrak}}$$</div>
+        <div class="rlabel">Dengan input saat ini</div>
+        <div class="sub" id="sp-rumus"></div>
+        <div class="rn">Hasil bergantung pada jumlah SR aktual, keberfungsian, kualitas &amp; kontinuitas air. Akses "layak" ≠ layanan "aman".</div>
       </div></details>
     </div>
     <div class="card" data-cat="rekap" style="background:var(--ink);color:var(--paper)"><h3 style="color:var(--paper)">Rekap Manfaat Tahunan</h3><div class="src" style="color:var(--amber-soft)">Jalan (BOK+VoT) + lima kategori non-konstruksi</div>
@@ -517,8 +581,39 @@ function calcKes2(){
   $('st-out').textContent=N(smand,2); $('st-d').textContent=N(smati,2);
   KX('st-rumus',`\\begin{aligned}\\text{Mandiri}&=0{,}91\\times\\tfrac{${tx(N(sm))}}{15}\\times\\tfrac{${tx(N(sn))}}{100}=\\boxed{${tx(N(smand,2))}}\\\\ \\text{Kematian/hospice }\\downarrow&=0{,}77\\times\\tfrac{${tx(N(sm))}}{15}\\times\\tfrac{${tx(N(sn))}}{100}=\\boxed{${tx(N(smati,2))}}\\end{aligned}`);
 }
+// --- modul lanjutan: pendidikan rantai, irigasi rantai pasok, kelayakan PJU & SPAM ---
+function annuity(rp,nn){const r=rp/100;return r>0?(1-Math.pow(1+r,-nn))/r:nn;}
+function calcExtra(n){
+  // Pendidikan (rantai kapasitas → penghasilan)
+  const rkb=num('pd-rkb'),usb=num('pd-usb'),rmb=num('pd-rombel'),sw=num('pd-siswa'),tg=num('pd-tingkat');
+  const rkbY=tg>0?rkb*sw/tg:0, usbY=usb*rmb*sw, totY=rkbY+usbY;
+  const terisi=totY*num('pd-fill')/100, akses=terisi*num('pd-add')/100;
+  const pekerja=akses*num('pd-grad')/100*num('pd-work')/100, income=pekerja*num('pd-upah')*num('pd-prem')/100;
+  $('pd-rkbY').textContent=N(rkbY,0);$('pd-usbY').textContent=N(usbY,0);
+  $('pd-total').textContent=N(totY,0);$('pd-terisi').textContent=N(terisi,0);
+  $('pd-akses').textContent=N(akses,0);$('pd-pekerja').textContent=N(pekerja,0);$('pd-income').textContent=T(income);
+  KX('pd-rumus',`\\begin{aligned}\\text{Daya tampung}&=\\tfrac{${tx(N(rkb))}\\times${tx(N(sw))}}{${tx(N(tg))}}+${tx(N(usb))}\\times${tx(N(rmb))}\\times${tx(N(sw))}=${tx(N(totY,0)+'/thn')}\\\\ \\text{Akses baru}&=${tx(N(totY,0))}\\times${tx(N(num('pd-fill'))+'%')}\\times${tx(N(num('pd-add'))+'%')}=${tx(N(akses,0))}\\\\ \\text{Pekerja}&=${tx(N(akses,0))}\\times${tx(N(num('pd-grad'))+'%')}\\times${tx(N(num('pd-work'))+'%')}=${tx(N(pekerja,0))}\\\\ \\text{Penghasilan}&=${tx(N(pekerja,0))}\\times${tx(T(num('pd-upah')))}\\times${tx(N(num('pd-prem'))+'%')}=\\boxed{${tx(T(income))}}\\end{aligned}`);
+  // Irigasi (bersih + rantai pasok + payback)
+  const iha=num('ir-ha'),iip=num('ir-ip'),ipr=num('ir-pr'),ihg=num('ir-hg');
+  const prod=iha*iip*ipr, kotor=prod*1000*ihg, inet=kotor*num('ir-mar')/100, iva=kotor*num('ir-vm'), itk=kotor/1e12*12057, ipagu=num('ir-pagu')*1e6, ipb=inet>0?ipagu/inet:0;
+  $('ir-prod').textContent=N(prod,0)+' ton';$('ir-kotor').textContent=T(kotor);
+  $('ir-va').textContent=T(iva);$('ir-tk').textContent=N(itk,0)+' FTE';$('ir-pb').textContent=N(ipb,2)+' thn';$('ir-net').textContent=T(inet);
+  KX('ir-rumus',`\\begin{aligned}\\text{Produksi}&=${tx(N(iha))}\\times${tx(N(iip,2))}\\times${tx(N(ipr,2))}=${tx(N(prod,0)+' ton')}\\\\ \\text{Kotor}&=${tx(N(prod,0))}\\times1000\\times${tx(T(ihg))}=${tx(T(kotor))}\\\\ \\text{Bersih}&=${tx(T(kotor))}\\times${tx(N(num('ir-mar'))+'%')}=\\boxed{${tx(T(inet))}}\\\\ \\text{NT rantai pasok}&=${tx(T(kotor))}\\times${tx(N(num('ir-vm'),4))}=${tx(T(iva))}\\end{aligned}`);
+  // PJU kelayakan (pakai manfaat keselamatan n.apj)
+  const pjpagu=num('pj-pagu')*1e6, paf=annuity(num('pj-disk'),num('pj-umur'));
+  const pjpb=n.apj>0?pjpagu/n.apj:0, pjbcr=pjpagu>0?n.apj*paf/pjpagu:0;
+  $('pj-manfaat').textContent=T(n.apj);$('pj-pb').textContent=N(pjpb,1)+' thn';$('pj-bcr').textContent=N(pjbcr,2);
+  KX('pj-rumus',`\\begin{aligned}\\text{Payback}&=${tx(T(pjpagu))}\\div${tx(T(n.apj)+'/thn')}=${tx(N(pjpb,1)+' thn')}\\\\ \\text{BCR}&=\\dfrac{${tx(T(n.apj))}\\times${tx(N(paf,2))}}{${tx(T(pjpagu))}}=\\boxed{${tx(N(pjbcr,2))}}\\end{aligned}`);
+  // SPAM volume & kelayakan (pakai manfaat n.spam)
+  const pop=num('sp-sr')*num('sp-jiwa')*num('sp-aktif')/100, vol=pop*num('sp-lhari')*365/1000;
+  const sppagu=num('sp-pagu')*1e6, spom=sppagu*num('sp-om')/100, spnet=n.spam-spom, saf=annuity(num('sp-disk'),num('sp-umur'));
+  const sppb=spnet>0?sppagu/spnet:0, spbcr=sppagu>0?spnet*saf/sppagu:0;
+  $('sp-pop').textContent=N(pop,0)+' jiwa';$('sp-vol').textContent=N(vol,0)+' m³';
+  $('sp-pb').textContent=N(sppb,1)+' thn';$('sp-bcr').textContent=N(spbcr,2);
+  KX('sp-rumus',`\\begin{aligned}\\text{Penduduk aktif}&=${tx(N(num('sp-sr')))}\\times${tx(N(num('sp-jiwa')))}\\times${tx(N(num('sp-aktif'))+'%')}=${tx(N(pop,0)+' jiwa')}\\\\ \\text{Volume}&=${tx(N(pop,0))}\\times${tx(N(num('sp-lhari'))+' L')}\\times365=${tx(N(vol,0)+' m3/thn')}\\\\ \\text{BCR}&=\\dfrac{(${tx(T(n.spam))}-${tx(T(spom))})\\times${tx(N(saf,2))}}{${tx(T(sppagu))}}=\\boxed{${tx(N(spbcr,2))}}\\end{aligned}`);
+}
 function calcAll(){
-  const jalan=calcJalan(), n=calcNon(); calcMakro(); calcKemantapan(); calcKes2();
+  const jalan=calcJalan(), n=calcNon(); calcMakro(); calcKemantapan(); calcKes2(); calcExtra(n);
   $('r-jalan').textContent=T(jalan);$('r-pend').textContent=T(n.pend);$('r-kes').textContent=T(n.kes);
   $('r-apj').textContent=T(n.apj);$('r-iri').textContent=T(n.iri);$('r-spam').textContent=T(n.spam);
   $('r-total').textContent=T(jalan+n.pend+n.kes+n.apj+n.iri+n.spam);
