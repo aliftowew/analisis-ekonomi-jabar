@@ -320,6 +320,56 @@ body.locked>*:not(#login-gate){filter:blur(6px);pointer-events:none;user-select:
         <div class="rn">Faktor 2 = pasien + pendamping; nilai waktu Rp 17.341/jam (dari WAGE).</div>
       </div></details>
     </div>
+    <div class="card" data-cat="kesehatan"><h3>Kapasitas CT-Scan</h3><div class="src">Benchmark: ±13 pemeriksaan/hari kerja × 250 hari kerja/tahun (2 unit: RSUD Jampangkulon &amp; RS Jiwa Jabar)</div>
+      <div class="row"><span>Jumlah unit CT-Scan</span><input type="number" id="ct-u" value="2"></div>
+      <div class="row"><span>Pemeriksaan / hari kerja</span><input type="number" id="ct-d" value="13"></div>
+      <div class="row"><span>Hari kerja / tahun</span><input type="number" id="ct-h" value="250"></div>
+      <div class="row"><span>Porsi temuan klinis relevan (%)</span><input type="number" id="ct-t" value="65.2" step="0.1"></div>
+      <div class="row"><span>Temuan klinis relevan / tahun</span><b id="ct-tk"></b></div>
+      <div class="res"><span>Pemeriksaan / tahun</span><b id="ct-out"></b></div>
+      <details class="rumus" open><summary>Rumus &amp; perhitungan</summary><div class="rr">
+        <div class="rf">$$\text{Kapasitas}=\text{Unit}\times\text{Pemeriksaan/hari}\times\text{Hari kerja}$$</div>
+        <div class="rlabel">Dengan input saat ini</div>
+        <div class="sub" id="ct-rumus"></div>
+        <div class="rn">Temuan klinis relevan = pemeriksaan yang berpotensi memperjelas/mengubah keputusan klinis — <b>bukan</b> jumlah pasti pasien sembuh.</div>
+      </div></details>
+    </div>
+    <div class="card" data-cat="kesehatan"><h3>Kebutuhan Darah (UTDRS)</h3><div class="src">Benchmark kebutuhan darah ≈ 2% populasi/tahun · RSUD Pameungpeuk melayani ±1,5 juta jiwa</div>
+      <div class="row"><span>Populasi wilayah layanan</span><input type="number" id="bd-pop" value="1498749"></div>
+      <div class="row"><span>Kebutuhan darah (% populasi/thn)</span><input type="number" id="bd-pct" value="2" step="0.1"></div>
+      <div class="row"><span>Porsi kebutuhan dipenuhi (%)</span><input type="number" id="bd-f" value="50"></div>
+      <div class="res"><span>Kantong darah / tahun</span><b id="bd-out"></b></div>
+      <details class="rumus" open><summary>Rumus &amp; perhitungan</summary><div class="rr">
+        <div class="rf">$$\text{Kebutuhan}=\text{Populasi}\times 2\%\qquad \text{Dipenuhi}=\text{Kebutuhan}\times\%\text{penuhi}$$</div>
+        <div class="rlabel">Dengan input saat ini</div>
+        <div class="sub" id="bd-rumus"></div>
+        <div class="rn">29.975 kantong = benchmark kebutuhan wilayah, bukan target produksi pasti UTDRS. Perlu data kapasitas produksi &amp; rujukan.</div>
+      </div></details>
+    </div>
+    <div class="card" data-cat="kesehatan"><h3>Gap Komplikasi Kebidanan (KIA)</h3><div class="src">Kab. Sukabumi — Gedung KIA RSUD Jampangkulon (perkiraan komplikasi vs tertangani)</div>
+      <div class="row"><span>Komplikasi diperkirakan / thn</span><input type="number" id="kia-k" value="9541"></div>
+      <div class="row"><span>Komplikasi tertangani saat ini / thn</span><input type="number" id="kia-t" value="5988"></div>
+      <div class="row"><span>Porsi gap yang bisa ditutup (%)</span><input type="number" id="kia-c" value="50"></div>
+      <div class="res"><span>Tambahan kasus tertangani / thn</span><b id="kia-out"></b></div>
+      <details class="rumus" open><summary>Rumus &amp; perhitungan</summary><div class="rr">
+        <div class="rf">$$\text{Gap}=\text{Komplikasi diperkirakan}-\text{Tertangani}$$</div>
+        <div class="rlabel">Dengan input saat ini</div>
+        <div class="sub" id="kia-rumus"></div>
+        <div class="rn">Gedung KIA tidak otomatis mencegah sejumlah kematian tertentu. Monetisasi butuh data tempat tidur, spesialis, sesar, rujukan, dan outcome sebelum–sesudah.</div>
+      </div></details>
+    </div>
+    <div class="card" data-cat="kesehatan"><h3>Stroke Center (Door-to-Treatment)</h3><div class="src">Benchmark: tiap 15 menit lebih cepat → +0,91 mandiri fungsional &amp; −0,77 kematian/hospice per 100 pasien</div>
+      <div class="row"><span>Pasien stroke eligible / thn</span><input type="number" id="st-n" value="100"></div>
+      <div class="row"><span>Waktu penanganan dipangkas (menit)</span><input type="number" id="st-m" value="30"></div>
+      <div class="row"><span>Kematian/hospice berkurang / thn</span><b id="st-d"></b></div>
+      <div class="res"><span>Tambahan mandiri fungsional / thn</span><b id="st-out"></b></div>
+      <details class="rumus" open><summary>Rumus &amp; perhitungan</summary><div class="rr">
+        <div class="rf">$$\text{Mandiri}=0{,}91\times\dfrac{\text{menit}}{15}\times\dfrac{\text{pasien}}{100}$$</div>
+        <div class="rlabel">Dengan input saat ini</div>
+        <div class="sub" id="st-rumus"></div>
+        <div class="rn">Benchmark riset (waktu penanganan lebih cepat → outcome lebih baik). Butuh data pasien eligible &amp; door-to-treatment aktual.</div>
+      </div></details>
+    </div>
     <div class="card" data-cat="perhubungan"><h3>Perhubungan — APJ</h3><div class="src">Korban laka: Polda Jabar 2024 (MD 2.778 · LB 627 · LR 8.313) · Biaya korban: Pd T-02-2005-B eskalasi 2023 · Efek lampu: <a href="https://www.cochranelibrary.com/cdsr/doi/10.1002/14651858.CD004728.pub2/full" target="_blank" rel="noopener">Cochrane (Beyer &amp; Ker 2009)</a> s.d. −55%, dipakai konservatif</div>
       <div class="row"><span>Titik APJ terpasang</span><input type="number" id="a-t" value="7778"></div>
       <div class="row"><span>Jarak antar tiang (m)</span><input type="number" id="a-j" value="40"></div>
@@ -448,8 +498,27 @@ function calcKemantapan(){
   $('km-s80').textContent=N(kem(0.8*eff),3)+'%';$('km-s100').textContent=N(kem(eff),3)+'%';
   KX('km-rumus',`\\begin{aligned}\\text{Nonmantap}&=${tx(N(tot,3)+' km')}-${tx(N(man,3)+' km')}=${tx(N(nm,3)+' km')}\\\\ \\text{Kemantapan baru}&=\\dfrac{${tx(N(man,3))}+${tx(N(eff,3))}}{${tx(N(tot,3))}}=\\boxed{${tx(N(kem(eff),3)+'%')}}\\end{aligned}`);
 }
+// --- kesehatan: modul kapasitas & benchmark ---
+function calcKes2(){
+  const u=num('ct-u'),cd=num('ct-d'),ch=num('ct-h'),ctt=num('ct-t');
+  const ctcap=u*cd*ch, cttk=ctcap*ctt/100;
+  $('ct-out').textContent=N(ctcap)+' /thn'; $('ct-tk').textContent=N(cttk,0)+' /thn';
+  KX('ct-rumus',`\\begin{aligned}\\text{Kapasitas}&=${tx(N(u))}\\times${tx(N(cd))}\\times${tx(N(ch))}=\\boxed{${tx(N(ctcap)+' /thn')}}\\\\ \\text{Temuan klinis}&=${tx(N(ctcap))}\\times${tx(N(ctt)+'%')}=${tx(N(cttk,0)+' /thn')}\\end{aligned}`);
+  const pop=num('bd-pop'),bpct=num('bd-pct'),bf=num('bd-f');
+  const bkeb=pop*bpct/100, bdip=bkeb*bf/100;
+  $('bd-out').textContent=N(bdip,0)+' kantong';
+  KX('bd-rumus',`\\begin{aligned}\\text{Kebutuhan}&=${tx(N(pop))}\\times${tx(N(bpct)+'%')}=${tx(N(bkeb,0)+' kantong')}\\\\ \\text{Dipenuhi}&=${tx(N(bkeb,0))}\\times${tx(N(bf)+'%')}=\\boxed{${tx(N(bdip,0)+' kantong')}}\\end{aligned}`);
+  const kk=num('kia-k'),kt=num('kia-t'),kc=num('kia-c');
+  const gap=Math.max(0,kk-kt), ktam=gap*kc/100;
+  $('kia-out').textContent=N(ktam,0)+' kasus';
+  KX('kia-rumus',`\\begin{aligned}\\text{Gap}&=${tx(N(kk))}-${tx(N(kt))}=${tx(N(gap,0)+' kasus')}\\\\ \\text{Tambahan}&=${tx(N(gap,0))}\\times${tx(N(kc)+'%')}=\\boxed{${tx(N(ktam,0)+' kasus')}}\\end{aligned}`);
+  const sn=num('st-n'),sm=num('st-m'), sfac=(sm/15)*(sn/100);
+  const smand=0.91*sfac, smati=0.77*sfac;
+  $('st-out').textContent=N(smand,2); $('st-d').textContent=N(smati,2);
+  KX('st-rumus',`\\begin{aligned}\\text{Mandiri}&=0{,}91\\times\\tfrac{${tx(N(sm))}}{15}\\times\\tfrac{${tx(N(sn))}}{100}=\\boxed{${tx(N(smand,2))}}\\\\ \\text{Kematian/hospice }\\downarrow&=0{,}77\\times\\tfrac{${tx(N(sm))}}{15}\\times\\tfrac{${tx(N(sn))}}{100}=\\boxed{${tx(N(smati,2))}}\\end{aligned}`);
+}
 function calcAll(){
-  const jalan=calcJalan(), n=calcNon(); calcMakro(); calcKemantapan();
+  const jalan=calcJalan(), n=calcNon(); calcMakro(); calcKemantapan(); calcKes2();
   $('r-jalan').textContent=T(jalan);$('r-pend').textContent=T(n.pend);$('r-kes').textContent=T(n.kes);
   $('r-apj').textContent=T(n.apj);$('r-iri').textContent=T(n.iri);$('r-spam').textContent=T(n.spam);
   $('r-total').textContent=T(jalan+n.pend+n.kes+n.apj+n.iri+n.spam);
