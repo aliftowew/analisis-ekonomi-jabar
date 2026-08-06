@@ -656,6 +656,8 @@ body.locked>*:not(#login-gate){filter:blur(6px);pointer-events:none;user-select:
         <div class="result-grid">
           <div class="rcard"><div class="rc-label mono">% TPT TERSERAP</div><div class="rc-val serif" id="r-tpt">0,00%</div></div>
           <div class="rcard"><div class="rc-label mono">Δ PDRB</div><div class="rc-val serif" id="r-pdrb">+0,00%</div></div>
+          <div class="rcard"><div class="rc-label mono">Δ OUTPUT</div><div class="rc-val serif" id="r-out">Rp 0 T</div></div>
+          <div class="rcard"><div class="rc-label mono">Δ NILAI TAMBAH (NTB)</div><div class="rc-val serif" id="r-ntb">Rp 0 T</div></div>
           <div class="rcard"><div class="rc-label mono">Δ KEMISKINAN</div><div class="rc-val serif" id="r-misk">−0,00 pp</div></div>
           <div class="rcard"><div class="rc-label mono">LK / RP 1T</div><div class="rc-val serif" id="r-eff">0</div></div>
         </div>
@@ -907,9 +909,10 @@ function renderSel(){
   </div>`;}).join('');
 }
 function recompute(){
-  let totLK=0,totInv=0,wVM=0;
-  Object.keys(SEL).forEach(k=>{const s=SMAP[k],inv=SEL[k].inv;totLK+=inv*tkT(s);totInv+=inv;wVM+=s.vm*inv;});
+  let totLK=0,totInv=0,wVM=0,totOut=0;
+  Object.keys(SEL).forEach(k=>{const s=SMAP[k],inv=SEL[k].inv;totLK+=inv*tkT(s);totInv+=inv;wVM+=s.vm*inv;totOut+=s.om*inv;});
   const avgVM=totInv>0?wVM/totInv:0;
+  const totNTB=wVM; // Σ(Investasi × VM) = total nilai tambah (Rp triliun)
   const pctTPT=totLK/PARAMS.tptJml*100;
   const dMisk=totLK*PARAMS.poorFactor*PARAMS.miskinPct/PARAMS.miskinJml;
   // ΔPDRB pakai value-added multiplier (avgVM), bukan output multiplier — lihat def. VM.
@@ -919,6 +922,8 @@ function recompute(){
   document.getElementById('r-lk-sub').textContent=`orang · dari Rp ${fmtID(totInv,totInv%1?1:0)} T investasi · ${Object.keys(SEL).length} industri`;
   document.getElementById('r-tpt').textContent=fmt2(pctTPT)+'%';
   document.getElementById('r-pdrb').textContent='+'+fmt2(dPDRB)+'%';
+  document.getElementById('r-out').textContent='Rp '+fmt2(totOut)+' T';
+  document.getElementById('r-ntb').textContent='Rp '+fmt2(totNTB)+' T';
   document.getElementById('r-misk').textContent='−'+fmtID(dMisk,3)+' pp';
   document.getElementById('r-eff').textContent=fmtID(eff);
   const note=document.getElementById('r-note');
@@ -931,6 +936,8 @@ function recompute(){
       const tex=`\\begin{aligned}`+
         `\\text{LK}&=${tx(fmtID(totLK)+' orang')}\\\\ `+
         `\\%\\text{TPT}&=${tx(fmtID(totLK))}\\div${tx(fmtID(PARAMS.tptJml))}\\times100=${tx(fmt2(pctTPT)+'%')}\\\\ `+
+        `\\Delta\\text{Output}&=\\textstyle\\sum(\\text{Investasi}\\times\\text{OM})=${tx('Rp '+fmt2(totOut)+' T')}\\\\ `+
+        `\\Delta\\text{NTB}&=\\textstyle\\sum(\\text{Investasi}\\times\\text{VM})=${tx('Rp '+fmt2(totNTB)+' T')}\\\\ `+
         `\\Delta\\text{PDRB}&=${tx('Rp '+fmt2(totInv)+' T')}\\times${tx(fmt2(avgVM)+' VM')}\\div${tx('Rp '+fmtID(PARAMS.pdrbAnnual)+' T')}=${tx('+'+fmt2(dPDRB)+'%')}\\\\ `+
         `\\Delta\\text{miskin}&=\\boxed{${tx('-'+fmtID(dMisk,3)+' pp')}}\\end{aligned}`;
       const t2=tex.replace(/\\begin\{aligned\}/g,'').replace(/\\end\{aligned\}/g,'').replace(/(?<!\\)&/g,'');
