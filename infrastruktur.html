@@ -386,19 +386,6 @@ body.locked>*:not(#login-gate){filter:blur(6px);pointer-events:none;user-select:
         <div class="rn">Eskalasi 1,10³ (biaya korban basis 2023 → 2026). Top-down dari total laka Jabar.</div>
       </div></details>
     </div>
-    <div class="card" data-cat="perhubungan"><h3>PJU — Kelayakan (BCR &amp; Payback)</h3><div class="src">Manfaat keselamatan diambil dari kartu APJ; biaya = pagu (rencana penuh). Belum termasuk listrik &amp; O&amp;M; manfaat non-keselamatan juga belum dimonetisasi.</div>
-      <div class="row"><span>Pagu (Rp juta)</span><input type="number" id="pj-pagu" value="369522"></div>
-      <div class="row"><span>Umur (thn) · Diskonto (%)</span><span style="display:flex;gap:6px"><input type="number" id="pj-umur" value="15" style="width:60px"><input type="number" id="pj-disk" value="5" step="0.5" style="width:56px"></span></div>
-      <div class="row"><span>Manfaat keselamatan / thn</span><b id="pj-manfaat"></b></div>
-      <div class="row"><span>Payback sederhana</span><b id="pj-pb"></b></div>
-      <div class="res"><span>BCR (keselamatan saja)</span><b id="pj-bcr"></b></div>
-      <details class="rumus" open><summary>Rumus &amp; perhitungan</summary><div class="rr">
-        <div class="rf">$$\text{BCR}=\dfrac{\text{Manfaat}\times\frac{1-(1+r)^{-n}}{r}}{\text{Pagu}}\qquad \text{Payback}=\dfrac{\text{Pagu}}{\text{Manfaat}}$$</div>
-        <div class="rlabel">Dengan input saat ini</div>
-        <div class="sub" id="pj-rumus"></div>
-        <div class="rn">BCR &lt; 1 berarti manfaat keselamatan saja belum menutup biaya; nilai kenyamanan, keamanan, aktivitas malam, &amp; kerusakan harta benda belum dihitung.</div>
-      </div></details>
-    </div>
     <div class="card" data-cat="sda"><h3>SDA — Irigasi</h3><div class="src">Produktivitas: <a href="https://jabar.bps.go.id/" target="_blank" rel="noopener">BPS Jabar 2025</a> (7,09 t GKP/ha) · Harga: <a href="https://badanpangan.go.id/" target="_blank" rel="noopener">HPP GKP Bapanas</a> Rp 6.500/kg · Luas: estimasi unit cost — GANTI dgn data DI riil</div>
       <div class="row"><span>Luas layanan terdampak (ha)</span><input type="number" id="i-ha" value="2467"></div>
       <div class="row"><span>Kenaikan IP (panen/thn)</span><input type="number" id="i-ip" value="0.5" step="0.1"></div>
@@ -575,11 +562,6 @@ function calcExtra(n){
   $('ir-prod').textContent=N(prod,0)+' ton';$('ir-kotor').textContent=T(kotor);
   $('ir-va').textContent=T(iva);$('ir-tk').textContent=N(itk,0)+' FTE';$('ir-pb').textContent=N(ipb,2)+' thn';$('ir-net').textContent=T(inet);
   KX('ir-rumus',`\\begin{aligned}\\text{Produksi}&=${tx(N(iha))}\\times${tx(N(iip,2))}\\times${tx(N(ipr,2))}=${tx(N(prod,0)+' ton')}\\\\ \\text{Kotor}&=${tx(N(prod,0))}\\times1000\\times${tx(T(ihg))}=${tx(T(kotor))}\\\\ \\text{Bersih}&=${tx(T(kotor))}\\times${tx(N(num('ir-mar'))+'%')}=\\boxed{${tx(T(inet))}}\\\\ \\text{NT rantai pasok}&=${tx(T(kotor))}\\times${tx(N(num('ir-vm'),4))}=${tx(T(iva))}\\end{aligned}`);
-  // PJU kelayakan (pakai manfaat keselamatan n.apj)
-  const pjpagu=num('pj-pagu')*1e6, paf=annuity(num('pj-disk'),num('pj-umur'));
-  const pjpb=n.apj>0?pjpagu/n.apj:0, pjbcr=pjpagu>0?n.apj*paf/pjpagu:0;
-  $('pj-manfaat').textContent=T(n.apj);$('pj-pb').textContent=N(pjpb,1)+' thn';$('pj-bcr').textContent=N(pjbcr,2);
-  KX('pj-rumus',`\\begin{aligned}\\text{Payback}&=${tx(T(pjpagu))}\\div${tx(T(n.apj)+'/thn')}=${tx(N(pjpb,1)+' thn')}\\\\ \\text{BCR}&=\\dfrac{${tx(T(n.apj))}\\times${tx(N(paf,2))}}{${tx(T(pjpagu))}}=\\boxed{${tx(N(pjbcr,2))}}\\end{aligned}`);
   // SPAM volume & kelayakan (pakai manfaat n.spam)
   const pop=num('sp-sr')*num('sp-jiwa')*num('sp-aktif')/100, vol=pop*num('sp-lhari')*365/1000;
   const sppagu=num('sp-pagu')*1e6, spom=sppagu*num('sp-om')/100, spnet=n.spam-spom, saf=annuity(num('sp-disk'),num('sp-umur'));
