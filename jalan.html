@@ -19,7 +19,7 @@
 <header class="hero"><div class="wrap">
   <div class="kicker"><img src="logo.svg" alt="Jabar">BOK · Value of Time · Emisi</div>
   <h1>Jalan mantap itu penghematan yang bisa dihitung.</h1>
-  <p class="lede">Manfaat tahunan 211,49 km penanganan: Biaya Operasional Kendaraan, nilai waktu, BBM, dan CO₂. Semua parameter bisa diubah.</p>
+  <p class="lede">Manfaat tahunan penanganan jalan nonmantap ±196,46 km (rusak ringan 133,08 + rusak berat 63,41 km): Biaya Operasional Kendaraan, nilai waktu, BBM, dan CO₂. Semua parameter bisa diubah.</p>
 </div></header>
 <section><div class="wrap">
   <h2 class="sec serif">Dampak Ekonomi (Model I-O 52 Industri)</h2>
@@ -31,9 +31,9 @@
     <div class="kpi"><div class="l">Lapangan Kerja</div><div class="v" id="io-tk"></div></div>
   </div>
 </div></section><section><div class="wrap"><div class="grid2"><div class="grid2">
-    <div class="card"><h3>Parameter</h3><div class="src">BOK &amp; kecepatan: literatur transportasi · Reduksi BBM: Llopis-Castelló dkk. (2026) ±10%</div>
-      <div class="row"><span>Km ditangani</span><input type="number" id="j-km" value="211.491" step="0.1"></div>
-      <div class="row"><span>Porsi rekonstruksi/rusak berat (%)</span><input type="number" id="j-rb" value="78.3" step="0.1"></div>
+    <div class="card"><h3>Parameter</h3><div class="src">BOK &amp; kecepatan: literatur transportasi · Reduksi BBM: Llopis-Castelló dkk. (2026) ±10% · Kondisi rusak ringan/berat: Kemantapan Jalan Provinsi per Kab/Kota 2025 (DBMPR Jabar)</div>
+      <div class="row"><span>Rusak ringan (km)</span><input type="number" id="j-rr" value="133.08" step="0.1"></div>
+      <div class="row"><span>Rusak berat (km)</span><input type="number" id="j-rbk" value="63.41" step="0.1"></div>
       <div class="row"><span>LHR (smp/hari)</span><input type="number" id="j-lhr" value="13358" step="100"></div>
       <div class="row"><span>BOK baik / RR / RB (Rp/kend-km)</span><span style="display:flex;gap:6px"><input type="number" id="j-b1" value="3000" style="width:74px"><input type="number" id="j-b2" value="3500" style="width:74px"><input type="number" id="j-b3" value="4500" style="width:74px"></span></div>
       <div class="row"><span>Kecepatan baik / RR / RB (km/jam)</span><span style="display:flex;gap:6px"><input type="number" id="j-v1" value="45" style="width:60px"><input type="number" id="j-v2" value="30" style="width:60px"><input type="number" id="j-v3" value="22" style="width:60px"></span></div>
@@ -121,7 +121,7 @@ const IO=rows=>{let dana=0,dx=0,dva=0,tk=0;rows.forEach(r=>{const s=S.find(x=>x.
 const R=[["Jalan", "I-31", 2905975591468]];const io=IO(R);
 $('io-dana').textContent=T(io.dana);$('io-dx').textContent=T(io.dx);$('io-dva').textContent=T(io.dva);$('io-tk').textContent=N(io.tk)+' org';
 function calc(){
-  const km=num('j-km'),rb=km*Math.min(Math.max(num('j-rb'),0),100)/100,rr=km-rb;
+  const rr=num('j-rr'),rb=num('j-rbk'),km=rr+rb;
   const lhr=num('j-lhr'),b1=num('j-b1'),b2=num('j-b2'),b3=num('j-b3');
   const v1=num('j-v1'),v2=num('j-v2'),v3=num('j-v3'),w=num('j-w'),o=num('j-o');
   const fc=num('j-f')>0?1/num('j-f'):0,eta=num('j-e')/100,ef=num('j-c');

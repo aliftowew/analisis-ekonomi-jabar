@@ -214,11 +214,11 @@ body.locked>*:not(#login-gate){filter:blur(6px);pointer-events:none;user-select:
 
 <section id="jalan" data-cat="jalan"><div class="wrap">
   <h2 class="sec serif">Jalan — BOK, Waktu Tempuh &amp; Emisi</h2>
-  <p class="intro">Manfaat tahunan dari 211,49 km penanganan: penghematan Biaya Operasional Kendaraan, nilai waktu, BBM, dan CO₂.</p>
+  <p class="intro">Manfaat tahunan penanganan jalan nonmantap ±196,46 km (rusak ringan 133,08 + rusak berat 63,41 km, dari data Kemantapan Jalan 2025): penghematan Biaya Operasional Kendaraan, nilai waktu, BBM, dan CO₂.</p>
   <div class="grid2">
     <div class="card"><h3>Parameter</h3><div class="src">BOK &amp; kecepatan: literatur transportasi · Reduksi BBM: <a href="https://riunet.upv.es/server/api/core/bitstreams/d6665dac-2171-4058-9369-c25f4f77d0b9/content" target="_blank" rel="noopener">Llopis-Castelló dkk. (2026)</a> ±10%</div>
-      <div class="row"><span>Km ditangani</span><input type="number" id="j-km" value="211.491" step="0.1"></div>
-      <div class="row"><span>Porsi rekonstruksi/rusak berat (%)</span><input type="number" id="j-rb" value="78.3" step="0.1"></div>
+      <div class="row"><span>Rusak ringan (km)</span><input type="number" id="j-rr" value="133.08" step="0.1"></div>
+      <div class="row"><span>Rusak berat (km)</span><input type="number" id="j-rbk" value="63.41" step="0.1"></div>
       <div class="row"><span>LHR (smp/hari)</span><input type="number" id="j-lhr" value="13358" step="100"></div>
       <div class="row"><span>BOK baik / RR / RB (Rp/kend-km)</span><span style="display:flex;gap:6px"><input type="number" id="j-b1" value="3000" style="width:74px"><input type="number" id="j-b2" value="3500" style="width:74px"><input type="number" id="j-b3" value="4500" style="width:74px"></span></div>
       <div class="row"><span>Kecepatan baik / RR / RB (km/jam)</span><span style="display:flex;gap:6px"><input type="number" id="j-v1" value="45" style="width:60px"><input type="number" id="j-v2" value="30" style="width:60px"><input type="number" id="j-v3" value="22" style="width:60px"></span></div>
@@ -498,7 +498,7 @@ const tx=s=>'\\text{'+String(s).replace(/%/g,'\\%')+'}';
 
 // --- jalan ---
 function calcJalan(){
-  const km=num('j-km'),rb=km*Math.min(Math.max(num('j-rb'),0),100)/100,rr=km-rb;
+  const rr=num('j-rr'),rb=num('j-rbk'),km=rr+rb;
   const lhr=num('j-lhr'),b1=num('j-b1'),b2=num('j-b2'),b3=num('j-b3');
   const v1=num('j-v1'),v2=num('j-v2'),v3=num('j-v3'),w=num('j-w'),o=num('j-o');
   const fc=num('j-f')>0?1/num('j-f'):0,eta=num('j-e')/100,ef=num('j-c');
