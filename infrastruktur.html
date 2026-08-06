@@ -386,34 +386,19 @@ body.locked>*:not(#login-gate){filter:blur(6px);pointer-events:none;user-select:
         <div class="rn">Eskalasi 1,10³ (biaya korban basis 2023 → 2026). Top-down dari total laka Jabar.</div>
       </div></details>
     </div>
-    <div class="card" data-cat="sda"><h3>SDA — Irigasi</h3><div class="src">Produktivitas: <a href="https://jabar.bps.go.id/" target="_blank" rel="noopener">BPS Jabar 2025</a> (7,09 t GKP/ha) · Harga: <a href="https://badanpangan.go.id/" target="_blank" rel="noopener">HPP GKP Bapanas</a> Rp 6.500/kg · Luas: estimasi unit cost — GANTI dgn data DI riil</div>
-      <div class="row"><span>Luas layanan terdampak (ha)</span><input type="number" id="i-ha" value="2467"></div>
-      <div class="row"><span>Kenaikan IP (panen/thn)</span><input type="number" id="i-ip" value="0.5" step="0.1"></div>
-      <div class="row"><span>Produktivitas (t GKP/ha)</span><input type="number" id="i-pr" value="7.09" step="0.01"></div>
-      <div class="row"><span>Harga GKP (Rp/kg)</span><input type="number" id="i-hg" value="6500"></div>
-      <div class="res"><span>Manfaat / tahun</span><b id="i-out"></b></div>
+    <div class="card" data-cat="sda"><h3>SDA — Irigasi (kenaikan Indeks Pertanaman)</h3><div class="src">Luas daerah irigasi utuh: <a href="https://opendata.jabarprov.go.id/" target="_blank" rel="noopener">Open Data Jabar — Dinas SDA</a> (total 14.275 ha). Kenaikan IP 179%→210% pasca-rehabilitasi: <a href="https://sda.pu.go.id/" target="_blank" rel="noopener">Ditjen SDA Kementerian PU</a>. Produktivitas η = 12,48 jt ton GKP ÷ 1,76 jt ha = 7,09 t/ha (<a href="https://jabar.bps.go.id/" target="_blank" rel="noopener">BPS Jabar 2025</a>). Harga: <a href="https://badanpangan.go.id/" target="_blank" rel="noopener">HPP GKP Bapanas</a> Rp 6.500/kg.</div>
+      <div class="row"><span>Luas daerah irigasi (ha)</span><input type="number" id="i-luas" value="14275"></div>
+      <div class="row"><span>IP awal (%) · IP setelah (%)</span><span style="display:flex;gap:6px"><input type="number" id="i-ip0" value="179" style="width:70px"><input type="number" id="i-ip1" value="210" style="width:70px"></span></div>
+      <div class="row"><span>Produktivitas η (t GKP/ha)</span><input type="number" id="i-eta" value="7.09" step="0.01"></div>
+      <div class="row"><span>Harga GKP (Rp/kg)</span><input type="number" id="i-hpp" value="6500"></div>
+      <div class="row"><span>Δ IP · Δ luas tanam</span><b><span id="i-dip"></span> · <span id="i-da"></span></b></div>
+      <div class="row"><span>Δ produksi GKP / thn</span><b id="i-dq"></b></div>
+      <div class="res"><span>Nilai produksi / tahun</span><b id="i-out"></b></div>
       <details class="rumus" open><summary>Rumus &amp; perhitungan</summary><div class="rr">
-        <div class="rf">$$\text{Manfaat}=\text{Luas}\times\Delta\text{IP}\times\text{Produktivitas}\times1000\times\text{Harga}$$</div>
+        <div class="rf">$$\Delta\text{IP}=\text{IP}_1-\text{IP}_0\qquad \Delta A=\text{Luas}\times\Delta\text{IP}\\ \Delta Q=\Delta A\times\eta\qquad \text{Nilai}=\Delta Q\times1000\times\text{HPP}$$</div>
         <div class="rlabel">Dengan input saat ini</div>
         <div class="sub" id="i-rumus"></div>
-        <div class="rn">Manfaat kotor (sesuai workbook, Rp 56,85 M).</div>
-      </div></details>
-    </div>
-    <div class="card" data-cat="sda"><h3>Irigasi — Manfaat Bersih &amp; Rantai Pasok</h3><div class="src">Kompilasi: ΔIP 0,25 musim/thn (dasar), margin bersih petani 35%, rantai pasok via I-O tani pangan (VM 0,9553; TK 12.057/Rp1T).</div>
-      <div class="row"><span>Luas efektif (ha)</span><input type="number" id="ir-ha" value="2467"></div>
-      <div class="row"><span>Kenaikan IP (musim/thn)</span><input type="number" id="ir-ip" value="0.25" step="0.05"></div>
-      <div class="row"><span>Produktivitas (t GKP/ha)</span><input type="number" id="ir-pr" value="7.09" step="0.01"></div>
-      <div class="row"><span>Harga GKP (Rp/kg) · Margin (%)</span><span style="display:flex;gap:6px"><input type="number" id="ir-hg" value="6500" style="width:80px"><input type="number" id="ir-mar" value="35" style="width:56px"></span></div>
-      <div class="row"><span>VM tani pangan · Pagu (Rp juta)</span><span style="display:flex;gap:6px"><input type="number" id="ir-vm" value="0.9553" step="0.0001" style="width:74px"><input type="number" id="ir-pagu" value="37010" style="width:80px"></span></div>
-      <div class="row"><span>Produksi tambahan · Nilai kotor</span><b><span id="ir-prod"></span> · <span id="ir-kotor"></span></b></div>
-      <div class="row"><span>NT rantai pasok · TK</span><b><span id="ir-va"></span> · <span id="ir-tk"></span></b></div>
-      <div class="row"><span>Payback (rencana penuh)</span><b id="ir-pb"></b></div>
-      <div class="res"><span>Manfaat bersih petani / thn</span><b id="ir-net"></b></div>
-      <details class="rumus" open><summary>Rumus &amp; perhitungan</summary><div class="rr">
-        <div class="rf">$$\text{Bersih}=\text{Luas}\times\Delta IP\times\text{Yield}\times1000\times\text{Harga}\times\text{Margin}$$</div>
-        <div class="rlabel">Dengan input saat ini</div>
-        <div class="sub" id="ir-rumus"></div>
-        <div class="rn">Manfaat bersih petani TIDAK dijumlahkan lagi ke NT rantai pasok — keuntungan petani sudah bagian dari nilai tambah (hindari dobel hitung).</div>
+        <div class="rn">ΔIP dalam poin persentase (pp). Rehabilitasi menaikkan indeks pertanaman → tambahan luas tanam → tambahan produksi gabah (GKP) yang dinilai dengan HPP.</div>
       </div></details>
     </div>
     <div class="card" data-cat="perumahan"><h3>Perumahan — SPAM</h3><div class="src">Reduksi diare: <a href="https://www.who.int/news-room/fact-sheets/detail/diarrhoeal-disease" target="_blank" rel="noopener">WHO</a> ±25% dari air minum layak</div>
@@ -504,10 +489,12 @@ function calcNon(){
   const apj=(md*BIAYA.md+lb*BIAYA.lb+lr*BIAYA.lr)*ESK;
   $('a-out').textContent=T(apj);
   KX('a-rumus',`\\begin{aligned}\\text{Cakupan}&=${tx(N(kmT,1)+' km')}\\div${tx('2.362,18')}=${tx(N(cak*100,2)+'%')}\\\\ \\text{Faktor}&=${tx(N(a_p)+'%')}\\times${tx(N(a_m)+'%')}\\times${tx(N(cak*100,2)+'%')}\\times${tx(N(a_r)+'%')}=${tx(N(f*100,3)+'%')}\\\\ \\text{Korban}&=\\text{MD }${tx(N(md,1))}\\cdot\\text{LB }${tx(N(lb,1))}\\cdot\\text{LR }${tx(N(lr,1))}\\\\ \\text{Manfaat}&=\\boxed{${tx(T(apj))}}\\end{aligned}`);
-  // SDA irigasi (kotor)
-  const iri=num('i-ha')*num('i-ip')*num('i-pr')*num('i-hg')*1000;
+  // SDA irigasi — kenaikan Indeks Pertanaman (ΔIP → Δluas tanam → Δproduksi → nilai)
+  const i_luas=num('i-luas'),i_ip0=num('i-ip0'),i_ip1=num('i-ip1'),i_eta=num('i-eta'),i_hpp=num('i-hpp');
+  const i_dip=i_ip1-i_ip0, i_da=i_luas*i_dip/100, i_dq=i_da*i_eta, iri=i_dq*1000*i_hpp;
+  $('i-dip').textContent=N(i_dip,0)+' pp';$('i-da').textContent=N(i_da,2)+' ha';$('i-dq').textContent=N(i_dq,0)+' ton';
   $('i-out').textContent=T(iri);
-  KX('i-rumus',`${tx(N(num('i-ha'))+' ha')}\\times${tx(N(num('i-ip'),2))}\\times${tx(N(num('i-pr'),2)+' t/ha')}\\times\\text{1.000}\\times${tx(T(num('i-hg')))}=\\boxed{${tx(T(iri))}}`);
+  KX('i-rumus',`\\begin{aligned}\\Delta\\text{IP}&=${tx(N(i_ip1)+'%')}-${tx(N(i_ip0)+'%')}=${tx(N(i_dip,0)+' pp')}\\\\ \\Delta A&=${tx(N(i_luas)+' ha')}\\times${tx(N(i_dip,0)+'%')}=${tx(N(i_da,2)+' ha')}\\\\ \\Delta Q&=${tx(N(i_da,2))}\\times${tx(N(i_eta,2)+' t/ha')}=${tx(N(i_dq,0)+' ton')}\\\\ \\text{Nilai}&=${tx(N(i_dq,0))}\\times1000\\times${tx(T(i_hpp))}=\\boxed{${tx(T(iri))}}\\end{aligned}`);
   // Perumahan SPAM
   const s_sr=num('s-sr'),s_j=num('s-j'),s_a=num('s-a'),s_d=num('s-d'),s_r=num('s-r'),s_b=num('s-b');
   const s_waktu=s_sr*s_j*365*17341, s_sehat=s_sr*s_a*s_d*s_r/100*s_b, spam=s_waktu+s_sehat;
@@ -556,12 +543,6 @@ function calcKes2(){
 // --- modul lanjutan: pendidikan rantai, irigasi rantai pasok, kelayakan PJU & SPAM ---
 function annuity(rp,nn){const r=rp/100;return r>0?(1-Math.pow(1+r,-nn))/r:nn;}
 function calcExtra(n){
-  // Irigasi (bersih + rantai pasok + payback)
-  const iha=num('ir-ha'),iip=num('ir-ip'),ipr=num('ir-pr'),ihg=num('ir-hg');
-  const prod=iha*iip*ipr, kotor=prod*1000*ihg, inet=kotor*num('ir-mar')/100, iva=kotor*num('ir-vm'), itk=kotor/1e12*12057, ipagu=num('ir-pagu')*1e6, ipb=inet>0?ipagu/inet:0;
-  $('ir-prod').textContent=N(prod,0)+' ton';$('ir-kotor').textContent=T(kotor);
-  $('ir-va').textContent=T(iva);$('ir-tk').textContent=N(itk,0)+' FTE';$('ir-pb').textContent=N(ipb,2)+' thn';$('ir-net').textContent=T(inet);
-  KX('ir-rumus',`\\begin{aligned}\\text{Produksi}&=${tx(N(iha))}\\times${tx(N(iip,2))}\\times${tx(N(ipr,2))}=${tx(N(prod,0)+' ton')}\\\\ \\text{Kotor}&=${tx(N(prod,0))}\\times1000\\times${tx(T(ihg))}=${tx(T(kotor))}\\\\ \\text{Bersih}&=${tx(T(kotor))}\\times${tx(N(num('ir-mar'))+'%')}=\\boxed{${tx(T(inet))}}\\\\ \\text{NT rantai pasok}&=${tx(T(kotor))}\\times${tx(N(num('ir-vm'),4))}=${tx(T(iva))}\\end{aligned}`);
   // SPAM volume & kelayakan (pakai manfaat n.spam)
   const pop=num('sp-sr')*num('sp-jiwa')*num('sp-aktif')/100, vol=pop*num('sp-lhari')*365/1000;
   const sppagu=num('sp-pagu')*1e6, spom=sppagu*num('sp-om')/100, spnet=n.spam-spom, saf=annuity(num('sp-disk'),num('sp-umur'));
