@@ -308,16 +308,19 @@ body.locked>*:not(#login-gate){filter:blur(6px);pointer-events:none;user-select:
         <div class="rn">Manfaat terwujud saat kohor lulus &amp; bekerja (idealnya diskonto NPV).</div>
       </div></details>
     </div>
-    <div class="card" data-cat="kesehatan"><h3>Kesehatan</h3><div class="src">CT-Scan 2 unit, X-Ray, lab, UTDRS — ganti asumsi dgn data rujukan RSUD/BPJS</div>
-      <div class="row"><span>Rujukan terhindarkan / tahun</span><input type="number" id="h-n" value="3000"></div>
-      <div class="row"><span>Biaya per rujukan (Rp)</span><input type="number" id="h-b" value="750000"></div>
-      <div class="row"><span>Jam perjalanan hemat / pasien</span><input type="number" id="h-j" value="6"></div>
+    <div class="card" data-cat="kesehatan"><h3>Kesehatan — CT-Scan (hemat rujukan)</h3><div class="src">RSUD Jampangkulon: jarak ke RS rujukan lain ±100 km (PP 200 km), ±3–9 jam. Manfaat = penghematan BBM + nilai waktu perjalanan yang tak perlu lagi ditempuh karena pemeriksaan bisa dilakukan di tempat. Pemeriksaan ±6.500/thn (2 unit × 13/hari × 250 hari).</div>
+      <div class="row"><span>Pemeriksaan / rujukan per tahun</span><input type="number" id="h-n" value="6500"></div>
+      <div class="row"><span>Jarak PP ke RS rujukan (km)</span><input type="number" id="h-l" value="200"></div>
+      <div class="row"><span>Efisiensi BBM (km/L) · Harga BBM (Rp)</span><span style="display:flex;gap:6px"><input type="number" id="h-eff" value="12" style="width:60px"><input type="number" id="h-bbm" value="10000" style="width:90px"></span></div>
+      <div class="row"><span>Waktu PP (jam) · Orang (pasien+pendamping)</span><span style="display:flex;gap:6px"><input type="number" id="h-j" value="7" style="width:60px"><input type="number" id="h-o" value="2" style="width:60px"></span></div>
+      <div class="row"><span>Nilai waktu (Rp/jam)</span><input type="number" id="h-vot" value="20857"></div>
+      <div class="row"><span>Penghematan / rujukan</span><b id="h-per"></b></div>
       <div class="res"><span>Manfaat / tahun</span><b id="h-out"></b></div>
       <details class="rumus" open><summary>Rumus &amp; perhitungan</summary><div class="rr">
-        <div class="rf">$$\text{Manfaat}=(N_{\text{ruj}}\times\text{Biaya})+(N_{\text{ruj}}\times\text{Jam}\times 2\times\text{Nilai waktu})$$</div>
+        <div class="rf">$$\text{Manfaat}=N\times\Big[\underbrace{\tfrac{L}{\eta}\times H_{\text{BBM}}}_{\text{BBM}}+\underbrace{\text{VoT}\times t\times n}_{\text{waktu}}\Big]$$</div>
         <div class="rlabel">Dengan input saat ini</div>
         <div class="sub" id="h-rumus"></div>
-        <div class="rn">Faktor 2 = pasien + pendamping; nilai waktu Rp 17.341/jam (dari WAGE).</div>
+        <div class="rn">Komponen biaya rujukan (N×Biaya) sengaja tidak dipakai — manfaat murni dari BBM + nilai waktu perjalanan yang dihemat karena pemeriksaan kini tersedia di RSUD setempat.</div>
       </div></details>
     </div>
     <div class="card" data-cat="kesehatan"><h3>Kapasitas CT-Scan</h3><div class="src">Benchmark: ±13 pemeriksaan/hari kerja × 250 hari kerja/tahun (2 unit: RSUD Jampangkulon &amp; RS Jiwa Jabar)</div>
@@ -499,11 +502,12 @@ function calcNon(){
   const pend=p_siswa*p_up;
   $('p-out').textContent=T(pend);
   KX('p-rumus',`\\begin{aligned}\\text{Siswa}&=${tx(N(num('p-r')))}\\times${tx(N(num('p-s')))}\\times${tx(N(num('p-p'))+'%')}=${tx(N(p_siswa,1)+' siswa')}\\\\ \\text{Uplift}&=${tx(N(num('p-ret'))+'%')}\\times${tx(N(num('p-t'))+' thn')}\\times${tx(T(num('p-w')))}=${tx(T(p_up))}\\\\ \\text{Total}&=\\boxed{${tx(T(pend))}}\\end{aligned}`);
-  // Kesehatan
-  const h_n=num('h-n'),h_b=num('h-b'),h_j=num('h-j');
-  const h_biaya=h_n*h_b, h_waktu=h_n*h_j*2*17341, kes=h_biaya+h_waktu;
+  // Kesehatan — penghematan perjalanan (BBM + VoT), TANPA N×Biaya
+  const h_n=num('h-n'),h_l=num('h-l'),h_eff=num('h-eff'),h_bbm=num('h-bbm'),h_j=num('h-j'),h_o=num('h-o'),h_vot=num('h-vot');
+  const h_perBBM=h_eff>0?h_l/h_eff*h_bbm:0, h_perWaktu=h_vot*h_j*h_o, h_per=h_perBBM+h_perWaktu, kes=h_per*h_n;
+  $('h-per').textContent=T(h_per);
   $('h-out').textContent=T(kes);
-  KX('h-rumus',`\\begin{aligned}\\text{Biaya}&=${tx(N(h_n))}\\times${tx(T(h_b))}=${tx(T(h_biaya))}\\\\ \\text{Waktu}&=${tx(N(h_n))}\\times${tx(N(h_j)+' jam')}\\times${tx('2 org')}\\times${tx('Rp 17.341')}=${tx(T(h_waktu))}\\\\ \\text{Total}&=\\boxed{${tx(T(kes))}}\\end{aligned}`);
+  KX('h-rumus',`\\begin{aligned}\\text{BBM}&=\\tfrac{${tx(N(h_l)+' km')}}{${tx(N(h_eff)+' km/L')}}\\times${tx(T(h_bbm))}=${tx(T(h_perBBM))}\\\\ \\text{Waktu}&=${tx(T(h_vot))}\\times${tx(N(h_j)+' jam')}\\times${tx(N(h_o)+' org')}=${tx(T(h_perWaktu))}\\\\ \\text{Per rujukan}&=${tx(T(h_per))}\\\\ \\text{Manfaat}&=${tx(N(h_n))}\\times${tx(T(h_per))}=\\boxed{${tx(T(kes))}}\\end{aligned}`);
   // Perhubungan APJ
   const a_t=num('a-t'),a_j=num('a-j'),a_p=num('a-p'),a_m=num('a-m'),a_r=num('a-r');
   const kmT=a_t*a_j/1000, cak=kmT/2362.18;
