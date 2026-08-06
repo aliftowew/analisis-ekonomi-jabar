@@ -54,7 +54,7 @@ const $=id=>document.getElementById(id);
 const num=id=>parseFloat($(id).value)||0;
 const T=v=>{const a=Math.abs(v);if(a>=1e12)return 'Rp '+(v/1e12).toLocaleString('id-ID',{maximumFractionDigits:2})+' T';if(a>=1e9)return 'Rp '+(v/1e9).toLocaleString('id-ID',{maximumFractionDigits:1})+' M';return 'Rp '+Math.round(v).toLocaleString('id-ID');};
 const N=(v,d=0)=>v.toLocaleString('id-ID',{maximumFractionDigits:d});
-const KX=(id,tex)=>{const el=$(id);if(!el)return;if(window.katex){try{katex.render(tex,el,{throwOnError:false,displayMode:true});}catch(e){el.textContent=tex;}}};
+const KX=(id,tex)=>{const el=$(id);if(!el)return;tex=tex.replace(/\\begin\{aligned\}/g,'').replace(/\\end\{aligned\}/g,'').replace(/(?<!\\)&/g,'');if(window.katex){try{katex.render(tex,el,{throwOnError:false,displayMode:true,strict:false});}catch(e){el.textContent=tex;}}};
 const tx=s=>'\\text{'+String(s).replace(/%/g,'\\%')+'}';
 const IO=rows=>{let dana=0,dx=0,dva=0,tk=0;rows.forEach(r=>{const s=S.find(x=>x.kode===r[1]);dana+=r[2];dx+=r[2]*s.om;dva+=r[2]*s.vm;tk+=r[2]/1e12*s.tkT;});return {dana,dx,dva,tk};};
 const R=[["Pendidikan", "I-31", 165691779936]];const io=IO(R);
@@ -66,7 +66,7 @@ function calc(){
   KX('p-rumus',`\\begin{aligned}\\text{Siswa}&=${tx(N(r))}\\times${tx(N(s))}\\times${tx(N(p)+'%')}=${tx(N(siswa,1)+' siswa')}\\\\ \\text{Uplift}&=${tx(N(ret)+'%')}\\times${tx(N(t)+' thn')}\\times${tx(T(w))}=${tx(T(uplift))}\\\\ \\text{Total}&=\\boxed{${tx(T(v))}}\\end{aligned}`);
 }
 document.querySelectorAll('input').forEach(el=>el.addEventListener('input',calc));calc();
-if(window.renderMathInElement)renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true}]});
+if(window.renderMathInElement)renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true}],strict:false});
 </script>
 </body>
 </html>
