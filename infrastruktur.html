@@ -308,25 +308,6 @@ body.locked>*:not(#login-gate){filter:blur(6px);pointer-events:none;user-select:
         <div class="rn">Manfaat terwujud saat kohor lulus &amp; bekerja (idealnya diskonto NPV).</div>
       </div></details>
     </div>
-    <div class="card" data-cat="pendidikan"><h3>Kapasitas &amp; Akses Pendidikan (rantai)</h3><div class="src">Kompilasi: RKB 204 ruang reguler + 17 USB reguler; keterisian 85%, additionality 20%, premium 3 thn 29,5% (return 9%/thn).</div>
-      <div class="row"><span>RKB reguler (ruang)</span><input type="number" id="pd-rkb" value="204"></div>
-      <div class="row"><span>Jumlah USB reguler</span><input type="number" id="pd-usb" value="17"></div>
-      <div class="row"><span>Rombel kelas X / USB</span><input type="number" id="pd-rombel" value="6"></div>
-      <div class="row"><span>Siswa/rombel · Tingkat</span><span style="display:flex;gap:6px"><input type="number" id="pd-siswa" value="36" style="width:60px"><input type="number" id="pd-tingkat" value="3" style="width:52px"></span></div>
-      <div class="row"><span>Keterisian · Additionality (%)</span><span style="display:flex;gap:6px"><input type="number" id="pd-fill" value="85" style="width:60px"><input type="number" id="pd-add" value="20" style="width:60px"></span></div>
-      <div class="row"><span>Lulus · Bekerja (%)</span><span style="display:flex;gap:6px"><input type="number" id="pd-grad" value="85" style="width:60px"><input type="number" id="pd-work" value="85" style="width:60px"></span></div>
-      <div class="row"><span>Upah dasar (Rp) · Premium (%)</span><span style="display:flex;gap:6px"><input type="number" id="pd-upah" value="43380000" style="width:100px"><input type="number" id="pd-prem" value="29.5" step="0.1" style="width:56px"></span></div>
-      <div class="row"><span>Daya tampung/thn (RKB · USB)</span><b><span id="pd-rkbY"></span> · <span id="pd-usbY"></span></b></div>
-      <div class="row"><span>Total · terisi 85%</span><b><span id="pd-total"></span> · <span id="pd-terisi"></span></b></div>
-      <div class="row"><span>Akses baru · pekerja/angkatan</span><b><span id="pd-akses"></span> · <span id="pd-pekerja"></span></b></div>
-      <div class="res"><span>Tambahan penghasilan / angkatan</span><b id="pd-income"></b></div>
-      <details class="rumus" open><summary>Rumus &amp; perhitungan</summary><div class="rr">
-        <div class="rf">$$\text{Daya tampung}=\tfrac{\text{RKB}\times\text{siswa}}{\text{tingkat}}+\text{USB}\times\text{rombel}\times\text{siswa}$$</div>
-        <div class="rlabel">Dengan input saat ini</div>
-        <div class="sub" id="pd-rumus"></div>
-        <div class="rn">Manfaat muncul setelah kohor lulus &amp; bekerja (perlu diskonto NPV). Additionality = porsi kursi baru yang benar-benar akses baru, bukan sekadar mengurangi kepadatan.</div>
-      </div></details>
-    </div>
     <div class="card" data-cat="kesehatan"><h3>Kesehatan</h3><div class="src">CT-Scan 2 unit, X-Ray, lab, UTDRS — ganti asumsi dgn data rujukan RSUD/BPJS</div>
       <div class="row"><span>Rujukan terhindarkan / tahun</span><input type="number" id="h-n" value="3000"></div>
       <div class="row"><span>Biaya per rujukan (Rp)</span><input type="number" id="h-b" value="750000"></div>
@@ -584,15 +565,6 @@ function calcKes2(){
 // --- modul lanjutan: pendidikan rantai, irigasi rantai pasok, kelayakan PJU & SPAM ---
 function annuity(rp,nn){const r=rp/100;return r>0?(1-Math.pow(1+r,-nn))/r:nn;}
 function calcExtra(n){
-  // Pendidikan (rantai kapasitas → penghasilan)
-  const rkb=num('pd-rkb'),usb=num('pd-usb'),rmb=num('pd-rombel'),sw=num('pd-siswa'),tg=num('pd-tingkat');
-  const rkbY=tg>0?rkb*sw/tg:0, usbY=usb*rmb*sw, totY=rkbY+usbY;
-  const terisi=totY*num('pd-fill')/100, akses=terisi*num('pd-add')/100;
-  const pekerja=akses*num('pd-grad')/100*num('pd-work')/100, income=pekerja*num('pd-upah')*num('pd-prem')/100;
-  $('pd-rkbY').textContent=N(rkbY,0);$('pd-usbY').textContent=N(usbY,0);
-  $('pd-total').textContent=N(totY,0);$('pd-terisi').textContent=N(terisi,0);
-  $('pd-akses').textContent=N(akses,0);$('pd-pekerja').textContent=N(pekerja,0);$('pd-income').textContent=T(income);
-  KX('pd-rumus',`\\begin{aligned}\\text{Daya tampung}&=\\tfrac{${tx(N(rkb))}\\times${tx(N(sw))}}{${tx(N(tg))}}+${tx(N(usb))}\\times${tx(N(rmb))}\\times${tx(N(sw))}=${tx(N(totY,0)+'/thn')}\\\\ \\text{Akses baru}&=${tx(N(totY,0))}\\times${tx(N(num('pd-fill'))+'%')}\\times${tx(N(num('pd-add'))+'%')}=${tx(N(akses,0))}\\\\ \\text{Pekerja}&=${tx(N(akses,0))}\\times${tx(N(num('pd-grad'))+'%')}\\times${tx(N(num('pd-work'))+'%')}=${tx(N(pekerja,0))}\\\\ \\text{Penghasilan}&=${tx(N(pekerja,0))}\\times${tx(T(num('pd-upah')))}\\times${tx(N(num('pd-prem'))+'%')}=\\boxed{${tx(T(income))}}\\end{aligned}`);
   // Irigasi (bersih + rantai pasok + payback)
   const iha=num('ir-ha'),iip=num('ir-ip'),ipr=num('ir-pr'),ihg=num('ir-hg');
   const prod=iha*iip*ipr, kotor=prod*1000*ihg, inet=kotor*num('ir-mar')/100, iva=kotor*num('ir-vm'), itk=kotor/1e12*12057, ipagu=num('ir-pagu')*1e6, ipb=inet>0?ipagu/inet:0;
